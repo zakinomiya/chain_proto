@@ -20,6 +20,5 @@ func main() {
 	firstBlock.SetHash("First Block")
 
 	blockchain.AddNewBlock(firstBlock)
-
-	log.Printf("Initialised Blockchain: %#v \n", blockchain.Blocks())
+	log.Printf("Blockchain: %#v \n", blockchain.Blocks())
 }

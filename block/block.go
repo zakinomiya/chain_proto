@@ -1,12 +1,20 @@
 package block
 
+import (
+	"go_chain/transaction"
+	"time"
+)
+
 type Block struct {
-	hash   string
-	amount int
+	timestamp    int64
+	hash         string
+	amount       int
+	transactions []transaction.Transaction
+	signerAddr   string
 }
 
 func New() *Block {
-	return &Block{"some hash", 100}
+	return &Block{time.Now().Unix(), "some hash", 100, []transaction.Transaction{}, "Miner"}
 }
 
 func (block *Block) Hash() string {

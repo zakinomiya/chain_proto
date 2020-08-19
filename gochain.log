@@ -8,3 +8,28 @@
 2020/08/19 08:55:48 main.go:16: Initialised Blockchain: []block.Block{block.Block{hash:"Genesis", amount:100}} 
 2020/08/19 08:55:48 blockchain.go:28: Adding new block: &block.Block{hash:"First Block", amount:200} 
 2020/08/19 08:55:48 main.go:24: Initialised Blockchain: []block.Block{block.Block{hash:"Genesis", amount:100}, block.Block{hash:"First Block", amount:200}} 
+2020/08/19 09:15:20 blockchain.go:25: Creating the genesis block
+2020/08/19 09:15:20 main.go:16: Initialised Blockchain: []block.Block(nil) 
+2020/08/19 09:15:20 blockchain.go:38: Adding new block: &block.Block{hash:"First Block", amount:200} 
+2020/08/19 09:15:20 main.go:23: Initialised Blockchain: []block.Block{block.Block{hash:"First Block", amount:200}} 
+2020/08/19 09:21:12 blockchain.go:26: Creating the genesis block
+2020/08/19 09:21:12 main.go:16: Initialised Blockchain: []block.Block(nil) 
+2020/08/19 09:21:12 blockchain.go:42: Adding new block: &block.Block{hash:"First Block", amount:200} 
+2020/08/19 09:21:12 main.go:23: Blockchain: []block.Block{block.Block{hash:"First Block", amount:200}} 
+2020/08/19 09:23:55 blockchain.go:26: Creating the genesis block
+2020/08/19 09:23:55 blockchain.go:42: Adding new block: &block.Block{hash:"Genesis", amount:100} 
+2020/08/19 09:23:55 main.go:16: Initialised Blockchain: []block.Block(nil) 
+2020/08/19 09:23:55 blockchain.go:42: Adding new block: &block.Block{hash:"First Block", amount:200} 
+2020/08/19 09:23:55 main.go:23: Blockchain: []block.Block{block.Block{hash:"First Block", amount:200}} 
+2020/08/19 09:24:10 blockchain.go:26: Creating the genesis block
+2020/08/19 09:24:10 blockchain.go:43: Adding new block: &block.Block{hash:"Genesis", amount:100} 
+2020/08/19 09:24:10 main.go:16: Initialised Blockchain: []block.Block{block.Block{hash:"Genesis", amount:100}} 
+2020/08/19 09:24:10 blockchain.go:43: Adding new block: &block.Block{hash:"First Block", amount:200} 
+2020/08/19 09:24:10 main.go:23: Blockchain: []block.Block{block.Block{hash:"Genesis", amount:100}, block.Block{hash:"First Block", amount:200}} 
+2020/08/19 09:25:46 blockchain.go:26: Creating the genesis block
+2020/08/19 09:25:46 blockchain.go:43: Adding new block: &block.Block{hash:"Genesis", amount:100} 
+2020/08/19 09:39:23 blockchain.go:26: Creating the genesis block
+2020/08/19 09:39:23 blockchain.go:43: Adding new block: &block.Block{timestamp:0, hash:"Genesis", amount:100, transactions:[]transaction.Transaction(nil), signerAddr:""} 
+2020/08/19 09:39:23 main.go:16: Initialised Blockchain: []block.Block{block.Block{timestamp:0, hash:"Genesis", amount:100, transactions:[]transaction.Transaction(nil), signerAddr:""}} 
+2020/08/19 09:39:23 blockchain.go:43: Adding new block: &block.Block{timestamp:1597797563, hash:"First Block", amount:200, transactions:[]transaction.Transaction{}, signerAddr:"Miner"} 
+2020/08/19 09:39:23 main.go:23: Blockchain: []block.Block{block.Block{timestamp:0, hash:"Genesis", amount:100, transactions:[]transaction.Transaction(nil), signerAddr:""}, block.Block{timestamp:1597797563, hash:"First Block", amount:200, transactions:[]transaction.Transaction{}, signerAddr:"Miner"}} 
