@@ -33,3 +33,16 @@
 2020/08/19 09:39:23 main.go:16: Initialised Blockchain: []block.Block{block.Block{timestamp:0, hash:"Genesis", amount:100, transactions:[]transaction.Transaction(nil), signerAddr:""}} 
 2020/08/19 09:39:23 blockchain.go:43: Adding new block: &block.Block{timestamp:1597797563, hash:"First Block", amount:200, transactions:[]transaction.Transaction{}, signerAddr:"Miner"} 
 2020/08/19 09:39:23 main.go:23: Blockchain: []block.Block{block.Block{timestamp:0, hash:"Genesis", amount:100, transactions:[]transaction.Transaction(nil), signerAddr:""}, block.Block{timestamp:1597797563, hash:"First Block", amount:200, transactions:[]transaction.Transaction{}, signerAddr:"Miner"}} 
+2020/08/20 23:01:48 server.go:33: Starting service Blockchain 
+2020/08/20 23:01:48 server.go:38: Successfully started service Blockchain 
+2020/08/20 23:01:48 server.go:41: Successfully started the node
+2020/08/20 23:03:54 server.go:34: Starting service Blockchain 
+2020/08/20 23:03:54 server.go:39: Successfully started service Blockchain 
+2020/08/20 23:03:54 server.go:42: Successfully started the node
+2020/08/20 23:06:28 server.go:35: Starting service Blockchain 
+2020/08/20 23:06:28 server.go:40: Successfully started service Blockchain 
+2020/08/20 23:06:28 server.go:43: Successfully started the node
+2020/08/20 23:06:44 server.go:35: Starting service Blockchain 
+2020/08/20 23:06:44 server.go:40: Successfully started service Blockchain 
+2020/08/20 23:06:44 server.go:43: Successfully started the node
+2020/08/20 23:06:44 blockchain.go:56: Adding new block: &block.Block{timestamp:1597932404, hash:"First Block", amount:100, transactions:[]transaction.Transaction{}, signerAddr:"Miner"} 

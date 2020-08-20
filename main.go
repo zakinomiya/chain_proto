@@ -1,24 +1,20 @@
 package main
 
 import (
-	"go_chain/block"
-	"go_chain/blockchain"
 	"go_chain/config"
+	"go_chain/server"
 	"go_chain/utils"
 	"log"
+	"os"
 )
 
 func main() {
 	utils.LogginSettings(config.Config.LogFile)
 
-	blockchain := blockchain.New(nil)
+	server := server.New(&config.Config)
 
-	log.Printf("Initialised Blockchain: %#v \n", blockchain.Blocks())
-
-	firstBlock := block.New()
-	firstBlock.SetAmount(200)
-	firstBlock.SetHash("First Block")
-
-	blockchain.AddNewBlock(firstBlock)
-	log.Printf("Blockchain: %#v \n", blockchain.Blocks())
+	if err := server.Start(); err != nil {
+		log.Printf("Failed to start server. %s", err.Error())
+		os.Exit(1)
+	}
 }
