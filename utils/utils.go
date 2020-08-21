@@ -8,14 +8,13 @@ import (
 func NewGenesisBlock() *block.Block {
 	block := &block.Block{}
 	block.SetHash("Genesis")
-	block.SetAmount(100)
 	return block
 }
 
 func NewCoinbase(pubKey string, value uint64) *transaction.Transaction {
-	tx := transaction.New()
-	tx.AddOutput(transaction.NewOutput(0, pubKey, value))
-	tx.CalcHash()
-	tx.Sign()
-	return tx
+	// tx := transaction.New()
+	// tx.AddOutput(transaction.NewOutput(0, pubKey, value))
+	// tx.CalcHash()
+	// tx.Sign()
+	// return tx
 }

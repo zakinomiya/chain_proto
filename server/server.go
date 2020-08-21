@@ -48,7 +48,6 @@ func (server *Server) Start() error {
 
 func (server *Server) test() {
 	firstBlock := block.New()
-	firstBlock.SetAmount(100)
 	firstBlock.SetHash("First Block")
 	fmt.Printf("New block. %#v", firstBlock)
 

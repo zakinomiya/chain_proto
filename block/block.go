@@ -2,27 +2,33 @@ package block
 
 import (
 	"go_chain/transaction"
-	"time"
 )
 
+type BlockHeader struct {
+	prevBlockHash string
+	merkleRoot    string
+	timestamp     uint32
+	nonce         uint32
+}
+
+func NewHeader() *BlockHeader {
+	return &BlockHeader{}
+}
+
 type Block struct {
-	timestamp    int64
+	header       *BlockHeader
 	hash         string
-	amount       int
-	transactions []transaction.Transaction
+	transactions []*transaction.Transaction
 	signerAddr   string
 }
 
 func New() *Block {
-	return &Block{time.Now().Unix(), "some hash", 100, []transaction.Transaction{}, "Miner"}
+	header := NewHeader()
+	return &Block{header, "some hash", nil, "Miner"}
 }
 
 func (block *Block) Hash() string {
 	return block.hash
-}
-
-func (block *Block) Amount() int {
-	return block.amount
 }
 
 func (block *Block) SetHash(hash string) *Block {
@@ -30,7 +36,6 @@ func (block *Block) SetHash(hash string) *Block {
 	return block
 }
 
-func (block *Block) SetAmount(amount int) *Block {
-	block.amount = amount
-	return block
+func (block *Block) HashBlock() {
+
 }
