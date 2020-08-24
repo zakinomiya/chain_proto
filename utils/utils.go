@@ -12,9 +12,9 @@ func NewGenesisBlock() *block.Block {
 }
 
 func NewCoinbase(pubKey string, value uint64) *transaction.Transaction {
-	// tx := transaction.New()
-	// tx.AddOutput(transaction.NewOutput(0, pubKey, value))
-	// tx.CalcHash()
-	// tx.Sign()
-	// return tx
+	tx := transaction.New()
+	tx.AddInput(transaction.NewInput(0, "some hash"))
+	tx.AddOutput(transaction.NewOutput("public key", 500))
+	tx.CalcHash()
+	return tx
 }

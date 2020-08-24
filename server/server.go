@@ -5,6 +5,7 @@ import (
 	"go_chain/block"
 	"go_chain/blockchain"
 	"go_chain/config"
+	"go_chain/utils"
 	"log"
 )
 
@@ -50,6 +51,11 @@ func (server *Server) test() {
 	firstBlock := block.New()
 	firstBlock.SetHash("First Block")
 	fmt.Printf("New block. %#v", firstBlock)
+
+	fmt.Println("Adding coinbase transaction")
+	tx := utils.NewCoinbase("some pubkey", 250)
+	fmt.Printf("Transaction hash: %x \n", tx.Hash())
+	firstBlock.AddTransaction(tx)
 
 	fmt.Println("Adding new block")
 	server.blockchain.AddNewBlock(firstBlock)

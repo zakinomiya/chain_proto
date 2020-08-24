@@ -39,3 +39,7 @@ func (block *Block) SetHash(hash string) *Block {
 func (block *Block) HashBlock() {
 
 }
+
+func (block *Block) AddTransaction(tx *transaction.Transaction) {
+	block.transactions = append(block.transactions, tx)
+}

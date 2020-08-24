@@ -46,3 +46,149 @@
 2020/08/20 23:06:44 server.go:40: Successfully started service Blockchain 
 2020/08/20 23:06:44 server.go:43: Successfully started the node
 2020/08/20 23:06:44 blockchain.go:56: Adding new block: &block.Block{timestamp:1597932404, hash:"First Block", amount:100, transactions:[]transaction.Transaction{}, signerAddr:"Miner"} 
+2020/08/24 21:58:22 server.go:35: Starting service Blockchain 
+2020/08/24 21:58:22 server.go:40: Successfully started service Blockchain 
+2020/08/24 21:58:22 server.go:43: Successfully started the node
+2020/08/24 21:58:22 blockchain.go:56: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a3f0), hash:"First Block", transactions:[]*transaction.Transaction(nil), signerAddr:"Miner"} 
+2020/08/24 22:02:21 server.go:36: Starting service Blockchain 
+2020/08/24 22:02:21 server.go:41: Successfully started service Blockchain 
+2020/08/24 22:02:21 server.go:44: Successfully started the node
+2020/08/24 22:02:21 transactions.go:41: action=AddInput
+2020/08/24 22:02:21 transactions.go:47: action=AddOutput
+2020/08/24 22:02:21 transactions.go:23: action=Hash
+2020/08/24 22:02:21 blockchain.go:56: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a3f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000066140)}, signerAddr:"Miner"} 
+2020/08/24 22:03:45 server.go:36: Starting service Blockchain 
+2020/08/24 22:03:45 server.go:41: Successfully started service Blockchain 
+2020/08/24 22:03:45 server.go:44: Successfully started the node
+2020/08/24 22:03:45 transactions.go:45: action=AddInput
+2020/08/24 22:03:45 transactions.go:51: action=AddOutput
+2020/08/24 22:03:45 transactions.go:27: action=CalcHash
+2020/08/24 22:03:45 blockchain.go:56: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a3f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000066140)}, signerAddr:"Miner"} 
+2020/08/24 22:08:33 server.go:36: Starting service Blockchain 
+2020/08/24 22:08:33 server.go:41: Successfully started service Blockchain 
+2020/08/24 22:08:33 server.go:44: Successfully started the node
+2020/08/24 22:08:33 transactions.go:45: action=AddInput
+2020/08/24 22:08:33 transactions.go:51: action=AddOutput
+2020/08/24 22:08:33 transactions.go:27: action=CalcHash
+2020/08/24 22:08:33 blockchain.go:56: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc0000903f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc0000b0360)}, signerAddr:"Miner"} 
+2020/08/24 22:18:16 server.go:36: Starting service Blockchain 
+2020/08/24 22:18:16 server.go:41: Successfully started service Blockchain 
+2020/08/24 22:18:16 server.go:44: Successfully started the node
+2020/08/24 22:18:16 transactions.go:68: action=AddInput
+2020/08/24 22:18:16 transactions.go:74: action=AddOutput
+2020/08/24 22:18:16 transactions.go:28: action=CalcHash
+2020/08/24 22:18:16 blockchain.go:56: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a3f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000024420)}, signerAddr:"Miner"} 
+2020/08/24 23:09:46 blockchain.go:35: No blocks found in the db. Creating the genesis block
+2020/08/24 23:09:46 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(nil), hash:"Genesis", transactions:[]*transaction.Transaction(nil), signerAddr:""} 
+2020/08/24 23:09:46 server.go:36: Starting service Blockchain 
+2020/08/24 23:09:46 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:09:46 server.go:44: Successfully started the node
+2020/08/24 23:09:46 transactions.go:59: action=AddInput
+2020/08/24 23:09:46 transactions.go:65: action=AddOutput
+2020/08/24 23:09:46 transactions.go:28: action=CalcHash
+2020/08/24 23:09:46 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a3f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000024420)}, signerAddr:"Miner"} 
+2020/08/24 23:11:35 blockchain.go:35: No blocks found in the db. Creating the genesis block
+2020/08/24 23:11:35 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(nil), hash:"Genesis", transactions:[]*transaction.Transaction(nil), signerAddr:""} 
+2020/08/24 23:11:35 server.go:36: Starting service Blockchain 
+2020/08/24 23:11:35 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:11:35 server.go:44: Successfully started the node
+2020/08/24 23:11:35 transactions.go:59: action=AddInput
+2020/08/24 23:11:35 transactions.go:65: action=AddOutput
+2020/08/24 23:11:35 transactions.go:28: action=CalcHash
+2020/08/24 23:11:35 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a450), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000024420)}, signerAddr:"Miner"} 
+2020/08/24 23:12:06 blockchain.go:35: No blocks found in the db. Creating the genesis block
+2020/08/24 23:12:06 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(nil), hash:"Genesis", transactions:[]*transaction.Transaction(nil), signerAddr:""} 
+2020/08/24 23:12:06 server.go:36: Starting service Blockchain 
+2020/08/24 23:12:06 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:12:06 server.go:44: Successfully started the node
+2020/08/24 23:12:06 transactions.go:59: action=AddInput
+2020/08/24 23:12:06 transactions.go:65: action=AddOutput
+2020/08/24 23:12:06 transactions.go:28: action=CalcHash
+2020/08/24 23:12:06 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc0000903f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc0000b0360)}, signerAddr:"Miner"} 
+2020/08/24 23:12:56 blockchain.go:35: No blocks found in the db. Creating the genesis block
+2020/08/24 23:12:56 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(nil), hash:"Genesis", transactions:[]*transaction.Transaction(nil), signerAddr:""} 
+2020/08/24 23:12:56 server.go:36: Starting service Blockchain 
+2020/08/24 23:12:56 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:12:56 server.go:44: Successfully started the node
+2020/08/24 23:12:56 transactions.go:59: action=AddInput
+2020/08/24 23:12:56 transactions.go:65: action=AddOutput
+2020/08/24 23:12:56 transactions.go:28: action=CalcHash
+2020/08/24 23:12:56 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc0000903f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc0000b0360)}, signerAddr:"Miner"} 
+2020/08/24 23:13:35 blockchain.go:37: No blocks found in the db. Creating the genesis block
+2020/08/24 23:13:35 blockchain.go:68: Adding new block: &block.Block{header:(*block.BlockHeader)(nil), hash:"Genesis", transactions:[]*transaction.Transaction(nil), signerAddr:""} 
+2020/08/24 23:13:35 server.go:36: Starting service Blockchain 
+2020/08/24 23:13:35 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:13:35 server.go:44: Successfully started the node
+2020/08/24 23:13:35 transactions.go:59: action=AddInput
+2020/08/24 23:13:35 transactions.go:65: action=AddOutput
+2020/08/24 23:13:35 transactions.go:28: action=CalcHash
+2020/08/24 23:13:35 blockchain.go:68: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc0000903f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc0000b0360)}, signerAddr:"Miner"} 
+2020/08/24 23:13:46 blockchain.go:37: No blocks found in the db. Creating the genesis block
+2020/08/24 23:13:46 blockchain.go:68: Adding new block: &block.Block{header:(*block.BlockHeader)(nil), hash:"Genesis", transactions:[]*transaction.Transaction(nil), signerAddr:""} 
+2020/08/24 23:13:46 server.go:36: Starting service Blockchain 
+2020/08/24 23:13:46 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:13:46 server.go:44: Successfully started the node
+2020/08/24 23:13:46 transactions.go:59: action=AddInput
+2020/08/24 23:13:46 transactions.go:65: action=AddOutput
+2020/08/24 23:13:46 transactions.go:28: action=CalcHash
+2020/08/24 23:13:46 blockchain.go:68: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a3f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000024420)}, signerAddr:"Miner"} 
+2020/08/24 23:14:00 blockchain.go:41: Block record found in the db. Restoring the blockchain
+2020/08/24 23:14:00 server.go:36: Starting service Blockchain 
+2020/08/24 23:14:00 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:14:00 server.go:44: Successfully started the node
+2020/08/24 23:14:00 transactions.go:59: action=AddInput
+2020/08/24 23:14:00 transactions.go:65: action=AddOutput
+2020/08/24 23:14:00 transactions.go:28: action=CalcHash
+2020/08/24 23:14:00 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a3f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000024420)}, signerAddr:"Miner"} 
+2020/08/24 23:14:36 blockchain.go:35: No blocks found in the db. Creating the genesis block
+2020/08/24 23:14:36 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(nil), hash:"Genesis", transactions:[]*transaction.Transaction(nil), signerAddr:""} 
+2020/08/24 23:14:36 server.go:36: Starting service Blockchain 
+2020/08/24 23:14:36 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:14:36 server.go:44: Successfully started the node
+2020/08/24 23:14:36 transactions.go:59: action=AddInput
+2020/08/24 23:14:36 transactions.go:65: action=AddOutput
+2020/08/24 23:14:36 transactions.go:28: action=CalcHash
+2020/08/24 23:14:36 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a3f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000024420)}, signerAddr:"Miner"} 
+2020/08/24 23:14:42 blockchain.go:41: Block record found in the db. Restoring the blockchain
+2020/08/24 23:14:42 server.go:36: Starting service Blockchain 
+2020/08/24 23:14:42 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:14:42 server.go:44: Successfully started the node
+2020/08/24 23:14:42 transactions.go:59: action=AddInput
+2020/08/24 23:14:42 transactions.go:65: action=AddOutput
+2020/08/24 23:14:42 transactions.go:28: action=CalcHash
+2020/08/24 23:14:42 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc0000903f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc0000b0360)}, signerAddr:"Miner"} 
+2020/08/24 23:15:51 blockchain.go:35: No blocks found in the db. Creating the genesis block
+2020/08/24 23:15:51 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(nil), hash:"Genesis", transactions:[]*transaction.Transaction(nil), signerAddr:""} 
+2020/08/24 23:15:51 server.go:36: Starting service Blockchain 
+2020/08/24 23:15:51 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:15:51 server.go:44: Successfully started the node
+2020/08/24 23:15:51 transactions.go:59: action=AddInput
+2020/08/24 23:15:51 transactions.go:65: action=AddOutput
+2020/08/24 23:15:51 transactions.go:28: action=CalcHash
+2020/08/24 23:15:51 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a3f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000024420)}, signerAddr:"Miner"} 
+2020/08/24 23:16:15 blockchain.go:41: Block record found in the db. Restoring the blockchain
+2020/08/24 23:16:15 server.go:36: Starting service Blockchain 
+2020/08/24 23:16:15 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:16:15 server.go:44: Successfully started the node
+2020/08/24 23:16:15 transactions.go:59: action=AddInput
+2020/08/24 23:16:15 transactions.go:65: action=AddOutput
+2020/08/24 23:16:15 transactions.go:28: action=CalcHash
+2020/08/24 23:16:15 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00006a3f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000024420)}, signerAddr:"Miner"} 
+2020/08/24 23:16:22 blockchain.go:35: No blocks found in the db. Creating the genesis block
+2020/08/24 23:16:22 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(nil), hash:"Genesis", transactions:[]*transaction.Transaction(nil), signerAddr:""} 
+2020/08/24 23:16:22 server.go:36: Starting service Blockchain 
+2020/08/24 23:16:22 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:16:22 server.go:44: Successfully started the node
+2020/08/24 23:16:22 transactions.go:59: action=AddInput
+2020/08/24 23:16:22 transactions.go:65: action=AddOutput
+2020/08/24 23:16:22 transactions.go:28: action=CalcHash
+2020/08/24 23:16:22 blockchain.go:66: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc0000903f0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc0000b0360)}, signerAddr:"Miner"} 
+2020/08/24 23:19:15 blockchain.go:40: No blocks found in the db. Creating the genesis block
+2020/08/24 23:19:15 blockchain.go:71: Adding new block: &block.Block{header:(*block.BlockHeader)(nil), hash:"Genesis", transactions:[]*transaction.Transaction(nil), signerAddr:""} 
+2020/08/24 23:19:15 server.go:36: Starting service Blockchain 
+2020/08/24 23:19:15 server.go:41: Successfully started service Blockchain 
+2020/08/24 23:19:15 server.go:44: Successfully started the node
+2020/08/24 23:19:15 transactions.go:59: action=AddInput
+2020/08/24 23:19:15 transactions.go:65: action=AddOutput
+2020/08/24 23:19:15 transactions.go:28: action=CalcHash
+2020/08/24 23:19:15 blockchain.go:71: Adding new block: &block.Block{header:(*block.BlockHeader)(0xc00018e2a0), hash:"First Block", transactions:[]*transaction.Transaction{(*transaction.Transaction)(0xc000182360)}, signerAddr:"Miner"} 
