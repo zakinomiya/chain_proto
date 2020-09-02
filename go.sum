@@ -1,2 +1,4 @@
+github.com/NebulousLabs/merkletree v0.0.0-20181203152040-08d5d54b07f5 h1:pk9SclNGplPbF6YDIDKMhHh9SaUWcoxPkMr7zdu1hfk=
+github.com/NebulousLabs/merkletree v0.0.0-20181203152040-08d5d54b07f5/go.mod h1:Cn056wBLKay+uIS9LJn7ymwhgC5mqbOtG6iOhEvyy4M=
 gopkg.in/ini.v1 v1.60.0 h1:P5ZzC7RJO04094NJYlEnBdFK2wwmnCAy/+7sAzvWs60=
 gopkg.in/ini.v1 v1.60.0/go.mod h1:pNLf8WUiyNEtQjuu5G5vTm06TEv9tsIgeAvK8hOrP4k=

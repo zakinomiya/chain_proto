@@ -49,7 +49,6 @@ func (server *Server) Start() error {
 
 func (server *Server) test() {
 	firstBlock := block.New()
-	firstBlock.SetHash("First Block")
 	fmt.Printf("New block. %#v", firstBlock)
 
 	fmt.Println("Adding coinbase transaction")
@@ -57,8 +56,5 @@ func (server *Server) test() {
 	fmt.Printf("Transaction hash: %x \n", tx.Hash())
 	firstBlock.AddTransaction(tx)
 
-	fmt.Println("Adding new block")
-	server.blockchain.AddNewBlock(firstBlock)
-
-	fmt.Printf("Blocks in the blockchain: %#v", server.blockchain.Blocks())
+	server.blockchain.Mining(firstBlock)
 }

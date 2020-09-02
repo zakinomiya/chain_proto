@@ -1,11 +1,14 @@
 package blockchain
 
 import (
+	"context"
+	"fmt"
 	"go_chain/block"
 	"go_chain/config"
 	"go_chain/repository"
 	"go_chain/utils"
 	"log"
+	"runtime"
 	"sync"
 )
 
@@ -71,4 +74,19 @@ func (bc *Blockchain) AddNewBlock(block *block.Block) (*Blockchain, error) {
 	log.Printf("Adding new block: %#v \n", block)
 	bc.blocks = append(bc.blocks, block)
 	return bc, nil
+}
+
+func (bc *Blockchain) Mining(block *block.Block) {
+	ctx := context.Background()
+	ctxP, cancel := context.WithCancel(ctx)
+
+	for i := 0; i < runtime.NumCPU(); i++ {
+		go block.Work(ctxP, 5)
+	}
+
+	ctxP.Done()
+	cancel()
+
+	fmt.Println("Canceled")
+	log.Printf("block hash is %x", block.Hash())
 }
