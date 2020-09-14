@@ -5,10 +5,10 @@ import (
 	"sync"
 )
 
-var repositories *Repositories
+var repository *Repository
 var once sync.Once
 
-type Repositories struct {
+type Repository struct {
 	BlockRepository IBlockRepostitory
 }
 
@@ -17,8 +17,8 @@ type IBlockRepostitory interface {
 	GetAll() ([]*block.Block, error)
 }
 
-func New() *Repositories {
-	once.Do(func() { repositories = &Repositories{newBlockRepository()} })
+func New() *Repository {
+	once.Do(func() { repository = &Repository{newBlockRepository()} })
 
-	return repositories
+	return repository
 }

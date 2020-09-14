@@ -7702,3 +7702,984 @@
 2020/09/02 22:55:17 server.go:34: Starting service Blockchain 
 2020/09/02 22:55:17 server.go:39: Successfully started service Blockchain 
 2020/09/02 22:55:17 server.go:42: Successfully started the node
+2020/09/14 23:50:10 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:50:10 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:50:10 server.go:46: Starting service Blockchain 
+2020/09/14 23:50:10 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:50:10 server.go:46: Starting service Miner 
+2020/09/14 23:50:10 miner.go:33: Mining process started
+2020/09/14 23:50:10 server.go:51: Successfully started service Miner 
+2020/09/14 23:50:10 server.go:54: Successfully started the node
+2020/09/14 23:50:10 transactions.go:59: action=AddInput
+2020/09/14 23:50:10 transactions.go:65: action=AddOutput
+2020/09/14 23:50:10 transactions.go:28: action=CalcHash
+2020/09/14 23:51:27 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:51:27 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:51:27 server.go:46: Starting service Blockchain 
+2020/09/14 23:51:27 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:51:27 server.go:46: Starting service Miner 
+2020/09/14 23:51:27 miner.go:34: Mining process started
+2020/09/14 23:51:27 server.go:51: Successfully started service Miner 
+2020/09/14 23:51:27 server.go:54: Successfully started the node
+2020/09/14 23:51:27 transactions.go:59: action=AddInput
+2020/09/14 23:51:27 transactions.go:65: action=AddOutput
+2020/09/14 23:51:27 transactions.go:28: action=CalcHash
+2020/09/14 23:51:27 miner.go:82: Started generating a new block
+2020/09/14 23:51:27 miner.go:82: Started generating a new block
+2020/09/14 23:51:27 miner.go:82: Started generating a new block
+2020/09/14 23:51:27 transactions.go:59: action=AddInput
+2020/09/14 23:51:43 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:51:43 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:51:43 server.go:46: Starting service Blockchain 
+2020/09/14 23:51:43 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:51:43 server.go:46: Starting service Miner 
+2020/09/14 23:51:43 miner.go:34: Mining process started
+2020/09/14 23:51:43 server.go:51: Successfully started service Miner 
+2020/09/14 23:51:43 server.go:54: Successfully started the node
+2020/09/14 23:51:43 transactions.go:59: action=AddInput
+2020/09/14 23:51:43 transactions.go:65: action=AddOutput
+2020/09/14 23:51:43 transactions.go:28: action=CalcHash
+2020/09/14 23:52:09 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:52:09 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:52:09 server.go:46: Starting service Blockchain 
+2020/09/14 23:52:09 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:52:09 server.go:46: Starting service Miner 
+2020/09/14 23:52:09 miner.go:34: Mining process started
+2020/09/14 23:52:09 server.go:51: Successfully started service Miner 
+2020/09/14 23:52:09 server.go:54: Successfully started the node
+2020/09/14 23:52:15 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:52:15 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:52:15 server.go:46: Starting service Blockchain 
+2020/09/14 23:52:15 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:52:15 server.go:46: Starting service Miner 
+2020/09/14 23:52:15 miner.go:34: Mining process started
+2020/09/14 23:52:15 server.go:51: Successfully started service Miner 
+2020/09/14 23:52:15 server.go:54: Successfully started the node
+2020/09/14 23:52:16 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:52:16 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:52:16 server.go:46: Starting service Blockchain 
+2020/09/14 23:52:16 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:52:16 server.go:46: Starting service Miner 
+2020/09/14 23:52:16 miner.go:34: Mining process started
+2020/09/14 23:52:16 server.go:51: Successfully started service Miner 
+2020/09/14 23:52:16 server.go:54: Successfully started the node
+2020/09/14 23:53:38 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:53:38 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:53:38 server.go:46: Starting service Blockchain 
+2020/09/14 23:53:38 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:53:38 server.go:46: Starting service Miner 
+2020/09/14 23:53:38 miner.go:34: Mining process started
+2020/09/14 23:53:38 server.go:51: Successfully started service Miner 
+2020/09/14 23:53:38 server.go:54: Successfully started the node
+2020/09/14 23:53:44 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:53:44 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:53:44 server.go:46: Starting service Blockchain 
+2020/09/14 23:53:44 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:53:44 server.go:46: Starting service Miner 
+2020/09/14 23:53:44 miner.go:34: Mining process started
+2020/09/14 23:53:44 server.go:51: Successfully started service Miner 
+2020/09/14 23:53:44 server.go:54: Successfully started the node
+2020/09/14 23:53:48 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:53:48 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:53:48 server.go:46: Starting service Blockchain 
+2020/09/14 23:53:48 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:53:48 server.go:46: Starting service Miner 
+2020/09/14 23:53:48 miner.go:34: Mining process started
+2020/09/14 23:53:48 server.go:51: Successfully started service Miner 
+2020/09/14 23:53:48 server.go:54: Successfully started the node
+2020/09/14 23:53:50 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:53:50 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:53:50 server.go:46: Starting service Blockchain 
+2020/09/14 23:53:50 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:53:50 server.go:46: Starting service Miner 
+2020/09/14 23:53:50 miner.go:34: Mining process started
+2020/09/14 23:53:50 server.go:51: Successfully started service Miner 
+2020/09/14 23:53:50 server.go:54: Successfully started the node
+2020/09/14 23:59:04 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:59:04 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:59:04 server.go:46: Starting service Blockchain 
+2020/09/14 23:59:04 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:59:04 server.go:46: Starting service Miner 
+2020/09/14 23:59:04 miner.go:34: Mining process started
+2020/09/14 23:59:04 server.go:51: Successfully started service Miner 
+2020/09/14 23:59:04 server.go:54: Successfully started the node
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 miner.go:83: Started generating a new block
+2020/09/14 23:59:04 transactions.go:59: action=AddInput
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:04 transactions.go:65: action=AddOutput
+2020/09/14 23:59:04 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:09 transactions.go:59: action=AddInput
+2020/09/14 23:59:09 transactions.go:65: action=AddOutput
+2020/09/14 23:59:09 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:59: action=AddInput
+2020/09/14 23:59:14 transactions.go:65: action=AddOutput
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:14 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/14 23:59:54 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/14 23:59:54 server.go:46: Starting service Blockchain 
+2020/09/14 23:59:54 server.go:51: Successfully started service Blockchain 
+2020/09/14 23:59:54 server.go:46: Starting service Miner 
+2020/09/14 23:59:54 miner.go:34: Mining process started
+2020/09/14 23:59:54 server.go:51: Successfully started service Miner 
+2020/09/14 23:59:54 server.go:54: Successfully started the node
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 miner.go:83: Started generating a new block
+2020/09/14 23:59:54 transactions.go:59: action=AddInput
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 transactions.go:65: action=AddOutput
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:54 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:59: action=AddInput
+2020/09/14 23:59:55 transactions.go:65: action=AddOutput
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:55 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:59: action=AddInput
+2020/09/14 23:59:56 transactions.go:65: action=AddOutput
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:56 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:57 transactions.go:59: action=AddInput
+2020/09/14 23:59:57 transactions.go:65: action=AddOutput
+2020/09/14 23:59:57 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:59: action=AddInput
+2020/09/14 23:59:58 transactions.go:65: action=AddOutput
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:58 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:59: action=AddInput
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/14 23:59:59 transactions.go:65: action=AddOutput
+2020/09/14 23:59:59 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:00 transactions.go:59: action=AddInput
+2020/09/15 00:00:00 transactions.go:65: action=AddOutput
+2020/09/15 00:00:00 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:59: action=AddInput
+2020/09/15 00:00:01 transactions.go:65: action=AddOutput
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:01 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:02 transactions.go:59: action=AddInput
+2020/09/15 00:00:02 transactions.go:65: action=AddOutput
+2020/09/15 00:00:02 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:59: action=AddInput
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:03 transactions.go:65: action=AddOutput
+2020/09/15 00:00:03 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:59: action=AddInput
+2020/09/15 00:00:04 transactions.go:65: action=AddOutput
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:04 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:59: action=AddInput
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:05 transactions.go:65: action=AddOutput
+2020/09/15 00:00:05 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:59: action=AddInput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:65: action=AddOutput
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:06 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:59: action=AddInput
+2020/09/15 00:00:07 transactions.go:65: action=AddOutput
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:07 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:59: action=AddInput
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:65: action=AddOutput
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:08 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:59: action=AddInput
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:09 transactions.go:65: action=AddOutput
+2020/09/15 00:00:09 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:10 transactions.go:59: action=AddInput
+2020/09/15 00:00:10 transactions.go:65: action=AddOutput
+2020/09/15 00:00:10 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:11 transactions.go:59: action=AddInput
+2020/09/15 00:00:11 transactions.go:65: action=AddOutput
+2020/09/15 00:00:11 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:59: action=AddInput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:00:12 transactions.go:65: action=AddOutput
+2020/09/15 00:00:12 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 blockchain.go:55: No blocks found in the db. Creating the genesis block
+2020/09/15 00:01:45 blockchain.go:98: Adding new block: &block.Block{mut:(*sync.Mutex)(nil), header:(*block.BlockHeader)(nil), hash:[32]uint8{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, transactions:[]*transaction.Transaction(nil), signerAddr:"", extraNonce:0x0} 
+2020/09/15 00:01:45 server.go:46: Starting service Blockchain 
+2020/09/15 00:01:45 server.go:51: Successfully started service Blockchain 
+2020/09/15 00:01:45 server.go:46: Starting service Miner 
+2020/09/15 00:01:45 miner.go:34: Mining process started
+2020/09/15 00:01:45 server.go:51: Successfully started service Miner 
+2020/09/15 00:01:45 server.go:54: Successfully started the node
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 miner.go:87: Started generating a new block
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 transactions.go:59: action=AddInput
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash
+2020/09/15 00:01:45 transactions.go:65: action=AddOutput
+2020/09/15 00:01:45 transactions.go:28: action=CalcHash

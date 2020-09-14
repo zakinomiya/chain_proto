@@ -5,6 +5,9 @@ import (
 	"go_chain/block"
 	"go_chain/blockchain"
 	"go_chain/config"
+	"go_chain/gateway"
+	"go_chain/miner"
+	"go_chain/repository"
 	"go_chain/utils"
 	"log"
 )
@@ -18,18 +21,25 @@ type Service interface {
 type Server struct {
 	config     *config.ConfigSettings
 	blockchain *blockchain.Blockchain
+	miner      *miner.Miner
+	gateway    *gateway.Gateway
+	repository *repository.Repository
 }
 
 func New(config *config.ConfigSettings) *Server {
-	blockchain := blockchain.New(nil)
+	blockchain := blockchain.New(config)
+	miner := miner.New(blockchain)
+	gateway := &gateway.Gateway{}
+	repository := repository.New()
 
-	return &Server{config, blockchain}
+	return &Server{config, blockchain, miner, gateway, repository}
 }
 
 func (server *Server) Start() error {
 
 	services := []Service{
 		server.blockchain,
+		server.miner,
 	}
 
 	for _, s := range services {
@@ -43,7 +53,7 @@ func (server *Server) Start() error {
 
 	log.Println("Successfully started the node")
 
-	server.test()
+	// server.test()
 	return nil
 }
 
@@ -52,9 +62,6 @@ func (server *Server) test() {
 	fmt.Printf("New block. %#v", firstBlock)
 
 	fmt.Println("Adding coinbase transaction")
-	tx := utils.NewCoinbase("some pubkey", 250)
+	tx := utils.NewCoinbase([]byte("some pubkey"), 250)
 	fmt.Printf("Transaction hash: %x \n", tx.Hash())
-	firstBlock.AddTransaction(tx)
-
-	server.blockchain.Mining(firstBlock)
 }

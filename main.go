@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	c := make(chan struct{})
 	utils.LogginSettings(config.Config.LogFile)
 
 	server := server.New(&config.Config)
@@ -17,4 +18,6 @@ func main() {
 		log.Printf("Failed to start server. %s", err.Error())
 		os.Exit(1)
 	}
+
+	<-c
 }
