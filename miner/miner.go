@@ -8,14 +8,14 @@ import (
 	"go_chain/utils"
 	"log"
 	"runtime"
+	"strings"
 	"sync"
-	"time"
 )
 
 type Miner struct {
-	transactionPool []*transaction.Transaction
-	quit            chan struct{}
 	blockLock       sync.Mutex
+	quit            chan struct{}
+	transactionPool []*transaction.Transaction
 	wg              sync.WaitGroup
 	workers         []chan struct{}
 	pubKey          []byte /// TODO read from config
@@ -27,23 +27,36 @@ func New(bc blockchain.BlockchainInterface) *Miner {
 }
 
 func (m *Miner) Start() error {
+	if m.quit != nil {
+		log.Println("debug: Mining process is already running")
+		return nil
+	}
+
 	m.quit = make(chan struct{})
-	m.wg.Add(1)
 	go m.mining()
 
-	log.Println("Mining process started")
+	log.Println("debug: Mining process started")
 	return nil
 }
 
 func (m *Miner) Stop() {
+	if m.quit == nil {
+		log.Println("debug: No mining process is running")
+		return
+	}
 	close(m.quit)
-	m.wg.Wait()
-
-	log.Println("Mining process stopped")
+	m.quit = nil
+	log.Println("debug: Mining process stopped")
 }
 
 func (m *Miner) ServiceName() string {
 	return "Miner"
+}
+
+func (m *Miner) Restart() {
+	log.Println("debug: Restarting Miner")
+	m.Stop()
+	m.Start()
 }
 
 func (m *Miner) AddTransaction(tx *transaction.Transaction) {
@@ -52,11 +65,9 @@ func (m *Miner) AddTransaction(tx *transaction.Transaction) {
 
 func (m *Miner) mining() {
 	runWorkers := func(workersCount uint32) {
-		fmt.Printf("CPU NUM: %v \n", workersCount)
 		for i := uint32(0); i < workersCount; i++ {
-			fmt.Printf("worker no. %v \n", i)
 			quit := make(chan struct{})
-			m.workers = append(m.workers)
+			m.workers = append(m.workers, quit)
 			m.wg.Add(1)
 
 			go m.generateBlock(quit)
@@ -64,41 +75,61 @@ func (m *Miner) mining() {
 	}
 	runWorkers(uint32(runtime.NumCPU()))
 
-	select {
-	case <-m.quit:
-		for _, w := range m.workers {
-			close(w)
+	for {
+		select {
+		case <-m.quit:
+			log.Println("debug: Someone closed the quit channel")
+			return
+		default:
+			//
 		}
 	}
+
 }
 
-func (m *Miner) findNonce(block *block.Block, quit chan struct{}) bool {
+func (m *Miner) findNonce(block *block.Block, quit chan struct{}, difficulty uint8) bool {
+	consecutiveZeros := strings.Repeat("0", int(difficulty))
 
-	time.Sleep(time.Second * 1)
+	for {
+		select {
+		case <-m.quit:
+			return false
+		default:
+			//
+		}
+		hash := block.HashBlock()
 
-	if utils.RandomUint32() > 50 {
-		quit <- struct{}{}
+		if strings.HasPrefix(fmt.Sprintf("%x", hash), consecutiveZeros) {
+			block.SetHash(hash)
+			log.Printf("info: Found a valid nonce: %v \n", block.Nonce())
+			return true
+		}
+		block.IncrementNonce()
 	}
-
-	return true
 }
 
 func (m *Miner) generateBlock(quit chan struct{}) {
-	log.Println("Started generating a new block")
+	log.Println("trace: Started generating a new block")
 
-OUTER:
 	for {
-
 		select {
-		case <-quit:
-			break OUTER
+		case <-m.quit:
+			log.Println("trace: Breaking OUTER: action=generateBlock")
+			return
 		default:
 			//
 		}
 
 		block := block.New()
+		block.SetExtraNonce()
 		coinbase := utils.NewCoinbase(m.pubKey, 25)
 		block.SetTranscations(append([]*transaction.Transaction{coinbase}, m.transactionPool...))
-		m.findNonce(block, quit)
+		block.CalcTxHash()
+		if m.findNonce(block, quit, m.blockchain.Difficulty()) {
+			m.blockchain.AddBlock(block)
+			log.Printf("info: %x \n", block.Hash())
+			log.Println("debug: Closing the quit channel")
+			m.Restart()
+		}
 	}
 }

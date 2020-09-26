@@ -1,5 +1,7 @@
 github.com/NebulousLabs/merkletree v0.0.0-20181203152040-08d5d54b07f5 h1:pk9SclNGplPbF6YDIDKMhHh9SaUWcoxPkMr7zdu1hfk=
 github.com/NebulousLabs/merkletree v0.0.0-20181203152040-08d5d54b07f5/go.mod h1:Cn056wBLKay+uIS9LJn7ymwhgC5mqbOtG6iOhEvyy4M=
+github.com/comail/colog v0.0.0-20160416085026-fba8e7b1f46c h1:bzYQ6WpR+t35/y19HUkolcg7SYeWZ15IclC9Z4naGHI=
+github.com/comail/colog v0.0.0-20160416085026-fba8e7b1f46c/go.mod h1:1WwgAwMKQLYG5I2FBhpVx94YTOAuB2W59IZ7REjSE6Y=
 github.com/google/go-cmp v0.2.0/go.mod h1:oXzfMopK8JAjlY9xF4vHSVASa0yLyX7SntLO5aqRK0M=
 github.com/google/subcommands v1.0.1 h1:/eqq+otEXm5vhfBrbREPCSVQbvofip6kIz+mX5TUH7k=
 github.com/google/subcommands v1.0.1/go.mod h1:ZjhPrFU+Olkh9WazFPsl27BQ4UPiG37m3yTrtFlrHVk=

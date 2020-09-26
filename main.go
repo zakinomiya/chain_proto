@@ -9,8 +9,7 @@ import (
 )
 
 func main() {
-	c := make(chan struct{})
-	utils.LogginSettings(config.Config.LogFile)
+	utils.LogginSettings(config.Config.LogFile, config.Config.DefaultLogLevel)
 
 	server := server.New(&config.Config)
 
@@ -19,5 +18,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	<-c
+	c := make(chan int)
+
+	for {
+		select {
+		case <-c:
+
+		}
+	}
+
 }

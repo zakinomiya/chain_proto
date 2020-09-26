@@ -25,7 +25,7 @@ func (tx *Transaction) Hash() [32]byte {
 }
 
 func (tx *Transaction) CalcHash() error {
-	log.Println("action=CalcHash")
+	log.Println("debug: action=CalcHash")
 	hash := sha256.New()
 
 	for _, vin := range tx.vins {
@@ -56,13 +56,13 @@ func (tx *Transaction) addHash(h hash.Hash, strs []string) error {
 }
 
 func (tx *Transaction) AddInput(input *Input) *Transaction {
-	log.Println("action=AddInput")
+	log.Println("debug: action=AddInput")
 	tx.vins = append(tx.vins, input)
 	return tx
 }
 
 func (tx *Transaction) AddOutput(output *Output) *Transaction {
-	log.Println("action=AddOutput")
+	log.Println("debug: action=AddOutput")
 	tx.vouts = append(tx.vouts, output)
 	return tx
 }

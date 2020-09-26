@@ -1,8 +1,6 @@
 package blockchain
 
 import (
-	"context"
-	"fmt"
 	"go_chain/block"
 	"go_chain/config"
 	"go_chain/repository"
@@ -47,18 +45,18 @@ func initializeBlockchain() error {
 	blocks, err := blockchain.repositories.BlockRepository.GetAll()
 
 	if err != nil {
-		log.Fatalln("Failed to initialise blockchain")
+		log.Fatalln("error: Failed to initialise blockchain")
 		return err
 	}
 
 	if len(blocks) == 0 {
-		log.Println("No blocks found in the db. Creating the genesis block")
+		log.Println("info: No blocks found in the db. Creating the genesis block")
 		genesis := utils.NewGenesisBlock()
 		blockchain.AddBlock(genesis)
 		return nil
 	}
 
-	log.Println("Block record found in the db. Restoring the blockchain")
+	log.Println("info: Block record found in the db. Restoring the blockchain")
 	blockchain.height = uint32(len(blocks))
 	blockchain.ReplaceBlocks(blocks)
 	return nil
@@ -69,6 +67,10 @@ func (BC *Blockchain) ServiceName() string {
 }
 
 func (bc *Blockchain) Start() error {
+	if bc.difficulty == 0 {
+		bc.difficulty = 5
+	}
+
 	return nil
 }
 
@@ -95,19 +97,11 @@ func (bc *Blockchain) ReplaceBlocks(blocks []*block.Block) {
 }
 
 func (bc *Blockchain) AddBlock(block *block.Block) {
-	log.Printf("Adding new block: %#v \n", block)
+	log.Printf("debug: Adding new block: %#v \n", block)
+	log.Printf("debug: Now the length of the chain is %d:\n", len(bc.blocks))
 	bc.blocks = append(bc.blocks, block)
 }
 
-func (bc *Blockchain) Mining(block *block.Block) {
-	ctx := context.Background()
-	// ctxP, cancel := context.WithCancel(ctx)
+func (bc *Blockchain) verifyBlock(block *block.Block) {
 
-	for i := 0; i < 1000; i++ {
-		// go block.Work(ctxP, 3)
-	}
-
-	// cancel()
-	fmt.Println("Canceled")
-	log.Printf("block hash is %x", ctx.Done())
 }

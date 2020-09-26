@@ -53,7 +53,6 @@ func (server *Server) Start() error {
 
 	log.Println("Successfully started the node")
 
-	// server.test()
 	return nil
 }
 

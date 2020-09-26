@@ -16,10 +16,11 @@ type RpcConfig struct {
 }
 
 type ConfigSettings struct {
-	LogFile   string
-	secretKey string
-	DBConf    *DBConfig
-	RpcConf   *RpcConfig
+	LogFile         string
+	DefaultLogLevel string
+	secretKey       string
+	DBConf          *DBConfig
+	RpcConf         *RpcConfig
 }
 
 var Config ConfigSettings
@@ -27,12 +28,13 @@ var Config ConfigSettings
 func init() {
 	cfg, err := ini.Load("config.ini")
 	if err != nil {
-		log.Printf("Failed to read config file. ERROR: %v", err)
+		log.Printf("error: Failed to read config file. ERROR: %v", err)
 		os.Exit(1)
 	}
 
 	Config = ConfigSettings{
-		LogFile: cfg.Section("general").Key("log_file").String(),
+		LogFile:         cfg.Section("general").Key("log_file").String(),
+		DefaultLogLevel: cfg.Section("general").Key("default_log_level").String(),
 	}
 }
 
