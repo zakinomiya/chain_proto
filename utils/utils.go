@@ -7,14 +7,16 @@ import (
 )
 
 func NewGenesisBlock() *block.Block {
-	block := &block.Block{}
+	block := block.New()
+	genesis := NewCoinbase([]byte("This is Minimum Viable Blockchain"), 25)
+	block.SetTranscations([]*transaction.Transaction{genesis})
+	block.CalcMerkleTree()
 	return block
 }
 
 func NewCoinbase(pubKey []byte, value uint64) *transaction.Transaction {
 	tx := transaction.New()
-	tx.AddInput(transaction.NewInput(0, "some hash"))
-	tx.AddOutput(transaction.NewOutput("public key", 500))
+	tx.AddOutput(transaction.NewOutput())
 	tx.CalcHash()
 	return tx
 }

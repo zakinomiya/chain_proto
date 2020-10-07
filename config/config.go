@@ -16,9 +16,11 @@ type RpcConfig struct {
 }
 
 type ConfigSettings struct {
+	ChainID         uint32
 	LogFile         string
 	DefaultLogLevel string
-	secretKey       string
+	minerSecretKey  [32]byte
+	MinerPubKey     [32]byte
 	DBConf          *DBConfig
 	RpcConf         *RpcConfig
 }
@@ -33,11 +35,12 @@ func init() {
 	}
 
 	Config = ConfigSettings{
+		ChainID:         uint32(cfg.Section("chain_info").Key("chain_id").InUint(1995, []uint{})),
 		LogFile:         cfg.Section("general").Key("log_file").String(),
 		DefaultLogLevel: cfg.Section("general").Key("default_log_level").String(),
 	}
 }
 
-func (c *ConfigSettings) SecretKey() string {
-	return c.secretKey
+func (c *ConfigSettings) MinerSecretKey() [32]byte {
+	return c.minerSecretKey
 }

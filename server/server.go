@@ -62,5 +62,5 @@ func (server *Server) test() {
 
 	fmt.Println("Adding coinbase transaction")
 	tx := utils.NewCoinbase([]byte("some pubkey"), 250)
-	fmt.Printf("Transaction hash: %x \n", tx.Hash())
+	fmt.Printf("Transaction hash: %x \n", tx.TxHash())
 }

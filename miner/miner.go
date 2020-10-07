@@ -9,17 +9,14 @@ import (
 	"log"
 	"runtime"
 	"strings"
-	"sync"
 )
 
 type Miner struct {
-	blockLock       sync.Mutex
 	quit            chan struct{}
 	transactionPool []*transaction.Transaction
-	wg              sync.WaitGroup
-	workers         []chan struct{}
-	pubKey          []byte /// TODO read from config
 	blockchain      blockchain.BlockchainInterface
+	minerPubKey     [32]byte
+	minerSecKey     [32]byte
 }
 
 func New(bc blockchain.BlockchainInterface) *Miner {
@@ -37,6 +34,13 @@ func (m *Miner) Start() error {
 
 	log.Println("debug: Mining process started")
 	return nil
+}
+
+func (m *Miner) CalcGenesis() *block.Block {
+	gen := utils.NewGenesisBlock()
+
+	m.findNonce(gen, make(chan struct{}), 5)
+	return gen
 }
 
 func (m *Miner) Stop() {
@@ -67,8 +71,6 @@ func (m *Miner) mining() {
 	runWorkers := func(workersCount uint32) {
 		for i := uint32(0); i < workersCount; i++ {
 			quit := make(chan struct{})
-			m.workers = append(m.workers, quit)
-			m.wg.Add(1)
 
 			go m.generateBlock(quit)
 		}
@@ -87,8 +89,8 @@ func (m *Miner) mining() {
 
 }
 
-func (m *Miner) findNonce(block *block.Block, quit chan struct{}, difficulty uint8) bool {
-	consecutiveZeros := strings.Repeat("0", int(difficulty))
+func (m *Miner) findNonce(block *block.Block, quit chan struct{}, target uint32) bool {
+	consecutiveZeros := strings.Repeat("0", int(target))
 
 	for {
 		select {
@@ -120,12 +122,9 @@ func (m *Miner) generateBlock(quit chan struct{}) {
 			//
 		}
 
-		block := block.New()
-		block.SetExtraNonce()
-		coinbase := utils.NewCoinbase(m.pubKey, 25)
-		block.SetTranscations(append([]*transaction.Transaction{coinbase}, m.transactionPool...))
-		block.CalcTxHash()
-		if m.findNonce(block, quit, m.blockchain.Difficulty()) {
+		coinbase := utils.NewCoinbase(m.minerPubKey[:], 25)
+		block := m.blockchain.GenerateBlock(append([]*transaction.Transaction{coinbase}, m.transactionPool...))
+		if m.findNonce(block, quit, block.Bits()) {
 			m.blockchain.AddBlock(block)
 			log.Printf("info: %x \n", block.Hash())
 			log.Println("debug: Closing the quit channel")
