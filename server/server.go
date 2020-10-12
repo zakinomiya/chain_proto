@@ -38,8 +38,9 @@ func New(config *config.ConfigSettings) *Server {
 func (server *Server) Start() error {
 
 	services := []Service{
-		server.blockchain,
-		server.miner,
+		// server.blockchain,
+		// server.miner,
+		server.repository,
 	}
 
 	for _, s := range services {

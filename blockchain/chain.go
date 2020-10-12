@@ -1,12 +1,10 @@
 package blockchain
 
 import (
-	"fmt"
 	"go_chain/block"
 	"go_chain/config"
 	"go_chain/repository"
 	"go_chain/transaction"
-	"go_chain/utils"
 	"log"
 	"os"
 	"sync"
@@ -55,10 +53,10 @@ func initializeBlockchain(chainID uint32) error {
 
 	if len(blocks) == 0 {
 		log.Println("info: No blocks found in the db. Creating the genesis block")
-		genesis := utils.NewGenesisBlock()
-		if !blockchain.AddBlock(genesis) {
-			return fmt.Errorf("error: failed to add the genesis block")
-		}
+		// genesis := utils.NewGenesisBlock()
+		// // if !blockchain.AddBlock(genesis) {
+		// // 	return fmt.Errorf("error: failed to add the genesis block")
+		// // }
 		return nil
 	}
 
