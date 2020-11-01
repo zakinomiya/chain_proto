@@ -8,7 +8,8 @@ import (
 )
 
 type DBConfig struct {
-	Path string
+	Path   string
+	Driver string
 }
 
 type RpcConfig struct {
@@ -19,10 +20,9 @@ type ConfigSettings struct {
 	ChainID         uint32
 	LogFile         string
 	DefaultLogLevel string
-	minerSecretKey  [32]byte
-	MinerPubKey     [32]byte
-	DBConf          *DBConfig
-	RpcConf         *RpcConfig
+	MinerSecretKey  string
+	*DBConfig
+	*RpcConfig
 }
 
 var Config ConfigSettings
@@ -35,12 +35,17 @@ func init() {
 	}
 
 	Config = ConfigSettings{
-		ChainID:         uint32(cfg.Section("chain_info").Key("chain_id").InUint(1995, []uint{})),
+		// general
 		LogFile:         cfg.Section("general").Key("log_file").String(),
 		DefaultLogLevel: cfg.Section("general").Key("default_log_level").String(),
+		// chain info
+		ChainID: uint32(cfg.Section("chain_info").Key("chain_id").InUint(1995, []uint{})),
+		//miner
+		MinerSecretKey: cfg.Section("miner").Key("secret_key").String(),
+		// db
+		DBConfig: &DBConfig{
+			Path:   cfg.Section("db").Key("db_path").String(),
+			Driver: cfg.Section("db").Key("driver").String(),
+		},
 	}
-}
-
-func (c *ConfigSettings) MinerSecretKey() [32]byte {
-	return c.minerSecretKey
 }

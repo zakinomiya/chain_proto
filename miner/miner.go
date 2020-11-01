@@ -102,8 +102,8 @@ func (m *Miner) findNonce(block *block.Block, quit chan struct{}, target uint32)
 		hash := block.HashBlock()
 
 		if strings.HasPrefix(fmt.Sprintf("%x", hash), consecutiveZeros) {
-			block.SetHash(hash)
-			log.Printf("info: Found a valid nonce: %v \n", block.Nonce())
+			block.Hash = hash
+			log.Printf("info: Found a valid nonce: %v \n", block.Nonce)
 			return true
 		}
 		block.IncrementNonce()
@@ -124,9 +124,9 @@ func (m *Miner) generateBlock(quit chan struct{}) {
 
 		coinbase := utils.NewCoinbase(m.minerPubKey[:], 25)
 		block := m.blockchain.GenerateBlock(append([]*transaction.Transaction{coinbase}, m.transactionPool...))
-		if m.findNonce(block, quit, block.Bits()) {
+		if m.findNonce(block, quit, block.Bits) {
 			m.blockchain.AddBlock(block)
-			log.Printf("info: %x \n", block.Hash())
+			log.Printf("info: %x \n", block.Hash)
 			log.Println("debug: Closing the quit channel")
 			m.Restart()
 		}

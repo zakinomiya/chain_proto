@@ -1,22 +1,37 @@
 package transaction
 
 import (
+	"bytes"
 	"crypto/sha256"
+	"go_chain/common"
 	"hash"
 	"log"
 )
 
 type Transaction struct {
-	txHash     [32]byte
-	totalValue uint32
-	fee        uint32
-	senderAddr [32]byte
-	outs       []*Output
-	timestamp  uint64
+	txHash        [32]byte
+	totalValue    uint32
+	fee           uint32
+	senderAddr    [32]byte
+	timestamp     uint64
+	recipientAddr [32]byte
+	value         uint32
+	signature     [32]byte
 }
 
 func New() *Transaction {
 	return &Transaction{}
+}
+
+func (tx *Transaction) ToBytes() []byte {
+	buf := &bytes.Buffer{}
+	buf.Write(tx.txHash[:])
+	buf.Write(common.IntToByteSlice(int(tx.totalValue)))
+	buf.Write(common.IntToByteSlice(int(tx.fee)))
+	buf.Write(tx.senderAddr[:])
+	buf.Write(common.IntToByteSlice(int(tx.timestamp)))
+
+	return buf.Bytes()
 }
 
 func (tx *Transaction) TxHash() [32]byte {
@@ -27,13 +42,7 @@ func (tx *Transaction) CalcHash() error {
 	log.Println("debug: action=CalcHash")
 	hash := sha256.New()
 
-	for _, o := range tx.outs {
-		if err := tx.addHash(hash, []string{string(o.value)}); err != nil {
-			return err
-		}
-	}
-
-	tx.txHash = sha256.Sum256(hash.Sum([]byte{}))
+	tx.txHash = sha256.Sum256(hash.Sum(tx.ToBytes()))
 	return nil
 }
 
@@ -48,26 +57,10 @@ func (tx *Transaction) addHash(h hash.Hash, strs []string) error {
 	return nil
 }
 
-func (tx *Transaction) AddOutput(output *Output) *Transaction {
-	log.Println("debug: action=AddOutput")
-	tx.outs = append(tx.outs, output)
-	return tx
-}
-
 func (tx *Transaction) Verify() bool {
 	return true
 }
 
-type Output struct {
-	recipientAddr [32]byte
-	value         uint32
-	signature     [32]byte
-}
-
-func NewOutput() *Output {
-	return &Output{}
-}
-
-func (o *Output) Sign(privKey []byte) {
-	o.signature = [32]byte{}
+func (tx *Transaction) Sign(privKey []byte) {
+	tx.signature = [32]byte{}
 }

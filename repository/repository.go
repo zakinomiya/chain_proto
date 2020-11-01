@@ -1,53 +1,83 @@
 package repository
 
 import (
-	"database/sql"
-	"go_chain/block"
-	"io/ioutil"
+	"go_chain/common"
 	"log"
-	"sync"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var repository *Repository
-var once sync.Once
-
-type Repository struct {
-	dbPath          string
-	dbDriver        string
-	BlockRepository IBlockRepostitory
+type database struct {
+	db       *sqlx.DB
+	dbPath   string
+	dbDriver string
 }
 
-type IBlockRepostitory interface {
-	Get(hash string) (*block.Block, error)
-	GetAll() ([]*block.Block, error)
-}
-
-// func New(dbPath string, dbDriver string) *Repository {
-func New() *Repository {
-	once.Do(func() {
-		repository = &Repository{dbPath: "./blockchain.db", dbDriver: "sqlite3", BlockRepository: newBlockRepository()}
-	})
-
-	return repository
-}
-
-func (r *Repository) Start() error {
-	db, err := sql.Open(r.dbDriver, r.dbPath)
-	if err != nil {
-		log.Fatal(err)
+func (d *database) exec(filename string, data interface{}) error {
+	args := data
+	if args == nil {
+		args = ""
 	}
-	defer db.Close()
 
-	initSQL, err := ioutil.ReadFile("./repository/sql/initialize.sql")
+	stmt, err := common.ReadSQL(filename)
 	if err != nil {
-		log.Println("error: Error retrieving db initialise sql")
 		return err
 	}
 
-	if _, err := db.Exec(string(initSQL)); err != nil {
-		log.Printf("error: Failed to execute SQL. sql=initialize.sql err: %v\n", err)
+	if _, err := d.db.NamedExec(stmt, data); err != nil {
+		log.Printf("error: Failed to execute SQL. sql=%s err: %v\n", filename, err)
+		return err
+	}
+
+	return nil
+}
+
+func (d *database) find(filename string, data interface{}) (*sqlx.Rows, error) {
+	args := data
+	if args == nil {
+		args = ""
+	}
+
+	stmt, err := common.ReadSQL(filename)
+	if err != nil {
+		log.Printf("sql file not found. filename=%s\n", filename)
+		return nil, err
+	}
+
+	rows, err := d.db.NamedQuery(stmt, args)
+	if err != nil {
+		return nil, err
+	}
+	return rows, nil
+}
+
+type Repository struct {
+	*database
+	*BlockRepository
+	*TxRepository
+}
+
+func New(dbPath string, dbDriver string) *Repository {
+	db := &database{
+		dbPath: dbPath, dbDriver: dbDriver,
+	}
+	rep := &Repository{database: db, BlockRepository: &BlockRepository{database: db}}
+
+	return rep
+}
+
+func (r *Repository) Start() error {
+	log.Printf("debug: DBInfo driver=%s, dbpath=%s\n", r.dbDriver, r.dbPath)
+	db, err := sqlx.Open(r.dbDriver, r.dbPath)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	r.db = db
+
+	err = r.exec("initialize.sql", map[string]interface{}{})
+	if err != nil {
 		return err
 	}
 
@@ -55,7 +85,7 @@ func (r *Repository) Start() error {
 }
 
 func (r *Repository) Stop() {
-
+	r.db.Close()
 }
 
 func (r *Repository) ServiceName() string {

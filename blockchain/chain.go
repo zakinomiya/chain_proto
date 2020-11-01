@@ -1,10 +1,11 @@
 package blockchain
 
 import (
+	"fmt"
 	"go_chain/block"
-	"go_chain/config"
 	"go_chain/repository"
 	"go_chain/transaction"
+	"go_chain/utils"
 	"log"
 	"os"
 	"sync"
@@ -17,46 +18,37 @@ type BlockchainInterface interface {
 }
 
 type Blockchain struct {
-	lock         sync.RWMutex
-	chainID      uint32
-	height       uint32
-	blocks       []*block.Block
-	repositories *repository.Repository
+	lock       sync.RWMutex
+	chainID    uint32
+	height     uint32
+	blocks     []*block.Block
+	repository *repository.Repository
 }
 
 var blockchain *Blockchain
 var once sync.Once
 
-func New(conf *config.ConfigSettings) *Blockchain {
-
-	once.Do(func() {
-		if err := initializeBlockchain(conf.ChainID); err != nil {
-			log.Println(err, "Exiting the process...")
-			os.Exit(1)
-		}
-	})
+func New(chainID uint32, repository *repository.Repository) *Blockchain {
+	blockchain = &Blockchain{
+		chainID: chainID, repository: repository,
+	}
 	return blockchain
 }
 
-func initializeBlockchain(chainID uint32) error {
-	blockchain = &Blockchain{
-		chainID:      chainID,
-		repositories: repository.New(),
-	}
-
-	blocks, err := blockchain.repositories.BlockRepository.GetAll()
+func initializeBlockchain() error {
+	blocks, err := blockchain.repository.GetLatestBlocks(10)
 
 	if err != nil {
-		log.Fatalln("error: Failed to initialise blockchain")
+		log.Println("error: Failed to initialise blockchain")
 		return err
 	}
 
 	if len(blocks) == 0 {
 		log.Println("info: No blocks found in the db. Creating the genesis block")
-		// genesis := utils.NewGenesisBlock()
-		// // if !blockchain.AddBlock(genesis) {
-		// // 	return fmt.Errorf("error: failed to add the genesis block")
-		// // }
+		genesis := utils.NewGenesisBlock()
+		if !blockchain.AddBlock(genesis) {
+			return fmt.Errorf("error: failed to add the genesis block")
+		}
 		return nil
 	}
 
@@ -71,6 +63,13 @@ func (bc *Blockchain) ServiceName() string {
 }
 
 func (bc *Blockchain) Start() error {
+	once.Do(func() {
+		if err := initializeBlockchain(); err != nil {
+			log.Println("error:", err)
+			log.Println("Exiting the process...")
+			os.Exit(1)
+		}
+	})
 	return nil
 }
 
@@ -80,7 +79,4 @@ func (bc *Blockchain) Stop() {
 
 func (bc *Blockchain) Height() uint32 {
 	return bc.height
-}
-func (bc *Blockchain) SetHeight(height uint32) {
-	bc.height = height
 }

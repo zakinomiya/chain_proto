@@ -1,14 +1,11 @@
 package server
 
 import (
-	"fmt"
-	"go_chain/block"
 	"go_chain/blockchain"
 	"go_chain/config"
 	"go_chain/gateway"
 	"go_chain/miner"
 	"go_chain/repository"
-	"go_chain/utils"
 	"log"
 )
 
@@ -19,31 +16,23 @@ type Service interface {
 }
 
 type Server struct {
-	config     *config.ConfigSettings
-	blockchain *blockchain.Blockchain
-	miner      *miner.Miner
-	gateway    *gateway.Gateway
-	repository *repository.Repository
+	config   *config.ConfigSettings
+	services []Service
 }
 
 func New(config *config.ConfigSettings) *Server {
-	blockchain := blockchain.New(config)
-	miner := miner.New(blockchain)
-	gateway := &gateway.Gateway{}
-	repository := repository.New()
+	r := repository.New(config.Path, config.Driver)
+	bc := blockchain.New(config.ChainID, r)
+	m := miner.New(bc)
+	g := &gateway.Gateway{}
 
-	return &Server{config, blockchain, miner, gateway, repository}
+	return &Server{config: config, services: []Service{r, bc, m, g}}
 }
 
 func (server *Server) Start() error {
+	log.Printf("info: Starting MVB node. ChainID=%d\n", server.config.ChainID)
 
-	services := []Service{
-		// server.blockchain,
-		// server.miner,
-		server.repository,
-	}
-
-	for _, s := range services {
+	for _, s := range server.services {
 		log.Printf("Starting service %s \n", s.ServiceName())
 		if err := s.Start(); err != nil {
 			log.Printf("Failed to start service %s \n", s.ServiceName())
@@ -55,13 +44,4 @@ func (server *Server) Start() error {
 	log.Println("Successfully started the node")
 
 	return nil
-}
-
-func (server *Server) test() {
-	firstBlock := block.New()
-	fmt.Printf("New block. %#v", firstBlock)
-
-	fmt.Println("Adding coinbase transaction")
-	tx := utils.NewCoinbase([]byte("some pubkey"), 250)
-	fmt.Printf("Transaction hash: %x \n", tx.TxHash())
 }
