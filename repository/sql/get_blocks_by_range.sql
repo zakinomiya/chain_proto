@@ -10,5 +10,5 @@ SELECT
     nonce,
     transactions
 FROM blocks
-WHERE height >= :start AND height<:
+WHERE blocks.height >= :start AND blocks.height<:
 end;

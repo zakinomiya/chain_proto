@@ -1,8 +1,8 @@
 package common
 
 import (
-	"io/ioutil"
-	"log"
+	"errors"
+	"math/rand"
 	"strconv"
 )
 
@@ -10,12 +10,20 @@ func IntToByteSlice(b int) []byte {
 	return []byte(strconv.Itoa(b))
 }
 
-func ReadSQL(filename string) (string, error) {
-	sql, err := ioutil.ReadFile("./repository/sql/" + filename)
-	if err != nil {
-		log.Printf("error: Error retrieving sql file. filename=%s\n", filename)
-		return "", err
+/// Pseudo random uint32
+func RandomUint32() uint32 {
+	return rand.Uint32()
+}
+
+func ReadByteInto32(h []byte) ([32]byte, error) {
+	if len(h) != 32 {
+		return [32]byte{}, errors.New("byte slice length must be 32")
 	}
 
-	return string(sql), nil
+	var bytes [32]byte
+	for i, b := range h {
+		bytes[i] = b
+	}
+
+	return bytes, nil
 }

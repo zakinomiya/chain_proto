@@ -1,13 +1,13 @@
 package main
 
 import (
+	"go_chain/common"
 	"go_chain/config"
 	"go_chain/server"
-	"go_chain/utils"
 )
 
 func main() {
-	utils.LogginSettings(config.Config.LogFile, config.Config.DefaultLogLevel)
+	common.LogginSettings(config.Config.LogFile, config.Config.DefaultLogLevel)
 
 	server := server.New(&config.Config)
 	server.Start()

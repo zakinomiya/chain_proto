@@ -5,7 +5,7 @@ import (
 	"go_chain/block"
 	"go_chain/blockchain"
 	"go_chain/transaction"
-	"go_chain/utils"
+	"go_chain/wallet"
 	"log"
 	"runtime"
 	"strings"
@@ -15,8 +15,7 @@ type Miner struct {
 	quit            chan struct{}
 	transactionPool []*transaction.Transaction
 	blockchain      blockchain.BlockchainInterface
-	minerPubKey     [32]byte
-	minerSecKey     [32]byte
+	*wallet.Wallet
 }
 
 func New(bc blockchain.BlockchainInterface) *Miner {
@@ -37,7 +36,7 @@ func (m *Miner) Start() error {
 }
 
 func (m *Miner) CalcGenesis() *block.Block {
-	gen := utils.NewGenesisBlock()
+	gen := block.NewGenesisBlock()
 
 	m.findNonce(gen, make(chan struct{}), 5)
 	return gen
@@ -101,6 +100,7 @@ func (m *Miner) findNonce(block *block.Block, quit chan struct{}, target uint32)
 		}
 		hash := block.HashBlock()
 
+		// TODO research on bitcoin compare algorithm is needed
 		if strings.HasPrefix(fmt.Sprintf("%x", hash), consecutiveZeros) {
 			block.Hash = hash
 			log.Printf("info: Found a valid nonce: %v \n", block.Nonce)
@@ -122,7 +122,7 @@ func (m *Miner) generateBlock(quit chan struct{}) {
 			//
 		}
 
-		coinbase := utils.NewCoinbase(m.minerPubKey[:], 25)
+		coinbase := transaction.NewCoinbase(m.X.Bytes(), 25)
 		block := m.blockchain.GenerateBlock(append([]*transaction.Transaction{coinbase}, m.transactionPool...))
 		if m.findNonce(block, quit, block.Bits) {
 			m.blockchain.AddBlock(block)

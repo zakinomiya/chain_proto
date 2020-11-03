@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"go_chain/common"
+	"io/ioutil"
 	"log"
 
 	"github.com/jmoiron/sqlx"
@@ -20,7 +20,7 @@ func (d *database) exec(filename string, data interface{}) error {
 		args = ""
 	}
 
-	stmt, err := common.ReadSQL(filename)
+	stmt, err := readSQL(filename)
 	if err != nil {
 		return err
 	}
@@ -39,7 +39,7 @@ func (d *database) find(filename string, data interface{}) (*sqlx.Rows, error) {
 		args = ""
 	}
 
-	stmt, err := common.ReadSQL(filename)
+	stmt, err := readSQL(filename)
 	if err != nil {
 		log.Printf("sql file not found. filename=%s\n", filename)
 		return nil, err
@@ -54,15 +54,13 @@ func (d *database) find(filename string, data interface{}) (*sqlx.Rows, error) {
 
 type Repository struct {
 	*database
-	*BlockRepository
-	*TxRepository
 }
 
 func New(dbPath string, dbDriver string) *Repository {
 	db := &database{
 		dbPath: dbPath, dbDriver: dbDriver,
 	}
-	rep := &Repository{database: db, BlockRepository: &BlockRepository{database: db}}
+	rep := &Repository{database: db}
 
 	return rep
 }
@@ -90,4 +88,14 @@ func (r *Repository) Stop() {
 
 func (r *Repository) ServiceName() string {
 	return "Repository"
+}
+
+func readSQL(filename string) (string, error) {
+	sql, err := ioutil.ReadFile("./repository/sql/" + filename)
+	if err != nil {
+		log.Printf("error: Error retrieving sql file. filename=%s\n", filename)
+		return "", err
+	}
+
+	return string(sql), nil
 }

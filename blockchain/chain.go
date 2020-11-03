@@ -5,7 +5,6 @@ import (
 	"go_chain/block"
 	"go_chain/repository"
 	"go_chain/transaction"
-	"go_chain/utils"
 	"log"
 	"os"
 	"sync"
@@ -45,7 +44,7 @@ func initializeBlockchain() error {
 
 	if len(blocks) == 0 {
 		log.Println("info: No blocks found in the db. Creating the genesis block")
-		genesis := utils.NewGenesisBlock()
+		genesis := block.NewGenesisBlock()
 		if !blockchain.AddBlock(genesis) {
 			return fmt.Errorf("error: failed to add the genesis block")
 		}

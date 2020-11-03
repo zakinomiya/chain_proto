@@ -47,10 +47,10 @@ func (block *Block) SetExtranNonce() {
 func (block *Block) CalcMerkleTree() {
 	tree := merkletree.New(crypto.SHA256.New())
 
-	// for _, tx := range block.Transactions {
-	// 	h := tx.TxHash()
-	// 	tree.Push(h[:])
-	// }
+	for _, tx := range block.Transactions {
+		h := tx.TxHash
+		tree.Push(h[:])
+	}
 
 	block.BlockHeader.MerkleRoot = tree.Root()
 }
@@ -66,4 +66,8 @@ func (block *Block) HashBlock() [32]byte {
 	sha.Write([]byte(strconv.Itoa(int(block.BlockHeader.Nonce))))
 
 	return sha256.Sum256(sha.Sum([]byte{}))
+}
+
+func (b *Block) TxCount() int {
+	return len(b.Transactions)
 }

@@ -3,31 +3,33 @@ IF NOT EXISTS blocks
 (
     height INTEGER NOT NULL PRIMARY KEY,
     hash STRING,
-    prevBlockHash BLOB,
-    merkleRoot BLOB,
+    prevBlockHash TEXT,
+    merkleRoot TEXT,
     extraNonce INTEGER,
     timestamp INTEGER,
     bits INTEGER,
     nonce INTEGER,
+    transactions TEXT,
+    txCount INTEGER
 );
 
 CREATE TABLE
 IF NOT EXISTS transactions
 (
-    txHash BLOB NOT NULL PRIMARY KEY,
-    blockHash BLOB,
-    index INTEGER,
+    txHash TEXT NOT NULL PRIMARY KEY,
+    blockHash TEXT,
     pendingNo TEXT,
     totalValue INTEGER,
     fee INTEGER,
-    senderAddr BLOB,
-    outs BLOB,
+    senderAddr TEXT,
+    outCount INTEGER,
+    outs TEXT,
     timestamp INTEGER
 );
 
 CREATE TABLE
 IF NOT EXISTS accounts
 (
-    addr BLOB NOT NULL PRIMARY KEY, 
+    addr TEXT NOT NULL PRIMARY KEY, 
     balance INTEGER
 );
