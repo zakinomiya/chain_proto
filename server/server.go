@@ -4,7 +4,6 @@ import (
 	"go_chain/blockchain"
 	"go_chain/config"
 	"go_chain/gateway"
-	"go_chain/miner"
 	"go_chain/repository"
 	"log"
 )
@@ -23,10 +22,10 @@ type Server struct {
 func New(config *config.ConfigSettings) *Server {
 	r := repository.New(config.Path, config.Driver)
 	bc := blockchain.New(config.ChainID, r)
-	m := miner.New(bc)
+	// m := miner.New(bc)
 	g := &gateway.Gateway{}
 
-	return &Server{config: config, services: []Service{r, bc, m, g}}
+	return &Server{config: config, services: []Service{r, bc, g}}
 }
 
 func (server *Server) Start() error {

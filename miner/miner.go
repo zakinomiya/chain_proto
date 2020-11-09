@@ -15,11 +15,11 @@ type Miner struct {
 	quit            chan struct{}
 	transactionPool []*transaction.Transaction
 	blockchain      blockchain.BlockchainInterface
-	*wallet.Wallet
+	minerWallet     *wallet.Wallet
 }
 
-func New(bc blockchain.BlockchainInterface) *Miner {
-	return &Miner{blockchain: bc}
+func New(bc blockchain.BlockchainInterface, w *wallet.Wallet) *Miner {
+	return &Miner{blockchain: bc, minerWallet: w}
 }
 
 func (m *Miner) Start() error {
@@ -33,13 +33,6 @@ func (m *Miner) Start() error {
 
 	log.Println("debug: Mining process started")
 	return nil
-}
-
-func (m *Miner) CalcGenesis() *block.Block {
-	gen := block.NewGenesisBlock()
-
-	m.findNonce(gen, make(chan struct{}), 5)
-	return gen
 }
 
 func (m *Miner) Stop() {
@@ -122,7 +115,7 @@ func (m *Miner) generateBlock(quit chan struct{}) {
 			//
 		}
 
-		coinbase := transaction.NewCoinbase(m.X.Bytes(), 25)
+		coinbase := transaction.NewCoinbase(m.minerWallet.X.Bytes(), 25)
 		block := m.blockchain.GenerateBlock(append([]*transaction.Transaction{coinbase}, m.transactionPool...))
 		if m.findNonce(block, quit, block.Bits) {
 			m.blockchain.AddBlock(block)

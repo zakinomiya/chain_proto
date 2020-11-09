@@ -9,46 +9,49 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type blockModel struct {
-	height        uint32
-	hash          []byte
-	prevBlockHash []byte
-	merkleRoot    []byte
-	timestamp     uint32
-	bits          uint32
-	nonce         uint32
-	extraNonce    uint32
-	txCount       int
-	transactions  []string
+type BlockModel struct {
+	Height        uint32 `db:"height"`
+	Hash          []byte `db:"hash"`
+	PrevBlockHash []byte `db:"prevBlockHash"`
+	MerkleRoot    []byte `db:"merkleRoot"`
+	Timestamp     uint32 `db:"timestamp"`
+	Bits          uint32 `db:"bits"`
+	Nonce         uint32 `db:"nonce"`
+	ExtraNonce    uint32 `db:"extraNonce"`
+	TxCount       int    `db:"txCount"`
+	Transactions  string `db:"transactions"`
 }
 
-func (r *Repository) fromBlock(b *block.Block, bm *blockModel) error {
-	var transactions []string
-	for _, tx := range b.Transactions {
-		transactions = append(transactions, tx.TxHashStr())
+func (r *Repository) fromBlock(b *block.Block, bm *BlockModel) error {
+	var transactions string
+	for i, tx := range b.Transactions {
+		if i != 0 {
+			transactions += "!!!"
+		}
+		transactions += tx.TxHashStr()
 	}
 
-	bm.height = b.Height
-	bm.hash = b.Hash[:]
-	bm.prevBlockHash = b.PrevBlockHash[:]
-	bm.merkleRoot = b.MerkleRoot
-	bm.timestamp = b.Timestamp
-	bm.bits = b.Bits
-	bm.nonce = b.Nonce
-	bm.extraNonce = b.ExtraNonce
-	bm.txCount = len(b.Transactions)
-	bm.transactions = transactions
+	bm.Height = b.Height
+	bm.Hash = b.Hash[:]
+	bm.PrevBlockHash = b.PrevBlockHash[:]
+	bm.MerkleRoot = b.MerkleRoot
+	bm.Timestamp = b.Timestamp
+	bm.Bits = b.Bits
+	bm.Nonce = b.Nonce
+	bm.ExtraNonce = b.ExtraNonce
+	bm.TxCount = len(b.Transactions)
+	bm.Transactions = transactions
 
 	return nil
 }
 
-func (r *Repository) toBlock(bm *blockModel, b *block.Block) error {
-	hash, err := common.ReadByteInto32(bm.hash)
+func (r *Repository) toBlock(bm *BlockModel, b *block.Block) error {
+	hash, err := common.ReadByteInto32(bm.Hash)
 	if err != nil {
 		return err
 	}
 
-	prevBlockHash, err := common.ReadByteInto32(bm.prevBlockHash)
+	prevBlockHash, err := common.ReadByteInto32(bm.PrevBlockHash)
 	if err != nil {
 		return err
 	}
@@ -59,13 +62,13 @@ func (r *Repository) toBlock(bm *blockModel, b *block.Block) error {
 	}
 
 	b.Hash = hash
-	b.Height = bm.height
-	b.MerkleRoot = bm.merkleRoot
+	b.Height = bm.Height
+	b.MerkleRoot = bm.MerkleRoot
 	b.PrevBlockHash = prevBlockHash
-	b.Timestamp = bm.timestamp
-	b.Bits = bm.bits
-	b.ExtraNonce = bm.extraNonce
-	b.Nonce = bm.nonce
+	b.Timestamp = bm.Timestamp
+	b.Bits = bm.Bits
+	b.ExtraNonce = bm.ExtraNonce
+	b.Nonce = bm.Nonce
 	b.Transactions = transactions
 
 	return nil
@@ -78,11 +81,13 @@ func (r *Repository) GetBlockByHash(hash string) (*block.Block, error) {
 	}
 
 	rows.Next()
-	block := block.New()
-	if err := r.scanBlock(block, rows); err != nil {
+	bm := &BlockModel{}
+	if err := r.scanBlock(bm, rows); err != nil {
 		return nil, err
 	}
 
+	block := &block.Block{}
+	r.toBlock(bm, block)
 	return block, nil
 }
 
@@ -98,44 +103,47 @@ func (r *Repository) GetBlocksByRange(start uint32, end uint32) ([]*block.Block,
 
 	blocks := []*block.Block{}
 	for rows.Next() {
-		block := block.New()
-		if err := r.scanBlock(block, rows); err != nil {
-			log.Printf("debug: Failed to scan block. height=%d\n", block.Height)
+		bm := &BlockModel{}
+		if err := r.scanBlock(bm, rows); err != nil {
+			log.Printf("debug: Failed to scan block. height=%d\n", bm.Height)
 			return nil, err
 		}
+		block := &block.Block{}
+		r.toBlock(bm, block)
 		blocks = append(blocks, block)
 	}
-
 	return blocks, nil
 }
 
-func (br *Repository) GetLatestBlocks(num uint32) ([]*block.Block, error) {
-	rows, err := br.find("get_latest_blocks.sql", map[string]interface{}{"num": num})
+func (r *Repository) GetLatestBlocks(num uint32) ([]*block.Block, error) {
+	rows, err := r.find("get_latest_blocks.sql", map[string]interface{}{"num": num})
 	if err != nil {
 		return nil, err
 	}
 
 	blocks := []*block.Block{}
 	for rows.Next() {
-		block := block.New()
-		if err := br.scanBlock(block, rows); err != nil {
-			log.Printf("debug: Failed to scan block. height=%d\n", block.Height)
+		bm := &BlockModel{}
+		if err := r.scanBlock(bm, rows); err != nil {
+			log.Printf("debug: Failed to scan block. height=%d\n", bm.Height)
 			return nil, err
 		}
+		block := &block.Block{}
+		r.toBlock(bm, block)
 		blocks = append(blocks, block)
 	}
 
 	return blocks, nil
 }
 
-func (br *Repository) Insert(b *block.Block) error {
-	bm := &blockModel{}
-	br.fromBlock(b, bm)
-	return br.exec("insert_block.sql", bm)
+func (r *Repository) Insert(b *block.Block) error {
+	bm := &BlockModel{}
+	r.fromBlock(b, bm)
+	return r.exec("insert_block.sql", bm)
 }
 
-func (br *Repository) scanBlock(block *block.Block, rows *sqlx.Rows) error {
-	if err := rows.StructScan(&block); err != nil {
+func (r *Repository) scanBlock(bm *BlockModel, rows *sqlx.Rows) error {
+	if err := rows.StructScan(&bm); err != nil {
 		log.Println("error:", err)
 		return err
 	}

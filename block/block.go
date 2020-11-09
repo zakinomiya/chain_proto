@@ -3,9 +3,12 @@ package block
 import (
 	"crypto"
 	"crypto/sha256"
+	"fmt"
 	"go_chain/transaction"
+	"log"
 	"math/rand"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/NebulousLabs/merkletree"
@@ -35,9 +38,17 @@ type Block struct {
 	*BlockHeader
 }
 
-func New() *Block {
-	header := NewHeader()
-	return &Block{BlockHeader: header}
+func New(height uint32, bits uint32, prevBlockHash [32]byte, txs []*transaction.Transaction) *Block {
+	block := &Block{}
+	block.Transactions = txs
+	block.Bits = bits
+	block.PrevBlockHash = prevBlockHash
+	block.Timestamp = uint32(time.Now().Unix())
+	block.Nonce = 0
+	block.SetExtranNonce()
+	block.CalcMerkleTree()
+
+	return block
 }
 
 func (block *Block) SetExtranNonce() {
@@ -70,4 +81,26 @@ func (block *Block) HashBlock() [32]byte {
 
 func (b *Block) TxCount() int {
 	return len(b.Transactions)
+}
+
+/// Check if reveived blocks are valid blocks
+/// Criteria:
+///  - Block hash is valid
+///     - hash = the calculated result from properties in the block
+///     - hash clears its difficulty
+func (b *Block) Verify() bool {
+
+	if b.Hash != b.HashBlock() {
+		log.Printf("info: block hash is invalid. presented: %x, calculated: %x\n", b.Hash, b.HashBlock())
+		return false
+	}
+
+	zeros := strings.Repeat("0", int(b.Bits))
+
+	if !strings.HasPrefix(fmt.Sprintf("%x", b.Hash), zeros) {
+		log.Printf("info: block hash does not meet the difficulty. difficulty %d, presented hash %x\n ", b.Bits, b.Hash)
+		return false
+	}
+
+	return true
 }

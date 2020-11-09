@@ -64,9 +64,9 @@ type Output struct {
 	Index         uint32   `json:"index"`
 	RecipientAddr [32]byte `json:"recipientAddr"`
 	Value         uint32   `json:"value"`
-	Signature     [32]byte `json:"signature"`
+	Signature     []byte   `json:"signature"`
 }
 
 func (o *Output) Sign(privKey []byte) {
-	o.Signature = [32]byte{}
+	o.Signature = []byte{}
 }

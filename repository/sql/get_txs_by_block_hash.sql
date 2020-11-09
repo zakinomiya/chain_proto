@@ -9,5 +9,4 @@ SELECT
     outs,
     timestamp
 FROM transactions
-WHERE transactions.blockHash=:
-blockHash:
+WHERE transactions.blockHash=:blockHash;

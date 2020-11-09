@@ -44,7 +44,11 @@ func initializeBlockchain() error {
 
 	if len(blocks) == 0 {
 		log.Println("info: No blocks found in the db. Creating the genesis block")
-		genesis := block.NewGenesisBlock()
+		genesis, err := block.NewGenesisBlock()
+		if err != nil {
+			return err
+		}
+
 		if !blockchain.AddBlock(genesis) {
 			return fmt.Errorf("error: failed to add the genesis block")
 		}

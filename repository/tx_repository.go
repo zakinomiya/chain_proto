@@ -7,72 +7,72 @@ import (
 	"log"
 )
 
-type txModel struct {
-	txHash     []byte
-	totalValue uint32
-	fee        uint32
-	senderAddr []byte
-	timestamp  uint64
-	outCount   int
-	outs       []byte
+type TxModel struct {
+	TxHash     []byte
+	TotalValue uint32
+	Fee        uint32
+	SenderAddr []byte
+	Timestamp  uint64
+	OutCount   int
+	Outs       []byte
 }
 
-func (r *Repository) toTx(tm *txModel, tx *transaction.Transaction) error {
-	txHash, err := common.ReadByteInto32(tm.txHash)
+func (r *Repository) toTx(tm *TxModel, tx *transaction.Transaction) error {
+	txHash, err := common.ReadByteInto32(tm.TxHash)
 	if err != nil {
 		return err
 	}
 
-	senderAddr, err := common.ReadByteInto32(tm.senderAddr)
+	senderAddr, err := common.ReadByteInto32(tm.SenderAddr)
 	if err != nil {
 		return err
 	}
 
 	var outs []*transaction.Output
-	err = json.Unmarshal(tm.outs, &outs)
-	if err != nil || tm.outCount != len(outs) {
+	err = json.Unmarshal(tm.Outs, &outs)
+	if err != nil || tm.OutCount != len(outs) {
 		return err
 	}
 
 	tx.TxHash = txHash
-	tx.TotalValue = tm.totalValue
-	tx.Timestamp = tm.timestamp
+	tx.TotalValue = tm.TotalValue
+	tx.Timestamp = tm.Timestamp
 	tx.SenderAddr = senderAddr
-	tx.Fee = tm.fee
+	tx.Fee = tm.Fee
 	tx.Outs = outs
 
 	return nil
 }
 
-func (r *Repository) fromTx(tx *transaction.Transaction, tm *txModel) error {
+func (r *Repository) fromTx(tx *transaction.Transaction, tm *TxModel) error {
 	outs, err := json.Marshal(tx.Outs)
 	if err != nil {
 		log.Println("error: failed to marshal outs to JSON format. ", err)
 		return err
 	}
 
-	tm.txHash = tx.TxHash[:]
-	tm.totalValue = tx.TotalValue
-	tm.fee = tx.Fee
-	tm.senderAddr = tx.SenderAddr[:]
-	tm.timestamp = tx.Timestamp
-	tm.outCount = len(tx.Outs)
-	tm.outs = outs
+	tm.TxHash = tx.TxHash[:]
+	tm.TotalValue = tx.TotalValue
+	tm.Fee = tx.Fee
+	tm.SenderAddr = tx.SenderAddr[:]
+	tm.Timestamp = tx.Timestamp
+	tm.OutCount = len(tx.Outs)
+	tm.Outs = outs
 
 	return nil
 }
 
 func (r *Repository) GetTxByBlockHash(blockHash [32]byte) ([]*transaction.Transaction, error) {
-	txModels, err := r.getTxModelByBlockHash(blockHash)
+	TxModels, err := r.getTxModelByBlockHash(blockHash)
 	if err != nil {
-		log.Println(err)
+		log.Println("error:", err)
 		return nil, err
 	}
 
 	var transactions []*transaction.Transaction
-	for _, txModel := range txModels {
+	for _, TxModel := range TxModels {
 		var t *transaction.Transaction
-		if err := r.toTx(txModel, t); err != nil {
+		if err := r.toTx(TxModel, t); err != nil {
 			return nil, err
 		}
 		transactions = append(transactions, t)
@@ -81,16 +81,17 @@ func (r *Repository) GetTxByBlockHash(blockHash [32]byte) ([]*transaction.Transa
 	return transactions, nil
 }
 
-func (r *Repository) getTxModelByBlockHash(blockHash [32]byte) ([]*txModel, error) {
+func (r *Repository) getTxModelByBlockHash(blockHash [32]byte) ([]*TxModel, error) {
 	rows, err := r.find("get_txs_by_block_hash.sql", map[string]interface{}{"blockHash": blockHash[:]})
 	if err != nil {
 		return nil, err
 	}
 
-	var txModels []*txModel
+	var txModels []*TxModel
 	for rows.Next() {
-		txModel := &txModel{}
+		txModel := &TxModel{}
 		if err := rows.StructScan(txModel); err != nil {
+			log.Println("error:", err)
 			return nil, err
 		}
 		txModels = append(txModels, txModel)
