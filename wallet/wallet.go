@@ -4,6 +4,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
+	"encoding/hex"
 	"errors"
 	"math/big"
 )
@@ -24,6 +25,14 @@ func New() (*Wallet, error) {
 	}
 
 	return (*Wallet)(privKey), nil
+}
+
+func (w *Wallet) PrivKeyStr() string {
+	return hex.EncodeToString(w.D.Bytes())
+}
+
+func (w *Wallet) PubKeyStr() string {
+	return hex.EncodeToString(append(w.PublicKey.X.Bytes(), w.PublicKey.Y.Bytes()...))
 }
 
 func RestoreWallet(privKeyBytes []byte) (*Wallet, error) {

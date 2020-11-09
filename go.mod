@@ -13,6 +13,7 @@ require (
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/mattn/go-sqlite3 v1.14.4
 	github.com/smartystreets/goconvey v1.6.4 // indirect
+	github.com/spf13/cobra v1.1.1
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
 	golang.org/x/sys v0.0.0-20201107080550-4d91cf3a1aaf // indirect
 	golang.org/x/tools v0.0.0-20201020123448-f5c826d1900e // indirect

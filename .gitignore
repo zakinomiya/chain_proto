@@ -1,1 +1,4 @@
 data/*
+
+# bin directory holds executables
+bin
