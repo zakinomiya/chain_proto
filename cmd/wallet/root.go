@@ -1,4 +1,4 @@
-package wallet
+package main
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
                 Complete documentation is available at http://hugo.spf13.com`,
 }
 
-func Execute() {
+func execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

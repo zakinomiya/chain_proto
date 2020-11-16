@@ -2,3 +2,7 @@ data/*
 
 # bin directory holds executables
 bin
+
+# where keypairs are stored
+keypairs
+
