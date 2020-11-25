@@ -8,7 +8,6 @@ import (
 	"go_chain/wallet"
 	"io/ioutil"
 	"testing"
-	"time"
 )
 
 func TestMining(t *testing.T) {
@@ -17,7 +16,7 @@ func TestMining(t *testing.T) {
 	c := transaction.NewCoinbase(w, 25)
 	h := block.NewHeader()
 	h.PrevBlockHash = [32]byte{}
-	h.Timestamp = uint32(time.Now().Unix())
+	h.Timestamp = common.Timestamp()
 	h.Bits = 5
 	h.Nonce = 0
 
@@ -28,7 +27,7 @@ func TestMining(t *testing.T) {
 		ExtraNonce:   common.RandomUint32(),
 		BlockHeader:  h,
 	}
-	block.CalcMerkleTree()
+	block.SetMerkleRoot()
 	if m.findNonce(block, make(chan struct{}, 0)) {
 		j, _ := json.Marshal(block)
 		t.Log(string(j))

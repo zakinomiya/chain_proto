@@ -12,7 +12,7 @@ type TxModel struct {
 	TotalValue uint32
 	Fee        uint32
 	SenderAddr string
-	Timestamp  uint64
+	Timestamp  int64
 	OutCount   int
 	Outs       []byte
 }

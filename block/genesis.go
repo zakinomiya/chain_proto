@@ -14,7 +14,7 @@ import (
 type genesis struct {
 	PrevBlockHash string `yaml:"prevBlockHash"`
 	MerkleRoot    string `yaml:"merkleRoot"`
-	Timestamp     uint32 `yaml:"timestamp"`
+	Timestamp     int64  `yaml:"timestamp"`
 	Bits          uint32 `yaml:"bits"`
 	Nonce         uint32 `yaml:"nonce"`
 	Height        uint32 `yaml:"height"`
@@ -25,7 +25,7 @@ type genesis struct {
 		TotalValue uint32 `yaml:"totalValue"`
 		Fee        uint32 `yaml:"fee"`
 		SenderAddr string `yaml:"senderAddr"`
-		Timestamp  uint64 `yaml:"timestamp"`
+		Timestamp  int64  `yaml:"timestamp"`
 		Signature  string `yaml:"signature"`
 		Outs       []struct {
 			Index         uint32 `yaml:"index"`

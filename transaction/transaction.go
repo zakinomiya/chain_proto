@@ -17,7 +17,7 @@ type Transaction struct {
 	TotalValue uint32
 	Fee        uint32
 	SenderAddr string
-	Timestamp  uint64
+	Timestamp  int64
 	Outs       []*Output
 	Signature  *wallet.Signature
 }
@@ -32,7 +32,7 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 		TotalValue uint32    `json:"totalValue"`
 		Fee        uint32    `json:"fee"`
 		SenderAddr string    `json:"senderAddr"`
-		Timestamp  uint64    `json:"timestamp"`
+		Timestamp  int64     `json:"timestamp"`
 		Outs       []*Output `json:"outs"`
 		Signature  string    `json:"signature"`
 	}{
@@ -84,16 +84,17 @@ func (tx *Transaction) Verify() bool {
 }
 
 type Output struct {
-	Index         uint32
-	RecipientAddr string
-	Value         uint32
+	Index     uint32
+	Signature *wallet.Signature
+	Value     uint32
 }
 
+// TODO make Output include signature and value only
 func (o *Output) MarshalJSON() ([]byte, error) {
 	return json.Marshal(
 		&struct {
 			Index         uint32 `json:"index"`
-			RecipientAddr string `json:"recipientAddr"`
+			RecipientAddr string `json:"signature"`
 			Value         uint32 `json:"value"`
 		}{
 			Index:         o.Index,

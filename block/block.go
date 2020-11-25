@@ -1,16 +1,17 @@
 package block
 
 import (
+	"bytes"
 	"crypto"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"go_chain/common"
 	"go_chain/transaction"
 	"log"
 	"math/rand"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/NebulousLabs/merkletree"
 )
@@ -18,13 +19,13 @@ import (
 type BlockHeader struct {
 	PrevBlockHash [32]byte `json:"prevBlockHash"`
 	MerkleRoot    []byte   `json:"merkleRoot"`
-	Timestamp     uint32   `json:"timestamp"`
+	Timestamp     int64    `json:"timestamp"`
 	Bits          uint32   `json:"bits"`
 	Nonce         uint32   `json:"nonce"`
 }
 
 func NewHeader() *BlockHeader {
-	return &BlockHeader{Nonce: 0, Timestamp: uint32(time.Now().UTC().Unix())}
+	return &BlockHeader{Nonce: 0, Timestamp: common.Timestamp()}
 }
 
 func (b *Block) MarshalJSON() ([]byte, error) {
@@ -35,7 +36,7 @@ func (b *Block) MarshalJSON() ([]byte, error) {
 		ExtraNonce    uint32                     `json:"extraNonce"`
 		PrevBlockHash string                     `json:"prevBlockHash"`
 		MerkleRoot    string                     `json:"merkleRoot"`
-		Timestamp     uint32                     `json:"timestamp"`
+		Timestamp     int64                      `json:"timestamp"`
 		Bits          uint32                     `json:"bits"`
 		Nonce         uint32                     `json:"nonce"`
 	}{
@@ -68,10 +69,10 @@ func New(height uint32, bits uint32, prevBlockHash [32]byte, txs []*transaction.
 	b.Transactions = txs
 	b.Bits = bits
 	b.PrevBlockHash = prevBlockHash
-	b.Timestamp = uint32(time.Now().Unix())
+	b.Timestamp = common.Timestamp()
 	b.Nonce = 0
 	b.SetExtranNonce()
-	b.CalcMerkleTree()
+	b.SetMerkleRoot()
 
 	return b
 }
@@ -80,7 +81,11 @@ func (b *Block) SetExtranNonce() {
 	b.ExtraNonce = rand.Uint32()
 }
 
-func (b *Block) CalcMerkleTree() {
+func (b *Block) SetMerkleRoot() {
+	b.MerkleRoot = b.calcMerkleRoot()
+}
+
+func (b *Block) calcMerkleRoot() []byte {
 	tree := merkletree.New(crypto.SHA256.New())
 
 	for _, tx := range b.Transactions {
@@ -88,7 +93,7 @@ func (b *Block) CalcMerkleTree() {
 		tree.Push(h[:])
 	}
 
-	b.BlockHeader.MerkleRoot = tree.Root()
+	return tree.Root()
 }
 
 func (b *Block) HashBlock() [32]byte {
@@ -114,6 +119,17 @@ func (b *Block) TxCount() int {
 ///     - hash = the calculated result from properties in the block
 ///     - hash clears its difficulty
 func (b *Block) Verify() bool {
+	for _, tx := range b.Transactions {
+		if !tx.Verify() {
+			log.Println("info: block contains a invalid transaction.")
+			return false
+		}
+	}
+
+	if bytes.Compare(b.MerkleRoot, b.calcMerkleRoot()) != 0 {
+		log.Println("info: failed to verify the merkle root.")
+		return false
+	}
 
 	if b.Hash != b.HashBlock() {
 		log.Printf("info: block hash is invalid. presented: %x, calculated: %x\n", b.Hash, b.HashBlock())

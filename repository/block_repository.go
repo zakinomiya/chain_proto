@@ -14,7 +14,7 @@ type BlockModel struct {
 	Hash          []byte `db:"hash"`
 	PrevBlockHash []byte `db:"prevBlockHash"`
 	MerkleRoot    []byte `db:"merkleRoot"`
-	Timestamp     uint32 `db:"timestamp"`
+	Timestamp     int64  `db:"timestamp"`
 	Bits          uint32 `db:"bits"`
 	Nonce         uint32 `db:"nonce"`
 	ExtraNonce    uint32 `db:"extraNonce"`

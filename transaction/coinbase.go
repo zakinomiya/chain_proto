@@ -1,8 +1,8 @@
 package transaction
 
 import (
+	"go_chain/common"
 	"go_chain/wallet"
-	"time"
 )
 
 func NewCoinbase(w *wallet.Wallet, value uint32) *Transaction {
@@ -10,7 +10,7 @@ func NewCoinbase(w *wallet.Wallet, value uint32) *Transaction {
 
 	tx.Fee = 0
 	tx.SenderAddr = ""
-	tx.Timestamp = uint64(time.Now().UnixNano())
+	tx.Timestamp = common.Timestamp()
 	tx.TotalValue = value
 	tx.Outs = []*Output{
 		{

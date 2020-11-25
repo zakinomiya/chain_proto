@@ -3,6 +3,7 @@ package common
 import (
 	"math/rand"
 	"strconv"
+	"time"
 )
 
 func IntToByteSlice(b int) []byte {
@@ -22,4 +23,10 @@ func ReadByteInto32(h []byte) [32]byte {
 	}
 
 	return bytes
+}
+
+// Timestamp returns a 64-bit integer
+// Yup. I will live for billions of years.
+func Timestamp() int64 {
+	return time.Now().Unix()
 }

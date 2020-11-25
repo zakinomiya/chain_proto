@@ -14,7 +14,7 @@ func (bc *Blockchain) ReplaceBlocks(blocks []*block.Block) {
 }
 
 func (bc *Blockchain) AddBlock(block *block.Block) bool {
-	if block.Verify() {
+	if !block.Verify() {
 		log.Println("info: Refused adding the block")
 		return false
 	}
