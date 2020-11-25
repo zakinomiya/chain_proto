@@ -81,8 +81,8 @@ func (m *Miner) mining() {
 
 }
 
-func (m *Miner) findNonce(block *block.Block, quit chan struct{}, target uint32) bool {
-	consecutiveZeros := strings.Repeat("0", int(target))
+func (m *Miner) findNonce(block *block.Block, quit chan struct{}) bool {
+	consecutiveZeros := strings.Repeat("0", int(block.Bits))
 
 	for {
 		select {
@@ -115,9 +115,9 @@ func (m *Miner) generateBlock(quit chan struct{}) {
 			//
 		}
 
-		coinbase := transaction.NewCoinbase(m.minerWallet.X.Bytes(), 25)
+		coinbase := transaction.NewCoinbase(m.minerWallet, 25)
 		block := m.blockchain.GenerateBlock(append([]*transaction.Transaction{coinbase}, m.transactionPool...))
-		if m.findNonce(block, quit, block.Bits) {
+		if m.findNonce(block, quit) {
 			m.blockchain.AddBlock(block)
 			log.Printf("info: %x \n", block.Hash)
 			log.Println("debug: Closing the quit channel")

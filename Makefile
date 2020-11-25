@@ -1,14 +1,17 @@
 PROJECT_NAME = go_chain
 OUT_DIR = bin
 
-.PHONY: wallet miner cli
+.PHONY: wallet server cli
 
 all: cli
 
-cli: wallet miner
+cli: wallet server
+
+clean: 
+	rm data/blockchain.db
 
 wallet:
 	go build -o $(OUT_DIR)/wallet $(PROJECT_NAME)/cmd/wallet
 
-miner: 
-	go build -o $(OUT_DIR)/miner $(PROJECT_NAME)/cmd/miner
+server: 
+	go build -o $(OUT_DIR)/server $(PROJECT_NAME)/cmd/server

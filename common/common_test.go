@@ -12,11 +12,7 @@ func TestReadByteInto32(t *testing.T) {
 	sum := sha.Sum(nil)
 	sumStr := fmt.Sprintf("%x", sum)
 
-	s, err := ReadByteInto32(sum)
-	if err != nil {
-		t.Log(err)
-		t.Fatal("failed to read byte into a byte array")
-	}
+	s := ReadByteInto32(sum)
 
 	sss := fmt.Sprintf("%x", s[:])
 

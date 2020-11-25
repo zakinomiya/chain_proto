@@ -46,15 +46,7 @@ func (r *Repository) fromBlock(b *block.Block, bm *BlockModel) error {
 }
 
 func (r *Repository) toBlock(bm *BlockModel, b *block.Block) error {
-	hash, err := common.ReadByteInto32(bm.Hash)
-	if err != nil {
-		return err
-	}
-
-	prevBlockHash, err := common.ReadByteInto32(bm.PrevBlockHash)
-	if err != nil {
-		return err
-	}
+	hash := common.ReadByteInto32(bm.Hash)
 
 	transactions, err := r.GetTxByBlockHash(hash)
 	if err != nil {
@@ -64,7 +56,7 @@ func (r *Repository) toBlock(bm *BlockModel, b *block.Block) error {
 	b.Hash = hash
 	b.Height = bm.Height
 	b.MerkleRoot = bm.MerkleRoot
-	b.PrevBlockHash = prevBlockHash
+	b.PrevBlockHash = common.ReadByteInto32(bm.PrevBlockHash)
 	b.Timestamp = bm.Timestamp
 	b.Bits = bm.Bits
 	b.ExtraNonce = bm.ExtraNonce

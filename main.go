@@ -1,29 +1,11 @@
 package main
 
 import (
-	"go_chain/common"
-	"go_chain/config"
-	"go_chain/server"
+	"encoding/hex"
+	"fmt"
 )
 
 func main() {
-	common.LogginSettings(config.Config.LogFile, config.Config.DefaultLogLevel)
-
-	server := server.New(&config.Config)
-	server.Start()
-
-	// if err := server.Start(); err != nil {
-	// 	log.Printf("Failed to start server. %s", err.Error())
-	// 	os.Exit(1)
-	// }
-
-	// c := make(chan int)
-
-	// for {
-	// 	select {
-	// 	case <-c:
-
-	// 	}
-	// }
-
+	h, _ := hex.DecodeString("000007cac0b2b4bfb9117d00a6a26944871e1fa903dbfb100e61171150f43534")
+	fmt.Println(h)
 }

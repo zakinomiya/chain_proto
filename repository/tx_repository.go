@@ -11,33 +11,24 @@ type TxModel struct {
 	TxHash     []byte
 	TotalValue uint32
 	Fee        uint32
-	SenderAddr []byte
+	SenderAddr string
 	Timestamp  uint64
 	OutCount   int
 	Outs       []byte
 }
 
 func (r *Repository) toTx(tm *TxModel, tx *transaction.Transaction) error {
-	txHash, err := common.ReadByteInto32(tm.TxHash)
-	if err != nil {
-		return err
-	}
-
-	senderAddr, err := common.ReadByteInto32(tm.SenderAddr)
-	if err != nil {
-		return err
-	}
 
 	var outs []*transaction.Output
-	err = json.Unmarshal(tm.Outs, &outs)
+	err := json.Unmarshal(tm.Outs, &outs)
 	if err != nil || tm.OutCount != len(outs) {
 		return err
 	}
 
-	tx.TxHash = txHash
+	tx.TxHash = common.ReadByteInto32(tm.TxHash)
 	tx.TotalValue = tm.TotalValue
 	tx.Timestamp = tm.Timestamp
-	tx.SenderAddr = senderAddr
+	tx.SenderAddr = tm.SenderAddr
 	tx.Fee = tm.Fee
 	tx.Outs = outs
 

@@ -7,6 +7,7 @@ require (
 	github.com/NebulousLabs/fastrand v0.0.0-20181203155948-6fb6489aac4e // indirect
 	github.com/NebulousLabs/merkletree v0.0.0-20181203152040-08d5d54b07f5
 	github.com/btcsuite/btcd v0.21.0-beta // indirect
+	github.com/btcsuite/btcutil v1.0.2
 	github.com/comail/colog v0.0.0-20160416085026-fba8e7b1f46c
 	github.com/ethereum/go-ethereum v1.9.23 // indirect
 	github.com/go-yaml/yaml v2.1.0+incompatible

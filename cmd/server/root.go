@@ -8,8 +8,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "miner",
-	Short: "miner command provides miner utilities for go_chain",
+	Use:   "server",
+	Short: "server command provides commands for a blockchain server",
 	Long:  ``,
 }
 

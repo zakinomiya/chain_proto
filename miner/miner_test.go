@@ -1,16 +1,20 @@
 package miner
 
 import (
+	"encoding/json"
 	"go_chain/block"
 	"go_chain/common"
 	"go_chain/transaction"
+	"go_chain/wallet"
+	"io/ioutil"
 	"testing"
 	"time"
 )
 
 func TestMining(t *testing.T) {
-	m := &Miner{}
-	c := transaction.NewCoinbase([]byte("hello world"), 25)
+	w, _ := wallet.New()
+	m := &Miner{minerWallet: w}
+	c := transaction.NewCoinbase(w, 25)
 	h := block.NewHeader()
 	h.PrevBlockHash = [32]byte{}
 	h.Timestamp = uint32(time.Now().Unix())
@@ -25,7 +29,9 @@ func TestMining(t *testing.T) {
 		BlockHeader:  h,
 	}
 	block.CalcMerkleTree()
-	if m.findNonce(block, make(chan struct{}, 0), 5) {
-		t.Errorf("height=%d, hash=%x, transaction=%#v, extraNonce=%d, prevBlockHash=%x, merkelRoot=%x, timestamp=%d, bits=%d, nonce=%d", block.Height, block.Hash, block.Transactions[0], block.ExtraNonce, block.PrevBlockHash, block.MerkleRoot, block.Timestamp, block.Bits, block.Nonce)
+	if m.findNonce(block, make(chan struct{}, 0)) {
+		j, _ := json.Marshal(block)
+		t.Log(string(j))
+		ioutil.WriteFile("block.json", j, 0400)
 	}
 }

@@ -3,8 +3,10 @@ package transaction
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"go_chain/common"
+	"go_chain/wallet"
 
 	"hash"
 	"log"
@@ -14,13 +16,34 @@ type Transaction struct {
 	TxHash     [32]byte
 	TotalValue uint32
 	Fee        uint32
-	SenderAddr [32]byte
+	SenderAddr string
 	Timestamp  uint64
 	Outs       []*Output
+	Signature  *wallet.Signature
 }
 
 func New() *Transaction {
 	return &Transaction{}
+}
+
+func (t *Transaction) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&struct {
+		TxHash     string    `json:"txHash"`
+		TotalValue uint32    `json:"totalValue"`
+		Fee        uint32    `json:"fee"`
+		SenderAddr string    `json:"senderAddr"`
+		Timestamp  uint64    `json:"timestamp"`
+		Outs       []*Output `json:"outs"`
+		Signature  string    `json:"signature"`
+	}{
+		TxHash:     fmt.Sprintf("%x", t.TxHash),
+		TotalValue: t.TotalValue,
+		Fee:        t.Fee,
+		SenderAddr: t.SenderAddr,
+		Timestamp:  t.Timestamp,
+		Outs:       t.Outs,
+		Signature:  t.Signature.String(),
+	})
 }
 
 func (tx *Transaction) ToBytes() []byte {
@@ -28,7 +51,7 @@ func (tx *Transaction) ToBytes() []byte {
 	buf.Write(tx.TxHash[:])
 	buf.Write(common.IntToByteSlice(int(tx.TotalValue)))
 	buf.Write(common.IntToByteSlice(int(tx.Fee)))
-	buf.Write(tx.SenderAddr[:])
+	buf.Write([]byte(tx.SenderAddr))
 	buf.Write(common.IntToByteSlice(int(tx.Timestamp)))
 
 	return buf.Bytes()
@@ -61,12 +84,20 @@ func (tx *Transaction) Verify() bool {
 }
 
 type Output struct {
-	Index         uint32   `json:"index"`
-	RecipientAddr [32]byte `json:"recipientAddr"`
-	Value         uint32   `json:"value"`
-	Signature     []byte   `json:"signature"`
+	Index         uint32
+	RecipientAddr string
+	Value         uint32
 }
 
-func (o *Output) Sign(privKey []byte) {
-	o.Signature = []byte{}
+func (o *Output) MarshalJSON() ([]byte, error) {
+	return json.Marshal(
+		&struct {
+			Index         uint32 `json:"index"`
+			RecipientAddr string `json:"recipientAddr"`
+			Value         uint32 `json:"value"`
+		}{
+			Index:         o.Index,
+			RecipientAddr: o.RecipientAddr,
+			Value:         o.Value,
+		})
 }

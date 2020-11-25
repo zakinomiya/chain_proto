@@ -45,7 +45,7 @@ var newKeyPair = &cobra.Command{
 
 var restoreKeyPair = &cobra.Command{
 	Use:   "restore",
-	Short: "restore a new keypair from private key",
+	Short: "Restore a keypair from private key",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		privKeyStr := args[0]
 
@@ -73,6 +73,12 @@ var restoreKeyPair = &cobra.Command{
 	},
 }
 
+func init() {
+	setCommonFlags(newKeyPair, restoreKeyPair)
+
+	rootCmd.AddCommand(newKeyPair, restoreKeyPair)
+}
+
 func storeKeypair(dir string, keypairName string, wallet *wallet.Wallet) error {
 	keypairYml := []yaml.MapItem{
 		{
@@ -91,7 +97,7 @@ func storeKeypair(dir string, keypairName string, wallet *wallet.Wallet) error {
 	}
 
 	if _, err := os.Stat(filepath.Join(keypairDirName, keypairName+".yml")); !os.IsNotExist(err) {
-		return errors.New("The same keypair name already exists")
+		return errors.New("A keypair file with the same name already exists")
 	}
 
 	if _, err := os.Stat(keypairDirName); os.IsNotExist(err) {
@@ -103,19 +109,14 @@ func storeKeypair(dir string, keypairName string, wallet *wallet.Wallet) error {
 		return err
 	}
 
+	fmt.Printf("A new keypair file (%s.yml) has been successfully created\n", keypairName)
 	return nil
-}
-
-func init() {
-	setCommonFlags(newKeyPair, restoreKeyPair)
-
-	rootCmd.AddCommand(newKeyPair, restoreKeyPair)
 }
 
 func setCommonFlags(cmds ...*cobra.Command) {
 	for _, cmd := range cmds {
-		cmd.Flags().BoolP("save", "s", false, "keypair is saved to a file")
-		cmd.Flags().StringVarP(&keypairName, "keypair", "k", "", "Filename for a new keypair")
+		cmd.Flags().BoolP("save", "s", false, "Keypair will be saved to a file")
+		cmd.Flags().StringVarP(&keypairName, "name", "n", "", "Filename for a new keypair")
 	}
 
 	if keypairName == "" {

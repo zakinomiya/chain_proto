@@ -1,7 +1,6 @@
 package common
 
 import (
-	"errors"
 	"math/rand"
 	"strconv"
 )
@@ -15,15 +14,12 @@ func RandomUint32() uint32 {
 	return rand.Uint32()
 }
 
-func ReadByteInto32(h []byte) ([32]byte, error) {
-	if len(h) != 32 {
-		return [32]byte{}, errors.New("byte slice length must be 32")
-	}
-
+//  Read first 32 bytes of the
+func ReadByteInto32(h []byte) [32]byte {
 	var bytes [32]byte
-	for i, b := range h {
+	for i, b := range h[0:32] {
 		bytes[i] = b
 	}
 
-	return bytes, nil
+	return bytes
 }

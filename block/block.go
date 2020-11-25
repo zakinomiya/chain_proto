@@ -3,6 +3,7 @@ package block
 import (
 	"crypto"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"go_chain/transaction"
 	"log"
@@ -15,66 +16,90 @@ import (
 )
 
 type BlockHeader struct {
-	PrevBlockHash [32]byte `db:"prevBlockHash"`
-	MerkleRoot    []byte   `db:"merkleRoot"`
-	Timestamp     uint32   `db:"timestamp"`
-	Bits          uint32   `db:"bits"`
-	Nonce         uint32   `db:"nonce"`
+	PrevBlockHash [32]byte `json:"prevBlockHash"`
+	MerkleRoot    []byte   `json:"merkleRoot"`
+	Timestamp     uint32   `json:"timestamp"`
+	Bits          uint32   `json:"bits"`
+	Nonce         uint32   `json:"nonce"`
 }
 
 func NewHeader() *BlockHeader {
 	return &BlockHeader{Nonce: 0, Timestamp: uint32(time.Now().UTC().Unix())}
 }
 
-func (block *Block) IncrementNonce() {
-	block.Nonce += 1
+func (b *Block) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&struct {
+		Height        uint32                     `json:"height"`
+		Hash          string                     `json:"hash"`
+		Transactions  []*transaction.Transaction `json:"transactions"`
+		ExtraNonce    uint32                     `json:"extraNonce"`
+		PrevBlockHash string                     `json:"prevBlockHash"`
+		MerkleRoot    string                     `json:"merkleRoot"`
+		Timestamp     uint32                     `json:"timestamp"`
+		Bits          uint32                     `json:"bits"`
+		Nonce         uint32                     `json:"nonce"`
+	}{
+		Height:        b.Height,
+		Hash:          fmt.Sprintf("%x", b.Hash),
+		Transactions:  b.Transactions,
+		ExtraNonce:    b.ExtraNonce,
+		PrevBlockHash: fmt.Sprintf("%x", b.PrevBlockHash),
+		MerkleRoot:    fmt.Sprintf("%x", b.MerkleRoot),
+		Timestamp:     b.Timestamp,
+		Bits:          b.Bits,
+		Nonce:         b.Nonce,
+	})
+}
+
+func (b *Block) IncrementNonce() {
+	b.Nonce += 1
 }
 
 type Block struct {
-	Height       uint32                     `db:"height"`
-	Hash         [32]byte                   `db:"hash"`
-	Transactions []*transaction.Transaction `db:"transactions"`
-	ExtraNonce   uint32                     `db:"extraNonce"`
+	Height       uint32                     `json:"height"`
+	Hash         [32]byte                   `json:"hash"`
+	Transactions []*transaction.Transaction `json:"transactions"`
+	ExtraNonce   uint32                     `json:"extraNonce"`
 	*BlockHeader
 }
 
 func New(height uint32, bits uint32, prevBlockHash [32]byte, txs []*transaction.Transaction) *Block {
-	block := &Block{}
-	block.Transactions = txs
-	block.Bits = bits
-	block.PrevBlockHash = prevBlockHash
-	block.Timestamp = uint32(time.Now().Unix())
-	block.Nonce = 0
-	block.SetExtranNonce()
-	block.CalcMerkleTree()
+	b := &Block{}
+	b.Transactions = txs
+	b.Bits = bits
+	b.PrevBlockHash = prevBlockHash
+	b.Timestamp = uint32(time.Now().Unix())
+	b.Nonce = 0
+	b.SetExtranNonce()
+	b.CalcMerkleTree()
 
-	return block
+	return b
 }
 
-func (block *Block) SetExtranNonce() {
-	block.ExtraNonce = rand.Uint32()
+func (b *Block) SetExtranNonce() {
+	b.ExtraNonce = rand.Uint32()
 }
 
-func (block *Block) CalcMerkleTree() {
+func (b *Block) CalcMerkleTree() {
 	tree := merkletree.New(crypto.SHA256.New())
 
-	for _, tx := range block.Transactions {
+	for _, tx := range b.Transactions {
 		h := tx.TxHash
 		tree.Push(h[:])
 	}
 
-	block.BlockHeader.MerkleRoot = tree.Root()
+	b.BlockHeader.MerkleRoot = tree.Root()
 }
 
-func (block *Block) HashBlock() [32]byte {
+func (b *Block) HashBlock() [32]byte {
 	sha := sha256.New()
 
-	sha.Write([]byte(strconv.Itoa(int(block.ExtraNonce))))
-	sha.Write(block.PrevBlockHash[:])
-	sha.Write([]byte(block.BlockHeader.MerkleRoot))
-	sha.Write([]byte(strconv.Itoa(int(block.BlockHeader.Timestamp))))
-	sha.Write([]byte(strconv.Itoa(int(block.BlockHeader.Bits))))
-	sha.Write([]byte(strconv.Itoa(int(block.BlockHeader.Nonce))))
+	sha.Write([]byte(strconv.Itoa(int(b.ExtraNonce))))
+	sha.Write(b.PrevBlockHash[:])
+	sha.Write([]byte(b.BlockHeader.MerkleRoot))
+	sha.Write([]byte(strconv.Itoa(int(b.BlockHeader.Timestamp))))
+	sha.Write([]byte(strconv.Itoa(int(b.BlockHeader.Bits))))
+	sha.Write([]byte(strconv.Itoa(int(b.BlockHeader.Nonce))))
 
 	return sha256.Sum256(sha.Sum([]byte{}))
 }

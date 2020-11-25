@@ -1,4 +1,5 @@
-data/*
+# data directory is the storage for db
+data
 
 # bin directory holds executables
 bin

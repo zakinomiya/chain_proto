@@ -1,19 +1,18 @@
-genesis:
-  hash: 000007cac0b2b4bfb9117d00a6a26944871e1fa903dbfb100e61171150f435341
-  nonce: 1975649
-  extraNonce: 2596996162
-  merkleRoot: 569e5547bdd4ac13679292267c06bd1bad2a9073af9863b7162e7c76aa51e30d
-  prevBlockHash: 0000000000000000000000000000000000000000000000000000000000000000
-  timestamp: 1601564532
-  bits: 5
-  transactions:
-    - txHash:
-      totalValue:
-      fee: 0
-      senderAddr:
-      timestamp:
-      outs:
-        - index: 0
-          recipientAddr:
-          value: 25
-          signature: 0
+hash: 000007cac0b2b4bfb9117d00a6a26944871e1fa903dbfb100e61171150f43534
+nonce: 1975649
+extraNonce: 2596996162
+merkleRoot: 569e5547bdd4ac13679292267c06bd1bad2a9073af9863b7162e7c76aa51e30d
+prevBlockHash: 0000000000000000000000000000000000000000000000000000000000000000
+timestamp: 1601564532
+bits: 5
+transactions:
+  - txHash: 0000000000000000000000000000000000000000000000000000000000000000
+    totalValue: 25
+    fee: 0
+    senderAddr: 0000000000000000000000000000000000000000000000000000000000000000
+    timestamp: 1601564532
+    outs:
+      - index: 0
+        recipientAddr: 000007cac0b2b4bfb9117d00a6a26944871e1fa903dbfb100e61171150f43534
+        value: 25
+        signature: 0

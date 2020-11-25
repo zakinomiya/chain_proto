@@ -1,52 +1,66 @@
 package block
 
 import (
+	"encoding/hex"
+	"go_chain/common"
 	"go_chain/transaction"
+	"go_chain/wallet"
 	"io/ioutil"
+	"log"
 
 	"github.com/go-yaml/yaml"
 )
 
-type Genesis struct {
-	PrevBlockHash [32]byte `yaml:"prevBlockHash"`
-	MerkleRoot    []byte   `yaml:"merkleRoot"`
-	Timestamp     uint32   `yaml:"timestamp"`
-	Bits          uint32   `yaml:"bits"`
-	Nonce         uint32   `yaml:"nonce"`
-	Height        uint32   `yaml:"height"`
-	Hash          [32]byte `yaml:"hash"`
-	ExtraNonce    uint32   `yaml:"extraNonce"`
+type genesis struct {
+	PrevBlockHash string `yaml:"prevBlockHash"`
+	MerkleRoot    string `yaml:"merkleRoot"`
+	Timestamp     uint32 `yaml:"timestamp"`
+	Bits          uint32 `yaml:"bits"`
+	Nonce         uint32 `yaml:"nonce"`
+	Height        uint32 `yaml:"height"`
+	Hash          string `yaml:"hash"`
+	ExtraNonce    uint32 `yaml:"extraNonce"`
 	Transactions  []struct {
-		TxHash     [32]byte `yaml:"txHash"`
-		TotalValue uint32   `yaml:"totalValue"`
-		Fee        uint32   `yaml:"fee"`
-		SenderAddr [32]byte `yaml:"senderAddr"`
-		Timestamp  uint64   `yaml:"timestamp"`
+		TxHash     string `yaml:"txHash"`
+		TotalValue uint32 `yaml:"totalValue"`
+		Fee        uint32 `yaml:"fee"`
+		SenderAddr string `yaml:"senderAddr"`
+		Timestamp  uint64 `yaml:"timestamp"`
+		Signature  string `yaml:"signature"`
 		Outs       []struct {
-			Index         uint32   `yaml:"index"`
-			RecipientAddr [32]byte `yaml:"recipientAddr"`
-			Value         uint32   `yaml:"value"`
-			Signature     string   `yaml:"signature"`
+			Index         uint32 `yaml:"index"`
+			RecipientAddr string `yaml:"recipientAddr"`
+			Value         uint32 `yaml:"value"`
 		} `yaml:"outs"`
 	} `yaml:"transactions"`
 }
 
-func NewGenesisBlock() (*Block, error) {
-	data, err := ioutil.ReadFile("./block/genesis.yaml")
+func readFromYaml(path string) (*genesis, error) {
+	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-
-	gen := &Genesis{}
+	gen := &genesis{}
 
 	if err := yaml.Unmarshal(data, gen); err != nil {
 		return nil, err
 	}
 
+	return gen, nil
+}
+
+func NewGenesisBlock() (*Block, error) {
+	gen, err := readFromYaml("block/genesis.yaml")
+
 	var transactions []*transaction.Transaction
 	for _, t := range gen.Transactions {
+		txHash, err := hex.DecodeString(t.TxHash)
+		if err != nil {
+			log.Println("error:", t.TxHash)
+			return nil, err
+		}
 		tx := transaction.New()
-		tx.TxHash = t.TxHash
+		tx.TxHash = common.ReadByteInto32(txHash)
 		tx.SenderAddr = t.SenderAddr
 		tx.Timestamp = t.Timestamp
 		tx.TotalValue = t.TotalValue
@@ -57,28 +71,54 @@ func NewGenesisBlock() (*Block, error) {
 			out := &transaction.Output{}
 			out.Index = o.Index
 			out.Value = o.Value
-			out.Signature = []byte{}
 			out.RecipientAddr = o.RecipientAddr
 			outs = append(outs, out)
 		}
-
 		tx.Outs = outs
+
+		sig, err := wallet.RestoreSignature(t.Signature)
+		if err != nil {
+			return nil, err
+		}
+
+		tx.Signature = sig
 		transactions = append(transactions, tx)
+	}
+
+	hash, err := hex.DecodeString(gen.Hash)
+	if err != nil {
+		log.Println("error:", gen.Hash)
+		return nil, err
+	}
+
+	prevBlockHash, err := hex.DecodeString(gen.PrevBlockHash)
+	if err != nil {
+		log.Println("error:", gen.PrevBlockHash)
+		return nil, err
+	}
+
+	merklerRoot, err := hex.DecodeString(gen.MerkleRoot)
+	if err != nil {
+		log.Println("error:", gen.MerkleRoot)
+		return nil, err
 	}
 
 	b := &Block{
 		Height:       gen.Height,
-		Hash:         gen.Hash,
+		Hash:         common.ReadByteInto32(hash),
 		ExtraNonce:   gen.ExtraNonce,
 		Transactions: transactions,
 		BlockHeader: &BlockHeader{
-			PrevBlockHash: gen.PrevBlockHash,
-			MerkleRoot:    gen.MerkleRoot,
+			PrevBlockHash: common.ReadByteInto32(prevBlockHash),
+			MerkleRoot:    merklerRoot,
 			Bits:          gen.Bits,
 			Nonce:         gen.Nonce,
 			Timestamp:     gen.Timestamp,
 		},
 	}
 
+	b.Hash = b.HashBlock()
+
+	log.Printf("debug: genesis block=%+v\n", b)
 	return b, nil
 }
