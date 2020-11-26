@@ -1,10 +1,9 @@
 package wallet
 
 import (
-	"errors"
+	"encoding/base64"
 	"log"
 	"math/big"
-	"strings"
 )
 
 type Signature struct {
@@ -12,23 +11,16 @@ type Signature struct {
 	S *big.Int
 }
 
-func RestoreSignature(sig string) (*Signature, error) {
-	rs := strings.Split(sig, "RS")
+func DecodeSigString(sigString string) (*Signature, error) {
 
-	if len(rs) != 2 {
-		log.Printf("debug: sig string=%s. rs=%+v\n", sig, rs)
-		return nil, errors.New("Invalid form of signature string")
+	rbuf, err := base64.StdEncoding.DecodeString(sigString)
+	if err != nil {
+		log.Println("debug: failed to the decode signature string:", sigString)
+		return nil, err
 	}
 
-	r, ok := new(big.Int).SetString(rs[0], 10)
-	if ok != true {
-		return nil, errors.New("Invalid form of signature string")
-	}
-
-	s, ok := new(big.Int).SetString(rs[1], 10)
-	if ok != true {
-		return nil, errors.New("Invalid form of siganture string")
-	}
+	r := new(big.Int).SetBytes(rbuf[:32])
+	s := new(big.Int).SetBytes(rbuf[32:])
 
 	return &Signature{
 		R: r,
@@ -37,5 +29,5 @@ func RestoreSignature(sig string) (*Signature, error) {
 }
 
 func (s *Signature) String() string {
-	return s.R.String() + "RS" + s.S.String()
+	return base64.StdEncoding.EncodeToString(append(s.R.Bytes(), s.S.Bytes()...))
 }

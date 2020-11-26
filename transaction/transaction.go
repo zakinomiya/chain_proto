@@ -19,7 +19,6 @@ type Transaction struct {
 	SenderAddr string
 	Timestamp  int64
 	Outs       []*Output
-	Signature  *wallet.Signature
 }
 
 func New() *Transaction {
@@ -34,7 +33,6 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 		SenderAddr string    `json:"senderAddr"`
 		Timestamp  int64     `json:"timestamp"`
 		Outs       []*Output `json:"outs"`
-		Signature  string    `json:"signature"`
 	}{
 		TxHash:     fmt.Sprintf("%x", t.TxHash),
 		TotalValue: t.TotalValue,
@@ -42,7 +40,6 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 		SenderAddr: t.SenderAddr,
 		Timestamp:  t.Timestamp,
 		Outs:       t.Outs,
-		Signature:  t.Signature.String(),
 	})
 }
 
@@ -93,12 +90,12 @@ type Output struct {
 func (o *Output) MarshalJSON() ([]byte, error) {
 	return json.Marshal(
 		&struct {
-			Index         uint32 `json:"index"`
-			RecipientAddr string `json:"signature"`
-			Value         uint32 `json:"value"`
+			Index     uint32 `json:"index"`
+			Signature string `json:"signature"`
+			Value     uint32 `json:"value"`
 		}{
-			Index:         o.Index,
-			RecipientAddr: o.RecipientAddr,
-			Value:         o.Value,
+			Index:     o.Index,
+			Signature: o.Signature.String(),
+			Value:     o.Value,
 		})
 }

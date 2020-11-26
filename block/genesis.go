@@ -26,11 +26,10 @@ type genesis struct {
 		Fee        uint32 `yaml:"fee"`
 		SenderAddr string `yaml:"senderAddr"`
 		Timestamp  int64  `yaml:"timestamp"`
-		Signature  string `yaml:"signature"`
 		Outs       []struct {
-			Index         uint32 `yaml:"index"`
-			RecipientAddr string `yaml:"recipientAddr"`
-			Value         uint32 `yaml:"value"`
+			Index     uint32 `yaml:"index"`
+			Signature string `yaml:"signature"`
+			Value     uint32 `yaml:"value"`
 		} `yaml:"outs"`
 	} `yaml:"transactions"`
 }
@@ -71,17 +70,15 @@ func NewGenesisBlock() (*Block, error) {
 			out := &transaction.Output{}
 			out.Index = o.Index
 			out.Value = o.Value
-			out.RecipientAddr = o.RecipientAddr
+			sig, err := wallet.DecodeSigString(o.Signature)
+			if err != nil {
+				return nil, err
+			}
+			out.Signature = sig
 			outs = append(outs, out)
 		}
 		tx.Outs = outs
 
-		sig, err := wallet.RestoreSignature(t.Signature)
-		if err != nil {
-			return nil, err
-		}
-
-		tx.Signature = sig
 		transactions = append(transactions, tx)
 	}
 

@@ -69,7 +69,14 @@ func decodeHex(str string) []byte {
 	return buf
 }
 
-func TestRestoreSignature(t *testing.T) {
-	sig := "50402529203570376662559875826766927271804230142275273453460449051556004915703RS70022284326539589448879401199728037123922696674788712990726468324680895666445"
+func TestDecodeSigString(t *testing.T) {
+	sigStr := "b27SEVIjobIjMjwk94Y/ivZjlWXuCo9G8c2td/NSafeazzVdF4LfHWiQqW1xIJQyhu/OXrcgcuSY4fDu8K2ZDQ=="
 
+	sig, err := DecodeSigString(sigStr)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	t.Logf("r=%s, s=%s", sig.R.String(), sig.S.String())
 }
