@@ -60,14 +60,13 @@ func (m *Miner) AddTransaction(tx *transaction.Transaction) {
 }
 
 func (m *Miner) mining() {
-	runWorkers := func(workersCount uint32) {
-		for i := uint32(0); i < workersCount; i++ {
-			quit := make(chan struct{})
-
-			go m.generateBlock(quit)
+	runWorkers := func(workersCount int) {
+		for i := 0; i < workersCount; i++ {
+			b := m.generateBlock()
+			go m.findNonce(b)
 		}
 	}
-	runWorkers(uint32(runtime.NumCPU()))
+	runWorkers(runtime.NumCPU())
 
 	for {
 		select {
@@ -78,10 +77,10 @@ func (m *Miner) mining() {
 			//
 		}
 	}
-
 }
 
-func (m *Miner) findNonce(block *block.Block, quit chan struct{}) bool {
+func (m *Miner) findNonce(block *block.Block) bool {
+	log.Println("Started mining")
 	consecutiveZeros := strings.Repeat("0", int(block.Bits))
 
 	for {
@@ -93,7 +92,6 @@ func (m *Miner) findNonce(block *block.Block, quit chan struct{}) bool {
 		}
 		hash := block.HashBlock()
 
-		// TODO research on bitcoin compare algorithm is needed
 		if strings.HasPrefix(fmt.Sprintf("%x", hash), consecutiveZeros) {
 			block.Hash = hash
 			log.Printf("info: Found a valid nonce: %v \n", block.Nonce)
@@ -103,25 +101,10 @@ func (m *Miner) findNonce(block *block.Block, quit chan struct{}) bool {
 	}
 }
 
-func (m *Miner) generateBlock(quit chan struct{}) {
+func (m *Miner) generateBlock() *block.Block {
 	log.Println("trace: Started generating a new block")
-
-	for {
-		select {
-		case <-m.quit:
-			log.Println("trace: Breaking OUTER: action=generateBlock")
-			return
-		default:
-			//
-		}
-
-		coinbase := transaction.NewCoinbase(m.minerWallet, 25)
-		block := m.blockchain.GenerateBlock(append([]*transaction.Transaction{coinbase}, m.transactionPool...))
-		if m.findNonce(block, quit) {
-			m.blockchain.AddBlock(block)
-			log.Printf("info: %x \n", block.Hash)
-			log.Println("debug: Closing the quit channel")
-			m.Restart()
-		}
-	}
+	coinbase := transaction.NewCoinbase(m.minerWallet, 25)
+	txs := append([]*transaction.Transaction{coinbase}, m.blockchain.GetPooledTransactions(10)...)
+	block := block.New(m.blockchain.CurrentBlockHeight(), m.blockchain.Difficulty(), m.blockchain.LatestBlock().Hash, txs)
+	return block
 }
