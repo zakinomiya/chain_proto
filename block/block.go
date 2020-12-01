@@ -24,10 +24,6 @@ type BlockHeader struct {
 	Nonce         uint32   `json:"nonce"`
 }
 
-func NewHeader() *BlockHeader {
-	return &BlockHeader{Nonce: 0, Timestamp: common.Timestamp()}
-}
-
 func (b *Block) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
 		Height        uint32                     `json:"height"`
@@ -65,12 +61,15 @@ type Block struct {
 }
 
 func New(height uint32, bits uint32, prevBlockHash [32]byte, txs []*transaction.Transaction) *Block {
-	b := &Block{}
-	b.Transactions = txs
-	b.Bits = bits
-	b.PrevBlockHash = prevBlockHash
-	b.Timestamp = common.Timestamp()
-	b.Nonce = 0
+	b := &Block{
+		Transactions: txs,
+		BlockHeader: &BlockHeader{
+			Bits:          bits,
+			PrevBlockHash: prevBlockHash,
+			Timestamp:     common.Timestamp(),
+			Nonce:         0,
+		},
+	}
 	b.SetExtranNonce()
 	b.SetMerkleRoot()
 
@@ -113,7 +112,7 @@ func (b *Block) TxCount() int {
 	return len(b.Transactions)
 }
 
-/// Check if reveived blocks are valid blocks
+/// Verify checks if received blocks are valid blocks
 /// Criteria:
 ///  - Block hash is valid
 ///     - hash = the calculated result from properties in the block

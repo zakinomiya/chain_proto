@@ -1,18 +1,44 @@
 package miner
 
 import (
+	"context"
 	"fmt"
 	"go_chain/block"
 	"go_chain/blockchain"
 	"go_chain/transaction"
 	"go_chain/wallet"
 	"log"
-	"runtime"
 	"strings"
+	"time"
 )
 
+type State int
+
+const (
+	unknown State = iota
+	running
+	stopping
+	stopped
+	restarting
+)
+
+func (s *State) Status(status string) int {
+	switch status {
+	case "Running":
+		return 1
+	case "Stopping":
+		return 2
+	case "Stopped":
+		return 3
+	default:
+		return 0
+	}
+}
+
 type Miner struct {
-	quit            chan struct{}
+	state           State
+	done            chan struct{}
+	miningCtx       context.Context
 	transactionPool []*transaction.Transaction
 	blockchain      blockchain.BlockchainInterface
 	minerWallet     *wallet.Wallet
@@ -22,27 +48,39 @@ func New(bc blockchain.BlockchainInterface, w *wallet.Wallet) *Miner {
 	return &Miner{blockchain: bc, minerWallet: w}
 }
 
-func (m *Miner) Start() error {
-	if m.quit != nil {
-		log.Println("debug: Mining process is already running")
-		return nil
+func (m *Miner) Start() {
+	log.Println("info: Starting mining process")
+
+	done := make(chan struct{}, 0)
+	m.done = done
+	m.state = running
+
+	go m.mining(done)
+
+	for {
+		select {
+		case <-done:
+			log.Println("Mining process stopped")
+			if m.state == running {
+				m.state = restarting
+				m.Restart()
+				return
+			} else if m.state == stopping {
+				m.state = stopped
+				log.Println("Mining server gracefully stopped")
+				return
+			}
+		default:
+			//
+		}
 	}
-
-	m.quit = make(chan struct{})
-	go m.mining()
-
-	log.Println("debug: Mining process started")
-	return nil
 }
 
 func (m *Miner) Stop() {
-	if m.quit == nil {
-		log.Println("debug: No mining process is running")
-		return
-	}
-	close(m.quit)
-	m.quit = nil
-	log.Println("debug: Mining process stopped")
+	log.Println("info: Stopping mining procss")
+	m.state = stopping
+	m.done <- struct{}{}
+	time.Sleep(time.Second * 2)
 }
 
 func (m *Miner) ServiceName() string {
@@ -51,7 +89,6 @@ func (m *Miner) ServiceName() string {
 
 func (m *Miner) Restart() {
 	log.Println("debug: Restarting Miner")
-	m.Stop()
 	m.Start()
 }
 
@@ -59,19 +96,18 @@ func (m *Miner) AddTransaction(tx *transaction.Transaction) {
 	m.transactionPool = append(m.transactionPool, tx)
 }
 
-func (m *Miner) mining() {
-	runWorkers := func(workersCount int) {
-		for i := 0; i < workersCount; i++ {
-			b := m.generateBlock()
-			go m.findNonce(b)
-		}
+func (m *Miner) mining(done chan struct{}) {
+	found := make(chan struct{}, 1)
+	for i := 0; i < 10; i++ {
+		b := m.generateBlock()
+		go m.findNonce(found, b)
 	}
-	runWorkers(runtime.NumCPU())
 
 	for {
 		select {
-		case <-m.quit:
-			log.Println("debug: Someone closed the quit channel")
+		case <-found:
+			log.Println("debug: Someone found a nonce")
+			done <- struct{}{}
 			return
 		default:
 			//
@@ -79,23 +115,27 @@ func (m *Miner) mining() {
 	}
 }
 
-func (m *Miner) findNonce(block *block.Block) bool {
+func (m *Miner) findNonce(found chan struct{}, block *block.Block) {
 	log.Println("Started mining")
 	consecutiveZeros := strings.Repeat("0", int(block.Bits))
 
 	for {
 		select {
-		case <-m.quit:
-			return false
+		case <-found:
+			log.Println("info: exiting findNonce")
+			return
 		default:
 			//
 		}
+
 		hash := block.HashBlock()
 
 		if strings.HasPrefix(fmt.Sprintf("%x", hash), consecutiveZeros) {
 			block.Hash = hash
 			log.Printf("info: Found a valid nonce: %v \n", block.Nonce)
-			return true
+			found <- struct{}{}
+			close(found)
+			return
 		}
 		block.IncrementNonce()
 	}
