@@ -1,51 +1,70 @@
 package config
 
 import (
+	"io/ioutil"
 	"log"
 	"os"
 
-	"gopkg.in/ini.v1"
+	"gopkg.in/yaml.v2"
 )
 
-type DBConfig struct {
-	Path   string
-	Driver string
+type Log struct {
+	LogFile         string `yaml:"log_file"`
+	DefaultLogLevel string `yaml:"default_log_level"`
 }
 
-type RpcConfig struct {
-	addr string
+type ChainInfo struct {
+	ChainID uint32 `yaml:"chain_id"`
+}
+
+type Miner struct {
+	SecretKeyStr string `yaml:"secret_key_str"`
+}
+
+type Db struct {
+	DbPath   string `yaml:"db_path"`
+	Driver   string `yaml:"driver"`
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+}
+type Network struct {
+	RPCPort       uint32 `yaml:"rpc_port"`
+	HTTPPort      uint32 `yaml:"http_port"`
+	WebsockerPort uint32 `yaml:"websocket_port"`
 }
 
 type ConfigSettings struct {
-	ChainID         uint32
-	LogFile         string
-	DefaultLogLevel string
-	MinerSecretKey  string
-	*DBConfig
-	*RpcConfig
+	Settings struct {
+		Log       `yaml:"log"`
+		ChainInfo `yaml:"chain_info"`
+		Miner     `yaml:"miner"`
+		Db        `yaml:"db"`
+		Network   `yaml:"network"`
+	} `yaml:"settings"`
 }
 
-var Config ConfigSettings
+var Config *ConfigSettings
 
 func init() {
-	cfg, err := ini.Load("config.ini")
+	conf, err := readFromYaml("../config.yaml")
 	if err != nil {
 		log.Printf("error: Failed to read config file. ERROR: %v", err)
 		os.Exit(1)
 	}
 
-	Config = ConfigSettings{
-		// general
-		LogFile:         cfg.Section("general").Key("log_file").String(),
-		DefaultLogLevel: cfg.Section("general").Key("default_log_level").String(),
-		// chain info
-		ChainID: uint32(cfg.Section("chain_info").Key("chain_id").InUint(1995, []uint{})),
-		//miner
-		MinerSecretKey: cfg.Section("miner").Key("secret_key").String(),
-		// db
-		DBConfig: &DBConfig{
-			Path:   cfg.Section("db").Key("db_path").String(),
-			Driver: cfg.Section("db").Key("driver").String(),
-		},
+	Config = conf
+}
+
+func readFromYaml(path string) (*ConfigSettings, error) {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, err
 	}
+	conf := &ConfigSettings{}
+
+	if err := yaml.Unmarshal(data, conf); err != nil {
+		return nil, err
+	}
+
+	return conf, nil
 }

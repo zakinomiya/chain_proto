@@ -56,7 +56,12 @@ func (w *Wallet) PubKeyStr() string {
 	return x + y
 }
 
-func RestoreWallet(privKeyBytes []byte) (*Wallet, error) {
+func RestoreWallet(privKeyHexStr string) (*Wallet, error) {
+	privKeyBytes, err := hex.DecodeString(privKeyHexStr)
+	if err != nil {
+		return nil, err
+	}
+
 	if len(privKeyBytes) != privKeyByteLength {
 		return nil, errors.New("invalid length of private key")
 	}

@@ -22,16 +22,20 @@ const (
 	restarting
 )
 
-func (s *State) Status(status string) int {
-	switch status {
-	case "Running":
-		return 1
-	case "Stopping":
-		return 2
-	case "Stopped":
-		return 3
+const maxMiningNum = 10
+
+func (s State) String() string {
+	switch s {
+	case unknown:
+		return "UNKNOWN"
+	case stopping:
+		return "STOPPING"
+	case stopped:
+		return "STOPPED"
+	case restarting:
+		return "RESTARTING"
 	default:
-		return 0
+		return "UNKNOWN"
 	}
 }
 
@@ -48,28 +52,30 @@ func New(bc blockchain.BlockchainInterface, w *wallet.Wallet) *Miner {
 	return &Miner{blockchain: bc, minerWallet: w}
 }
 
-func (m *Miner) Start() {
+func (m *Miner) Start() error {
 	log.Println("info: Starting mining process")
 
 	done := make(chan struct{}, 0)
 	m.done = done
 	m.state = running
 
-	go m.mining(done)
+	go m.mining()
 
 	for {
 		select {
 		case <-done:
-			log.Println("Mining process stopped")
 			if m.state == running {
 				m.state = restarting
 				m.Restart()
-				return
+				return nil
 			} else if m.state == stopping {
 				m.state = stopped
-				log.Println("Mining server gracefully stopped")
-				return
+				time.Sleep(time.Second * 1)
+				log.Println("info: Mining server gracefully stopped")
+				return nil
 			}
+
+			return nil
 		default:
 			//
 		}
@@ -77,10 +83,9 @@ func (m *Miner) Start() {
 }
 
 func (m *Miner) Stop() {
-	log.Println("info: Stopping mining procss")
+	log.Println("info: Stopping mining process")
 	m.state = stopping
-	m.done <- struct{}{}
-	time.Sleep(time.Second * 2)
+	m.interrupt()
 }
 
 func (m *Miner) ServiceName() string {
@@ -92,13 +97,21 @@ func (m *Miner) Restart() {
 	m.Start()
 }
 
+func (m *Miner) Status() string {
+	return m.state.String()
+}
+
+func (m *Miner) interrupt() {
+	m.done <- struct{}{}
+}
+
 func (m *Miner) AddTransaction(tx *transaction.Transaction) {
 	m.transactionPool = append(m.transactionPool, tx)
 }
 
-func (m *Miner) mining(done chan struct{}) {
-	found := make(chan struct{}, 1)
-	for i := 0; i < 10; i++ {
+func (m *Miner) mining() {
+	found := make(chan struct{}, 0)
+	for i := 0; i < maxMiningNum; i++ {
 		b := m.generateBlock()
 		go m.findNonce(found, b)
 	}
@@ -107,7 +120,7 @@ func (m *Miner) mining(done chan struct{}) {
 		select {
 		case <-found:
 			log.Println("debug: Someone found a nonce")
-			done <- struct{}{}
+			m.interrupt()
 			return
 		default:
 			//
@@ -116,7 +129,7 @@ func (m *Miner) mining(done chan struct{}) {
 }
 
 func (m *Miner) findNonce(found chan struct{}, block *block.Block) {
-	log.Println("Started mining")
+	log.Println("info: Started mining")
 	consecutiveZeros := strings.Repeat("0", int(block.Bits))
 
 	for {

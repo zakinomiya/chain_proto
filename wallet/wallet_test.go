@@ -3,6 +3,7 @@ package wallet
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"math/big"
 	"testing"
 )
@@ -43,8 +44,7 @@ func TestVerify(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Logf("%x", privKey)
-	w, err := RestoreWallet(privKey)
+	w, err := RestoreWallet(fmt.Sprintf("%x", privKey))
 	if err != nil {
 		t.Fatal(err)
 	}

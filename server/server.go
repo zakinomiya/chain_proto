@@ -1,10 +1,12 @@
 package server
 
 import (
+	"errors"
 	"go_chain/blockchain"
 	"go_chain/config"
-	"go_chain/gateway"
+	"go_chain/miner"
 	"go_chain/repository"
+	"go_chain/wallet"
 	"log"
 )
 
@@ -19,17 +21,27 @@ type Server struct {
 	services []Service
 }
 
-func New(config *config.ConfigSettings) *Server {
-	r := repository.New(config.Path, config.Driver)
-	bc := blockchain.New(config.ChainID, r)
-	// m := miner.New(bc)
-	g := &gateway.Gateway{}
+func New(config *config.ConfigSettings) (*Server, error) {
+	if config.Settings.Miner.SecretKeyStr == "" {
+		return nil, errors.New("No miner key provided")
+	}
 
-	return &Server{config: config, services: []Service{r, bc, g}}
+	repository := repository.New(config.Settings.DbPath, config.Settings.Driver)
+	blockchain := blockchain.New(config.Settings.ChainID, repository)
+
+	wal, err := wallet.RestoreWallet(config.Settings.Miner.SecretKeyStr)
+	if err != nil {
+		return nil, err
+	}
+
+	miner := miner.New(blockchain, wal)
+	// gateway := &gateway.Gateway{}
+
+	return &Server{config: config, services: []Service{repository, blockchain, miner}}, nil
 }
 
 func (server *Server) Start() error {
-	log.Printf("info: Starting MVB node. ChainID=%d\n", server.config.ChainID)
+	log.Printf("info: Starting MVB node. ChainID=%d\n", server.config.Settings.ChainID)
 
 	for _, s := range server.services {
 		log.Printf("Starting service %s \n", s.ServiceName())

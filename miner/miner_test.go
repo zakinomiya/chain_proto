@@ -2,9 +2,9 @@ package miner
 
 import (
 	"go_chain/block"
-	"go_chain/common"
 	"go_chain/transaction"
 	"go_chain/wallet"
+	"sync"
 	"testing"
 	"time"
 )
@@ -44,36 +44,16 @@ func (bc *MockBlockchain) GetPooledTransactions(num int) []*transaction.Transact
 }
 
 func TestMining(t *testing.T) {
-	w, _ := wallet.New()
-	// m := &Miner{minerWallet: w}
-	c := transaction.NewCoinbase(w, 25)
-	h := &block.BlockHeader{PrevBlockHash: [32]byte{},
-		Timestamp: common.Timestamp(),
-		Bits:      5,
-		Nonce:     0,
-	}
-
-	block := &block.Block{
-		Height:       0,
-		Hash:         [32]byte{},
-		Transactions: []*transaction.Transaction{c},
-		ExtraNonce:   common.RandomUint32(),
-		BlockHeader:  h,
-	}
-	block.SetMerkleRoot()
-	// if m.findNonce(block, make(chan struct{}, 0)) {
-	// 	j, _ := json.Marshal(block)
-	// 	t.Log(string(j))
-	// 	ioutil.WriteFile("block.json", j, 0400)
-	// }
-}
-
-func TestConcurrentMining(t *testing.T) {
 	b := &MockBlockchain{[]*block.Block{}}
 	w, _ := wallet.New()
-
 	m := New(b, w)
+
+	wg := &sync.WaitGroup{}
+	wg.Add(1)
 	go m.Start()
-	time.Sleep(time.Second * 3)
-	m.Stop()
+	time.AfterFunc(time.Second*5, func() {
+		wg.Done()
+	})
+
+	wg.Wait()
 }
