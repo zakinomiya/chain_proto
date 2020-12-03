@@ -10,4 +10,4 @@ SELECT
     transactions
 FROM blocks
 ORDER BY height DESC
-LIMIT :num
+LIMIT 1

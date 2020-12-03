@@ -9,7 +9,6 @@ import (
 	"go_chain/wallet"
 
 	"hash"
-	"log"
 )
 
 type Transaction struct {
@@ -59,9 +58,7 @@ func (tx *Transaction) TxHashStr() string {
 }
 
 func (tx *Transaction) CalcHash() error {
-	log.Println("debug: action=CalcHash")
 	hash := sha256.New()
-
 	tx.TxHash = sha256.Sum256(hash.Sum(tx.ToBytes()))
 	return nil
 }

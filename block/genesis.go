@@ -45,6 +45,7 @@ func readFromYaml(path string) (*genesis, error) {
 		return nil, err
 	}
 
+	log.Printf("debug: gen=%+v", gen)
 	return gen, nil
 }
 

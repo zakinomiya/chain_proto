@@ -36,7 +36,7 @@ func (d *database) exec(filename string, data interface{}) error {
 func (d *database) find(filename string, data interface{}) (*sqlx.Rows, error) {
 	args := data
 	if args == nil {
-		args = ""
+		args = map[string]interface{}{}
 	}
 
 	stmt, err := readSQL(filename)

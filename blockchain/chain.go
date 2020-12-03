@@ -4,19 +4,17 @@ import (
 	"fmt"
 	"go_chain/block"
 	"go_chain/repository"
-	"go_chain/transaction"
 	"log"
 	"os"
 	"sync"
 )
 
 type Blockchain struct {
-	lock            sync.RWMutex
-	chainID         uint32
-	height          uint32
-	blocks          []*block.Block
-	transactionPool []*transaction.Transaction
-	repository      *repository.Repository
+	lock       sync.RWMutex
+	chainID    uint32
+	height     uint32
+	blocks     []*block.Block
+	repository *repository.Repository
 }
 
 type BlockchainInterface interface {
@@ -24,7 +22,6 @@ type BlockchainInterface interface {
 	Difficulty() uint32
 	LatestBlock() *block.Block
 	AddBlock(block *block.Block) bool
-	GetPooledTransactions(num int) []*transaction.Transaction
 }
 
 var blockchain *Blockchain
@@ -32,20 +29,20 @@ var once sync.Once
 
 func New(chainID uint32, repository *repository.Repository) *Blockchain {
 	blockchain = &Blockchain{
-		chainID: chainID, repository: repository, transactionPool: make([]*transaction.Transaction, 0),
+		chainID: chainID, repository: repository,
 	}
 	return blockchain
 }
 
 func initializeBlockchain() error {
-	blocks, err := blockchain.repository.GetLatestBlocks(10)
+	b, err := blockchain.repository.GetLatestBlock()
 
 	if err != nil {
 		log.Println("error: Failed to initialise blockchain")
 		return err
 	}
 
-	if len(blocks) == 0 {
+	if b == nil {
 		log.Println("info: No blocks found in the db. Creating the genesis block")
 		genesis, err := block.NewGenesisBlock()
 		if err != nil {
@@ -59,8 +56,8 @@ func initializeBlockchain() error {
 	}
 
 	log.Println("info: Block record found in the db. Restoring the blockchain")
-	blockchain.height = uint32(len(blocks))
-	blockchain.ReplaceBlocks(blocks)
+	blockchain.height = b.Height
+	blockchain.ReplaceBlocks([]*block.Block{b})
 	return nil
 }
 

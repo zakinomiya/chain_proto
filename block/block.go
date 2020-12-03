@@ -62,6 +62,7 @@ type Block struct {
 
 func New(height uint32, bits uint32, prevBlockHash [32]byte, txs []*transaction.Transaction) *Block {
 	b := &Block{
+		Height:       height,
 		Transactions: txs,
 		BlockHeader: &BlockHeader{
 			Bits:          bits,

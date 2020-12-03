@@ -1,9 +1,11 @@
 package miner
 
 import (
+	"encoding/json"
 	"go_chain/block"
 	"go_chain/transaction"
 	"go_chain/wallet"
+	"log"
 	"sync"
 	"testing"
 	"time"
@@ -30,17 +32,12 @@ func (bc *MockBlockchain) LatestBlock() *block.Block {
 }
 
 func (bc *MockBlockchain) AddBlock(block *block.Block) bool {
+	j, _ := json.Marshal(block)
+	log.Printf("info: block=%s", string(j))
+
 	bc.blocks = append(bc.blocks, block)
+	log.Printf("info: now blockchain height is %d\n", len(bc.blocks))
 	return true
-}
-
-func (bc *MockBlockchain) GetPooledTransactions(num int) []*transaction.Transaction {
-	txs := []*transaction.Transaction{}
-	for i := 0; i < num; i++ {
-		txs = append(txs, transaction.New())
-	}
-
-	return txs
 }
 
 func TestMining(t *testing.T) {

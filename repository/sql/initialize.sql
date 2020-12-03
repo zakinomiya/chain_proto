@@ -1,8 +1,8 @@
 CREATE TABLE
 IF NOT EXISTS blocks
 (
-    height INTEGER NOT NULL PRIMARY KEY,
-    hash STRING,
+    hash STRING NOT NULL PRIMARY KEY,
+    height INTEGER,
     prevBlockHash TEXT,
     merkleRoot TEXT,
     extraNonce INTEGER,

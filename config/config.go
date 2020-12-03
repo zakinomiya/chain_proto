@@ -33,38 +33,46 @@ type Network struct {
 	WebsockerPort uint32 `yaml:"websocket_port"`
 }
 
-type ConfigSettings struct {
-	Settings struct {
-		Log       `yaml:"log"`
-		ChainInfo `yaml:"chain_info"`
-		Miner     `yaml:"miner"`
-		Db        `yaml:"db"`
-		Network   `yaml:"network"`
-	} `yaml:"settings"`
+type ConfigFile struct {
+	Configurations `yaml:"configurations"`
 }
 
-var Config *ConfigSettings
+type Configurations struct {
+	Log       `yaml:"log"`
+	ChainInfo `yaml:"chain_info"`
+	Miner     `yaml:"miner"`
+	Db        `yaml:"db"`
+	Network   `yaml:"network"`
+}
+
+var Config *Configurations
 
 func init() {
-	conf, err := readFromYaml("../config.yaml")
+	gopath := os.Getenv("GOPATH")
+	if gopath == "" {
+		log.Println("Please set GOPATH to run the server")
+	}
+
+	conf, err := readFromYaml(gopath + "/src/go_chain/config/config.yaml")
 	if err != nil {
-		log.Printf("error: Failed to read config file. ERROR: %v", err)
+		log.Printf("error: Failed to read config file. ERROR: %v.\n", err)
 		os.Exit(1)
 	}
 
 	Config = conf
 }
 
-func readFromYaml(path string) (*ConfigSettings, error) {
+func readFromYaml(path string) (*Configurations, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	conf := &ConfigSettings{}
+	configFile := &ConfigFile{}
 
-	if err := yaml.Unmarshal(data, conf); err != nil {
+	if err := yaml.Unmarshal(data, configFile); err != nil {
 		return nil, err
 	}
 
-	return conf, nil
+	log.Printf("debug: configuration=%+v", configFile)
+	return &configFile.Configurations, nil
 }

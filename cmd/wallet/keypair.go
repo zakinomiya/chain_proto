@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"go_chain/wallet"
@@ -49,12 +48,7 @@ var restoreKeyPair = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		privKeyStr := args[0]
 
-		privKeyBytes, err := hex.DecodeString(privKeyStr)
-		if err != nil {
-			return errors.New("Invalid form of private key")
-		}
-
-		w, err := wallet.RestoreWallet(privKeyBytes)
+		w, err := wallet.RestoreWallet(privKeyStr)
 		if err != nil {
 			return errors.New("Failed to inistialise wallet")
 		}

@@ -107,25 +107,26 @@ func (r *Repository) GetBlocksByRange(start uint32, end uint32) ([]*block.Block,
 	return blocks, nil
 }
 
-func (r *Repository) GetLatestBlocks(num uint32) ([]*block.Block, error) {
-	rows, err := r.find("get_latest_blocks.sql", map[string]interface{}{"num": num})
+func (r *Repository) GetLatestBlock() (*block.Block, error) {
+	rows, err := r.find("get_latest_block.sql", nil)
 	if err != nil {
 		return nil, err
 	}
 
-	blocks := []*block.Block{}
-	for rows.Next() {
+	block := block.New(0, 0, [32]byte{}, nil)
+	if rows.Next() {
 		bm := &BlockModel{}
 		if err := r.scanBlock(bm, rows); err != nil {
 			log.Printf("debug: Failed to scan block. height=%d\n", bm.Height)
 			return nil, err
 		}
-		block := &block.Block{}
+		log.Printf("debug: latest block height=%d", block.Height)
 		r.toBlock(bm, block)
-		blocks = append(blocks, block)
+	} else {
+		return nil, nil
 	}
 
-	return blocks, nil
+	return block, nil
 }
 
 func (r *Repository) Insert(b *block.Block) error {

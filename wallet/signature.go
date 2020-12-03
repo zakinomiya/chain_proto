@@ -2,6 +2,7 @@ package wallet
 
 import (
 	"encoding/base64"
+	"errors"
 	"log"
 	"math/big"
 )
@@ -17,6 +18,11 @@ func DecodeSigString(sigString string) (*Signature, error) {
 	if err != nil {
 		log.Println("debug: failed to the decode signature string:", sigString)
 		return nil, err
+	}
+
+	if len(rbuf) != 64 {
+		log.Printf("debug: signature string length is invalid. should be 64 but %d\n", len(rbuf))
+		return nil, errors.New("error: invalid signature string")
 	}
 
 	r := new(big.Int).SetBytes(rbuf[:32])
