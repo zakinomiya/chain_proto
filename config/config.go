@@ -73,6 +73,6 @@ func readFromYaml(path string) (*Configurations, error) {
 		return nil, err
 	}
 
-	log.Printf("debug: configuration=%+v", configFile)
+	// log.Printf("debug: configuration=%+v", configFile)
 	return &configFile.Configurations, nil
 }

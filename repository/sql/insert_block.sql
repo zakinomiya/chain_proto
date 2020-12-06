@@ -1,24 +1,26 @@
 INSERT INTO blocks
     (
-    height ,
     hash,
+    height,
     prevBlockHash,
     merkleRoot,
     extraNonce,
     timestamp,
     bits,
     nonce,
-    transactions
+    transactions,
+    txCount
     )
 VALUES
     (
-        :height,
         :hash,
+        :height,
         :prevBlockHash,
         :merkleRoot,
         :extraNonce,
         :timestamp,
         :bits,
         :nonce,
-        :transactions
-);
+        :transactions,
+        :txCount
+   );

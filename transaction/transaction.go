@@ -83,13 +83,12 @@ type Output struct {
 	Value     uint32
 }
 
-// TODO make Output include signature and value only
 func (o *Output) MarshalJSON() ([]byte, error) {
 	return json.Marshal(
 		&struct {
-			Index     uint32 `json:"index"`
-			Signature string `json:"signature"`
-			Value     uint32 `json:"value"`
+			Index         uint32 `json:"index"`
+			RecipientAddr string `json:"recipientAddr"`
+			Value         uint32 `json:"value"`
 		}{
 			Index:     o.Index,
 			Signature: o.Signature.String(),

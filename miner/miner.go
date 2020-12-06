@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"go_chain/block"
-	"go_chain/blockchain"
 	"go_chain/transaction"
 	"go_chain/wallet"
 	"log"
@@ -42,16 +41,23 @@ func (s State) String() string {
 	}
 }
 
+type Blockchain interface {
+	CurrentBlockHeight() uint32
+	Difficulty() uint32
+	LatestBlock() *block.Block
+	AddBlock(block *block.Block) bool
+}
+
 type Miner struct {
 	state           State
 	done            chan struct{}
 	miningCtx       context.Context
 	transactionPool []*transaction.Transaction
-	blockchain      blockchain.BlockchainInterface
+	blockchain      Blockchain
 	minerWallet     *wallet.Wallet
 }
 
-func New(bc blockchain.BlockchainInterface, w *wallet.Wallet) *Miner {
+func New(bc Blockchain, w *wallet.Wallet) *Miner {
 	return &Miner{blockchain: bc, minerWallet: w}
 }
 

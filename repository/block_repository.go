@@ -1,7 +1,9 @@
 package repository
 
 import (
+	"encoding/hex"
 	"errors"
+	"fmt"
 	"go_chain/block"
 	"go_chain/common"
 	"log"
@@ -11,9 +13,9 @@ import (
 
 type BlockModel struct {
 	Height        uint32 `db:"height"`
-	Hash          []byte `db:"hash"`
-	PrevBlockHash []byte `db:"prevBlockHash"`
-	MerkleRoot    []byte `db:"merkleRoot"`
+	Hash          string `db:"hash"`
+	PrevBlockHash string `db:"prevBlockHash"`
+	MerkleRoot    string `db:"merkleRoot"`
 	Timestamp     int64  `db:"timestamp"`
 	Bits          uint32 `db:"bits"`
 	Nonce         uint32 `db:"nonce"`
@@ -32,22 +34,32 @@ func (r *Repository) fromBlock(b *block.Block, bm *BlockModel) error {
 	}
 
 	bm.Height = b.Height
-	bm.Hash = b.Hash[:]
-	bm.PrevBlockHash = b.PrevBlockHash[:]
-	bm.MerkleRoot = b.MerkleRoot
+	bm.MerkleRoot = fmt.Sprintf("%x", b.MerkleRoot)
 	bm.Timestamp = b.Timestamp
 	bm.Bits = b.Bits
 	bm.Nonce = b.Nonce
 	bm.ExtraNonce = b.ExtraNonce
 	bm.TxCount = len(b.Transactions)
 	bm.Transactions = transactions
+	bm.Hash = fmt.Sprintf("%x", b.Hash)
+	bm.PrevBlockHash = fmt.Sprintf("%x", b.PrevBlockHash)
 
 	return nil
 }
 
 func (r *Repository) toBlock(bm *BlockModel, b *block.Block) error {
-	hash := common.ReadByteInto32(bm.Hash)
+	h, err := hex.DecodeString(bm.Hash)
+	if err != nil {
+		return err
+	}
+	merkleRoot, err := hex.DecodeString(bm.MerkleRoot)
+	if err != nil {
+		return err
+	}
 
+	prevBlockHash, err := hex.DecodeString(bm.PrevBlockHash)
+
+	hash := common.ReadByteInto32(h)
 	transactions, err := r.GetTxByBlockHash(hash)
 	if err != nil {
 		return err
@@ -55,8 +67,8 @@ func (r *Repository) toBlock(bm *BlockModel, b *block.Block) error {
 
 	b.Hash = hash
 	b.Height = bm.Height
-	b.MerkleRoot = bm.MerkleRoot
-	b.PrevBlockHash = common.ReadByteInto32(bm.PrevBlockHash)
+	b.MerkleRoot = merkleRoot
+	b.PrevBlockHash = common.ReadByteInto32(prevBlockHash)
 	b.Timestamp = bm.Timestamp
 	b.Bits = bm.Bits
 	b.ExtraNonce = bm.ExtraNonce
@@ -120,8 +132,8 @@ func (r *Repository) GetLatestBlock() (*block.Block, error) {
 			log.Printf("debug: Failed to scan block. height=%d\n", bm.Height)
 			return nil, err
 		}
-		log.Printf("debug: latest block height=%d", block.Height)
 		r.toBlock(bm, block)
+		log.Printf("info: latest block height=%d", block.Height)
 	} else {
 		return nil, nil
 	}

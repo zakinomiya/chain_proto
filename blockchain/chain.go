@@ -17,13 +17,6 @@ type Blockchain struct {
 	repository *repository.Repository
 }
 
-type BlockchainInterface interface {
-	CurrentBlockHeight() uint32
-	Difficulty() uint32
-	LatestBlock() *block.Block
-	AddBlock(block *block.Block) bool
-}
-
 var blockchain *Blockchain
 var once sync.Once
 

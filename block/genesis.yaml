@@ -10,8 +10,10 @@ transactions:
     totalValue: 25
     fee: 0
     senderAddr:
+    signature:
     timestamp: 1607006520
     outs:
       - index: 0
-        signature: LYl8u+3UT45394Wp5xXMCasNYb5gUiwtvdUs7z9Bwkss2NU1TMEaaZcWxbaBCOGElI/CEoV/kVSWA6fRRgpGSw==
+        recipientAddr:
+        signature:
         value: 25
