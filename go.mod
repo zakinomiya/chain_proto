@@ -10,6 +10,7 @@ require (
 	github.com/btcsuite/btcutil v1.0.2
 	github.com/comail/colog v0.0.0-20160416085026-fba8e7b1f46c
 	github.com/ethereum/go-ethereum v1.9.23 // indirect
+	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/mattn/go-sqlite3 v1.14.4

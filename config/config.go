@@ -1,6 +1,7 @@
 package config
 
 import (
+	"go_chain/common"
 	"io/ioutil"
 	"log"
 	"os"
@@ -28,9 +29,9 @@ type Db struct {
 	Password string `yaml:"password"`
 }
 type Network struct {
-	RPCPort       uint32 `yaml:"rpc_port"`
-	HTTPPort      uint32 `yaml:"http_port"`
-	WebsockerPort uint32 `yaml:"websocket_port"`
+	RPCPort       string `yaml:"rpc_port"`
+	HTTPPort      string `yaml:"http_port"`
+	WebsockerPort string `yaml:"websocket_port"`
 }
 
 type ConfigFile struct {
@@ -56,6 +57,18 @@ func init() {
 	conf, err := readFromYaml(gopath + "/src/go_chain/config/config.yaml")
 	if err != nil {
 		log.Printf("error: Failed to read config file. ERROR: %v.\n", err)
+		os.Exit(1)
+	}
+
+	if ok := common.IsValidPort(conf.RPCPort); ok == false {
+		os.Exit(1)
+	}
+
+	if ok := common.IsValidPort(conf.HTTPPort); ok == false {
+		os.Exit(1)
+	}
+
+	if ok := common.IsValidPort(conf.WebsockerPort); ok == false {
 		os.Exit(1)
 	}
 

@@ -1,19 +1,18 @@
-hash: 00000776c2e53883e6f28b7e0a312e999530f49d5f671438b286a89fb632bf37
-nonce: 394250
-extraNonce: 3632824159
-merkleRoot: 3cfa39fa465d3789a663517a8acff8f58e9408712a5db60705d155c4ac4b3277
+hash: 00000daa8f7489df7d07f518071a769f829da05423c845ff211420a86203234f
+nonce: 36506
+extraNonce: 1292406600
+merkleRoot: d7b958f742d5c0937c6737285f9e5f0ed180e9fc36932142bc9c24f1154dff07
 prevBlockHash: 0000000000000000000000000000000000000000000000000000000000000000
-timestamp: 1607006520
+timestamp: 1607348357
 bits: 5
 transactions:
-  - txHash: a4d21fada6e2635239219723900b39c646bc6281fd8b092a23d0375e56f2fbc3
+  - txHash: a480487ae7c7bd343e9e16adb3a8a5a9698f959c9da9dbe070c00dbbfd98ed88
+    txType: "coinbase"
     totalValue: 25
     fee: 0
     senderAddr:
-    signature:
-    timestamp: 1607006520
+    signature: gye7B9BiFIbi/xmHpc3iu1V2dvkKRxakvCiVKbi8tm6RehikD0V3oF0KD6dyrFBJLct9QqD/enpbTjyljsXc8w==
+    timestamp: 1607348357
     outs:
-      - index: 0
-        recipientAddr:
-        signature:
+      - recipientAddr: HcdQdFYiHZNeYYqZ35yoHqg11naLFyKoqu8mUmtokBWW
         value: 25

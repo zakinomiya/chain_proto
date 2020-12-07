@@ -42,7 +42,7 @@ func (bc *MockBlockchain) AddBlock(block *block.Block) bool {
 
 func TestMining(t *testing.T) {
 	b := &MockBlockchain{[]*block.Block{}}
-	w, _ := wallet.New()
+	w, _ := wallet.RestoreWallet("58898c79caf4a77a4aa10b4b9bad7d07f7e7c1842204be352a65d87f71277137")
 	m := New(b, w)
 
 	wg := &sync.WaitGroup{}

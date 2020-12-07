@@ -21,15 +21,16 @@ type genesis struct {
 	Hash          string `yaml:"hash"`
 	ExtraNonce    uint32 `yaml:"extraNonce"`
 	Transactions  []struct {
-		TxHash     string `yaml:"txHash"`
-		TotalValue uint32 `yaml:"totalValue"`
-		Fee        uint32 `yaml:"fee"`
-		SenderAddr string `yaml:"senderAddr"`
-		Timestamp  int64  `yaml:"timestamp"`
+		TxHash     string             `yaml:"txHash"`
+		TxType     transaction.TxType `yaml:"txType"`
+		TotalValue uint32             `yaml:"totalValue"`
+		Fee        uint32             `yaml:"fee"`
+		SenderAddr string             `yaml:"senderAddr"`
+		Timestamp  int64              `yaml:"timestamp"`
+		Signature  string             `yaml:"signature"`
 		Outs       []struct {
-			Index     uint32 `yaml:"index"`
-			Signature string `yaml:"signature"`
-			Value     uint32 `yaml:"value"`
+			RecipientAddr string `yaml:"recipientAddr"`
+			Value         uint32 `yaml:"value"`
 		} `yaml:"outs"`
 	} `yaml:"transactions"`
 }
@@ -61,21 +62,22 @@ func NewGenesisBlock() (*Block, error) {
 		}
 		tx := transaction.New()
 		tx.TxHash = common.ReadByteInto32(txHash)
+		tx.TxType = t.TxType
 		tx.SenderAddr = t.SenderAddr
 		tx.Timestamp = t.Timestamp
 		tx.TotalValue = t.TotalValue
 		tx.Fee = t.Fee
+		sig, err := wallet.DecodeSigString(t.Signature)
+		tx.Signature = sig
 
 		var outs []*transaction.Output
 		for _, o := range t.Outs {
 			out := &transaction.Output{}
-			out.Index = o.Index
+			out.RecipientAddr = o.RecipientAddr
 			out.Value = o.Value
-			sig, err := wallet.DecodeSigString(o.Signature)
 			if err != nil {
 				return nil, err
 			}
-			out.Signature = sig
 			outs = append(outs, out)
 		}
 		tx.Outs = outs

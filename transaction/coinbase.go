@@ -12,12 +12,13 @@ func NewCoinbase(w *wallet.Wallet, value uint32) *Transaction {
 	tx.SenderAddr = ""
 	tx.Timestamp = common.Timestamp()
 	tx.TotalValue = value
+	tx.TxType = "coinbase"
 	sig, _ := w.Sign(append(tx.TxHash[:], w.PubKeyBytes()...))
+	tx.Signature = sig
 	tx.Outs = []*Output{
 		{
-			Index:     0,
-			Signature: sig,
-			Value:     value,
+			RecipientAddr: w.Address(),
+			Value:         value,
 		},
 	}
 	tx.CalcHash()

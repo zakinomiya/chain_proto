@@ -7,7 +7,7 @@ configurations:
   chain_info:
     chain_id: 2020
   miner:
-    secret_key_str: 39726aa1f7746a0a91ed31dbc36403c95f96892d8b176112570141600141545f
+    secret_key_str: 58898c79caf4a77a4aa10b4b9bad7d07f7e7c1842204be352a65d87f71277137
   db:
     db_path: ./data/blockchain.db
     driver: sqlite3
