@@ -8,6 +8,7 @@ import (
 	"go_chain/wallet"
 	"log"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -49,6 +50,7 @@ type Blockchain interface {
 }
 
 type Miner struct {
+	mux             *sync.Mutex
 	state           State
 	done            chan struct{}
 	miningCtx       context.Context
@@ -58,7 +60,7 @@ type Miner struct {
 }
 
 func New(bc Blockchain, w *wallet.Wallet) *Miner {
-	return &Miner{blockchain: bc, minerWallet: w}
+	return &Miner{mux: &sync.Mutex{}, blockchain: bc, minerWallet: w, state: running}
 }
 
 func (m *Miner) Start() error {
@@ -66,7 +68,6 @@ func (m *Miner) Start() error {
 
 	done := make(chan struct{}, 0)
 	m.done = done
-	m.state = running
 
 	go m.mining()
 
@@ -74,13 +75,7 @@ func (m *Miner) Start() error {
 		select {
 		case <-done:
 			if m.state == running {
-				m.state = restarting
 				m.Restart()
-				return nil
-			} else if m.state == stopping {
-				m.state = stopped
-				time.Sleep(time.Second * 1)
-				log.Println("info: Mining server gracefully stopped")
 				return nil
 			}
 
@@ -93,8 +88,11 @@ func (m *Miner) Start() error {
 
 func (m *Miner) Stop() {
 	log.Println("info: Stopping mining process")
+	m.mux.Lock()
+	defer m.mux.Unlock()
 	m.state = stopping
 	m.interrupt()
+	time.Sleep(1 * time.Second)
 }
 
 func (m *Miner) ServiceName() string {
@@ -102,6 +100,7 @@ func (m *Miner) ServiceName() string {
 }
 
 func (m *Miner) Restart() {
+	m.state = restarting
 	log.Println("info: Restarting Miner")
 	time.Sleep(time.Second * miningWaitSecond)
 	m.Start()

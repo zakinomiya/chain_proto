@@ -4,10 +4,12 @@ import (
 	"errors"
 	"go_chain/blockchain"
 	"go_chain/config"
+	"go_chain/gateway"
 	"go_chain/miner"
 	"go_chain/repository"
 	"go_chain/wallet"
 	"log"
+	"time"
 )
 
 type Service interface {
@@ -35,9 +37,9 @@ func New(config *config.Configurations) (*Server, error) {
 	}
 
 	miner := miner.New(blockchain, wal)
-	// gateway := &gateway.Gateway{}
+	gateway := gateway.New(&config.Network)
 
-	return &Server{config: config, services: []Service{repository, blockchain, miner}}, nil
+	return &Server{config: config, services: []Service{repository, blockchain, miner, gateway}}, nil
 }
 
 func (server *Server) Start() error {
@@ -45,9 +47,11 @@ func (server *Server) Start() error {
 
 	for _, s := range server.services {
 		log.Printf("Starting service %s \n", s.ServiceName())
-		if err := s.Start(); err != nil {
-			log.Printf("Failed to start service %s \n", s.ServiceName())
-			return err
+		if s.ServiceName() == "Repository" {
+			s.Start()
+		} else {
+			go s.Start()
+			time.Sleep(1 * time.Second)
 		}
 		log.Printf("Successfully started service %s \n", s.ServiceName())
 	}

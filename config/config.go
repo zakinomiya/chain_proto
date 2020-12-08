@@ -28,10 +28,16 @@ type Db struct {
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
 }
+
+type ServerInfo struct {
+	Port    string `yaml:"port"`
+	Enabled bool   `yaml:"enabled"`
+}
+
 type Network struct {
-	RPCPort       string `yaml:"rpc_port"`
-	HTTPPort      string `yaml:"http_port"`
-	WebsockerPort string `yaml:"websocket_port"`
+	RPC       ServerInfo `yaml:"rpc"`
+	HTTP      ServerInfo `yaml:"http"`
+	Websocket ServerInfo `yaml:"websocket"`
 }
 
 type ConfigFile struct {
@@ -60,15 +66,15 @@ func init() {
 		os.Exit(1)
 	}
 
-	if ok := common.IsValidPort(conf.RPCPort); ok == false {
+	if ok := common.IsValidPort(conf.RPC.Port); ok == false {
 		os.Exit(1)
 	}
 
-	if ok := common.IsValidPort(conf.HTTPPort); ok == false {
+	if ok := common.IsValidPort(conf.HTTP.Port); ok == false {
 		os.Exit(1)
 	}
 
-	if ok := common.IsValidPort(conf.WebsockerPort); ok == false {
+	if ok := common.IsValidPort(conf.Websocket.Port); ok == false {
 		os.Exit(1)
 	}
 
