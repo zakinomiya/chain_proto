@@ -7,3 +7,4 @@ bin
 # where keypairs are stored
 keypairs
 
+*.log
