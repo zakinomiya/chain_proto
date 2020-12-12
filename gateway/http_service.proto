@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package gateway;
+
+import "google/api/annotations.proto";
+
+service HTTPService {
+    rpc SendTransaction(Transaction) returns (Transaction);
+}
+
+message Transaction {
+    string TxHash = 1; 
+    uint32 TotalValue = 2;
+    float Fee = 3;
+    string SenderAddr = 4;
+    int64 Timestamp = 5;
+    string Signature = 6;
+    repeated Output Outs = 7;
+}
+
+message Output {
+    string RecipientAddr = 1;
+    float Value = 2;
+}
+
+
+
