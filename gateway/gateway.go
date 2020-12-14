@@ -16,7 +16,6 @@ func New(config *config.Network) *Gateway {
 		config:     config,
 		httpServer: NewHTTPServer(config.HTTP.Port),
 	}
-
 }
 
 func (g *Gateway) ServiceName() string {
