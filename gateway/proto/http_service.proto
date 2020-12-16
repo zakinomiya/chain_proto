@@ -1,38 +1,40 @@
 syntax = "proto3";
 
-package gateway;
+package gw;
 
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 
+option go_package = "go_chain/gateway/gw";
+
 service HTTPService {
     rpc SendTransaction(Transaction) returns (google.protobuf.Empty) {
         option (google.api.http) = {
-            post: "/transacions"
+            post: "/transactions"
             body: "*"
         };
     }
-    rpc GetTransactionByHash(google.protobuf.Empty) returns (GetTransactionResponse) {
-        option (google.api.http) = {
-            get: "/transactions/{tx_hash}"
-        };
-    }
+    // rpc GetTransactionByHash(google.protobuf.Empty) returns (GetTransactionResponse) {
+    //     option (google.api.http) = {
+    //         get: "/transactions/{tx_hash}"
+    //     };
+    // }
     rpc SendBlock(Block) returns (SendBlockResponse) {
         option (google.api.http) = {
             post: "/blocks"
             body: "*"
         };
     }
-    rpc GetBlockByHeight(google.protobuf.Empty) returns (Block) {
-        option (google.api.http) = {
-            post: "/blocks/{block_height}"
-        };
-    }
-    rpc GetBlockByHash(google.protobuf.Empty) returns (Block) {
-        option (google.api.http) = {
-            post: "/blocks/{block_hash}"
-        };
-    }
+    // rpc GetBlockByHeight(google.protobuf.Empty) returns (Block) {
+    //     option (google.api.http) = {
+    //         post: "/blocks/{block_height}"
+    //     };
+    // }
+    // rpc GetBlockByHash(google.protobuf.Empty) returns (Block) {
+    //     option (google.api.http) = {
+    //         post: "/blocks/{block_hash}"
+    //     };
+    // }
 }
 
 message Transaction {

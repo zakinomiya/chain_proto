@@ -60,7 +60,7 @@ type Miner struct {
 }
 
 func New(bc Blockchain, w *wallet.Wallet) *Miner {
-	return &Miner{mux: &sync.Mutex{}, blockchain: bc, minerWallet: w, state: running}
+	return &Miner{mux: &sync.Mutex{}, blockchain: bc, minerWallet: w}
 }
 
 func (m *Miner) Start() error {
@@ -69,21 +69,13 @@ func (m *Miner) Start() error {
 	done := make(chan struct{}, 0)
 	m.done = done
 
-	go m.mining()
+	m.state = running
 
-	for {
-		select {
-		case <-done:
-			if m.state == running {
-				m.Restart()
-				return nil
-			}
-
-			return nil
-		default:
-			//
-		}
+	if err := m.mining(done); err != nil {
+		return err
 	}
+	log.Println("info: Stopped mining process")
+	return nil
 }
 
 func (m *Miner) Stop() {
@@ -103,7 +95,7 @@ func (m *Miner) Restart() {
 	m.state = restarting
 	log.Println("info: Restarting Miner")
 	time.Sleep(time.Second * miningWaitSecond)
-	m.Start()
+	go m.Start()
 }
 
 func (m *Miner) Status() string {
@@ -118,24 +110,45 @@ func (m *Miner) AddTransaction(tx *transaction.Transaction) {
 	m.transactionPool = append(m.transactionPool, tx)
 }
 
-func (m *Miner) mining() {
+// TODO wait until a new block is stored in the chain
+func (m *Miner) mining(done chan struct{}) error {
 	log.Println("info: Started mining")
 	found := make(chan struct{}, 0)
-	for i := 0; i < maxMiningNum; i++ {
-		b := m.generateBlock()
-		go m.findNonce(found, b)
-	}
+	m.startWorkers(found)
 
 	for {
 		select {
+		case <-done:
+			log.Println("debug: mining interrupted")
+			m.stopWorkers(found)
+			return nil
 		case <-found:
 			log.Println("info: Someone found a nonce")
-			m.interrupt()
-			return
+			m.startWorkers(found)
+			continue
 		default:
 			//
 		}
 	}
+}
+
+func (m *Miner) startWorkers(found chan struct{}) {
+	m.mux.Lock()
+	defer m.mux.Unlock()
+	for i := 0; i < maxMiningNum; i++ {
+		b := m.generateBlock()
+		go m.findNonce(found, b)
+	}
+	m.state = running
+}
+
+func (m *Miner) stopWorkers(found chan struct{}) {
+	m.mux.Lock()
+	defer m.mux.Unlock()
+	m.state = stopping
+	close(found)
+	time.Sleep(time.Second * miningWaitSecond)
+	m.state = stopped
 }
 
 func (m *Miner) findNonce(found chan struct{}, block *block.Block) {
@@ -155,7 +168,7 @@ func (m *Miner) findNonce(found chan struct{}, block *block.Block) {
 			block.Hash = hash
 			log.Printf("info: Found a valid nonce: %v \n", block.Nonce)
 			found <- struct{}{}
-			close(found)
+			m.stopWorkers(found)
 			m.blockchain.AddBlock(block)
 			return
 		}
