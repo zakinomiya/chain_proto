@@ -36,10 +36,13 @@ func New(config *config.Configurations) (*Server, error) {
 		return nil, err
 	}
 
-	miner := miner.New(blockchain, wal)
+	miner := miner.New(blockchain, wal, config.Enabled, config.Concurrent, config.MaxWorkersNum)
 	gateway := gateway.New(&config.Network)
 
-	return &Server{config: config, services: []Service{repository, blockchain, miner, gateway}}, nil
+	return &Server{
+		config:   config,
+		services: []Service{repository, blockchain, miner, gateway},
+	}, nil
 }
 
 func (server *Server) Start() error {
@@ -69,5 +72,5 @@ func (server *Server) Stop() {
 		log.Printf("Successfully stopped service %s \n", s.ServiceName())
 	}
 
-	log.Println("Successfully stoppede the node")
+	log.Println("Successfully stopped the node")
 }

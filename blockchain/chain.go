@@ -9,12 +9,19 @@ import (
 	"sync"
 )
 
+type BlockchainEvents string
+
+const (
+	NewBlock BlockchainEvents = "NEW_BLOCK"
+)
+
 type Blockchain struct {
-	lock       sync.RWMutex
-	chainID    uint32
-	height     uint32
-	blocks     []*block.Block
-	repository *repository.Repository
+	lock          sync.RWMutex
+	chainID       uint32
+	subscriptions map[string]chan BlockchainEvents
+	height        uint32
+	blocks        []*block.Block
+	repository    *repository.Repository
 }
 
 var blockchain *Blockchain
@@ -22,7 +29,9 @@ var once sync.Once
 
 func New(chainID uint32, repository *repository.Repository) *Blockchain {
 	blockchain = &Blockchain{
-		chainID: chainID, repository: repository,
+		chainID:       chainID,
+		repository:    repository,
+		subscriptions: make(map[string]chan BlockchainEvents),
 	}
 	return blockchain
 }
@@ -83,4 +92,21 @@ func (bc *Blockchain) LatestBlock() *block.Block {
 
 func (bc *Blockchain) Difficulty() uint32 {
 	return 5
+}
+
+func (bc *Blockchain) Subscribe(key string) <-chan BlockchainEvents {
+	ch := make(chan BlockchainEvents)
+	bc.subscriptions[key] = ch
+	return ch
+}
+
+func (bc *Blockchain) Unsubscribe(key string) {
+	delete(bc.subscriptions, key)
+}
+
+func (bc *Blockchain) SendEvent(eventName BlockchainEvents) {
+	for key, ch := range bc.subscriptions {
+		log.Printf("debug: sending event(%s) to the subsctiption(%s)\n", eventName, key)
+		ch <- eventName
+	}
 }

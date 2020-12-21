@@ -19,7 +19,10 @@ type ChainInfo struct {
 }
 
 type Miner struct {
-	SecretKeyStr string `yaml:"secret_key_str"`
+	Enabled       bool   `yaml:"enabled"`
+	Concurrent    bool   `yaml:"concurrent"`
+	MaxWorkersNum int    `yaml:"max_workers_num"`
+	SecretKeyStr  string `yaml:"secret_key_str"`
 }
 
 type Db struct {
@@ -60,7 +63,7 @@ func init() {
 		log.Println("Please set GOPATH to run the server")
 	}
 
-	conf, err := readFromYaml(gopath + "/src/go_chain/config/config.yaml")
+	conf, err := readConfig(gopath + "/src/go_chain/config/config.yaml")
 	if err != nil {
 		log.Printf("error: Failed to read config file. ERROR: %v.\n", err)
 		os.Exit(1)
@@ -81,7 +84,7 @@ func init() {
 	Config = conf
 }
 
-func readFromYaml(path string) (*Configurations, error) {
+func readConfig(path string) (*Configurations, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err

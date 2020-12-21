@@ -7,6 +7,10 @@ configurations:
   chain_info:
     chain_id: 2020
   miner:
+    enabled: true
+    concurrent: false
+    # max_workers_num applied only when concurrent is true
+    max_workers_num: 10
     secret_key_str: 58898c79caf4a77a4aa10b4b9bad7d07f7e7c1842204be352a65d87f71277137
   db:
     db_path: ./data/blockchain.db

@@ -1,9 +1,9 @@
 package miner
 
 import (
-	"context"
 	"fmt"
 	"go_chain/block"
+	"go_chain/blockchain"
 	"go_chain/transaction"
 	"go_chain/wallet"
 	"log"
@@ -22,9 +22,16 @@ const (
 	restarting
 )
 
+type event int
+
 const (
-	maxMiningNum     = 10
-	miningWaitSecond = 3
+	none event = iota + 1
+	found
+	interrupted
+)
+
+const (
+	defaultMaxWorkersNum = 5
 )
 
 func (s State) String() string {
@@ -47,42 +54,63 @@ type Blockchain interface {
 	Difficulty() uint32
 	LatestBlock() *block.Block
 	AddBlock(block *block.Block) bool
+	Subscribe(key string) <-chan blockchain.BlockchainEvents
+	Unsubscribe(key string)
 }
 
 type Miner struct {
-	mux             *sync.Mutex
-	state           State
-	done            chan struct{}
-	miningCtx       context.Context
-	transactionPool []*transaction.Transaction
-	blockchain      Blockchain
-	minerWallet     *wallet.Wallet
+	enabled          bool
+	concurrent       bool
+	maxWorkersNum    int
+	wg               *sync.WaitGroup
+	blockchainEvents <-chan blockchain.BlockchainEvents
+	exit             chan struct{}
+	transactionPool  []*transaction.Transaction
+	blockchain       Blockchain
+	minerWallet      *wallet.Wallet
 }
 
-func New(bc Blockchain, w *wallet.Wallet) *Miner {
-	return &Miner{mux: &sync.Mutex{}, blockchain: bc, minerWallet: w}
+func New(bc Blockchain, w *wallet.Wallet, enabled bool, concurrent bool, maxWorkersNum int) *Miner {
+	// listening blockchain updates
+	ch := bc.Subscribe("Miner")
+
+	return &Miner{
+		enabled:          enabled,
+		concurrent:       concurrent,
+		maxWorkersNum:    maxWorkersNum,
+		wg:               &sync.WaitGroup{},
+		blockchainEvents: ch,
+		exit:             make(chan struct{}),
+		transactionPool:  []*transaction.Transaction{},
+		blockchain:       bc,
+		minerWallet:      w,
+	}
 }
 
 func (m *Miner) Start() error {
 	log.Println("info: Starting mining process")
 
-	done := make(chan struct{}, 0)
-	m.done = done
+	workersNum := defaultMaxWorkersNum
 
-	m.state = running
-
-	if err := m.mining(done); err != nil {
-		return err
+	if !m.enabled {
+		log.Println("info: miner")
+		return nil
 	}
-	log.Println("info: Stopped mining process")
+
+	if !m.concurrent {
+		log.Println("info: [Miner] running in single mode")
+		workersNum = 1
+	} else {
+		log.Println("info: [Miner] running in conccurent mode")
+		workersNum = m.maxWorkersNum
+	}
+
+	go m.mining(workersNum)
 	return nil
 }
 
 func (m *Miner) Stop() {
 	log.Println("info: Stopping mining process")
-	m.mux.Lock()
-	defer m.mux.Unlock()
-	m.state = stopping
 	m.interrupt()
 	time.Sleep(1 * time.Second)
 }
@@ -91,86 +119,75 @@ func (m *Miner) ServiceName() string {
 	return "Miner"
 }
 
-func (m *Miner) Restart() {
-	m.state = restarting
-	log.Println("info: Restarting Miner")
-	time.Sleep(time.Second * miningWaitSecond)
-	go m.Start()
-}
-
-func (m *Miner) Status() string {
-	return m.state.String()
-}
-
 func (m *Miner) interrupt() {
-	m.done <- struct{}{}
+	m.exit <- struct{}{}
 }
 
 func (m *Miner) AddTransaction(tx *transaction.Transaction) {
 	m.transactionPool = append(m.transactionPool, tx)
 }
 
-// TODO wait until a new block is stored in the chain
-func (m *Miner) mining(done chan struct{}) error {
+func (m *Miner) mining(workersNum int) {
 	log.Println("info: Started mining")
-	found := make(chan struct{}, 0)
-	m.startWorkers(found)
+	workers := []chan struct{}{}
+	events := []chan blockchain.BlockchainEvents{}
+
+	work := func() {
+		for i := 0; i < workersNum; i++ {
+			q := make(chan struct{})
+			e := make(chan blockchain.BlockchainEvents)
+			workers = append(workers, q)
+			events = append(events, e)
+			go m.worker(q, e)
+			m.wg.Add(1)
+		}
+	}
+
+	go work()
 
 	for {
 		select {
-		case <-done:
-			log.Println("debug: mining interrupted")
-			m.stopWorkers(found)
-			return nil
-		case <-found:
-			log.Println("info: Someone found a nonce")
-			m.startWorkers(found)
-			continue
-		default:
-			//
+		case <-m.exit:
+			log.Println("info: received exit signal")
+			for _, q := range workers {
+				close(q)
+			}
+
+			m.wg.Wait()
+			return
+		case event := <-m.blockchainEvents:
+			log.Println("debug: received a new event")
+			for _, e := range events {
+				e <- event
+			}
 		}
 	}
 }
 
-func (m *Miner) startWorkers(found chan struct{}) {
-	m.mux.Lock()
-	defer m.mux.Unlock()
-	for i := 0; i < maxMiningNum; i++ {
-		b := m.generateBlock()
-		go m.findNonce(found, b)
-	}
-	m.state = running
-}
-
-func (m *Miner) stopWorkers(found chan struct{}) {
-	m.mux.Lock()
-	defer m.mux.Unlock()
-	m.state = stopping
-	close(found)
-	time.Sleep(time.Second * miningWaitSecond)
-	m.state = stopped
-}
-
-func (m *Miner) findNonce(found chan struct{}, block *block.Block) {
+func (m *Miner) worker(quit chan struct{}, eventStream <-chan blockchain.BlockchainEvents) {
+	block := m.generateBlock()
 	consecutiveZeros := strings.Repeat("0", int(block.Bits))
 
 	for {
 		select {
-		case <-found:
+		case <-quit:
+			log.Println("debug: received signal. quit working")
+			m.wg.Done()
 			return
+		case event := <-eventStream:
+			log.Printf("debug: new event received: event=%s\n", event)
+			if event == blockchain.NewBlock {
+				log.Println("debug: update block")
+				block = m.generateBlock()
+			}
 		default:
 			//
 		}
 
-		hash := block.HashBlock()
-
-		if strings.HasPrefix(fmt.Sprintf("%x", hash), consecutiveZeros) {
+		if hash := block.HashBlock(); strings.HasPrefix(fmt.Sprintf("%x", hash), consecutiveZeros) {
 			block.Hash = hash
 			log.Printf("info: Found a valid nonce: %v \n", block.Nonce)
-			found <- struct{}{}
-			m.stopWorkers(found)
 			m.blockchain.AddBlock(block)
-			return
 		}
 		block.IncrementNonce()
 	}
