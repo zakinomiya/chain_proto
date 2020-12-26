@@ -1,69 +1,26 @@
 package repository
 
 import (
-	"encoding/json"
-	"go_chain/common"
+	"go_chain/db/models"
 	"go_chain/transaction"
 	"log"
 )
 
-type TxModel struct {
-	TxHash     []byte
-	TotalValue uint32
-	Fee        uint32
-	SenderAddr string
-	Timestamp  int64
-	OutCount   int
-	Outs       []byte
+type TxRepository struct {
+	*database
 }
 
-func (r *Repository) toTx(tm *TxModel, tx *transaction.Transaction) error {
-
-	var outs []*transaction.Output
-	err := json.Unmarshal(tm.Outs, &outs)
-	if err != nil || tm.OutCount != len(outs) {
-		return err
-	}
-
-	tx.TxHash = common.ReadByteInto32(tm.TxHash)
-	tx.TotalValue = tm.TotalValue
-	tx.Timestamp = tm.Timestamp
-	tx.SenderAddr = tm.SenderAddr
-	tx.Fee = tm.Fee
-	tx.Outs = outs
-
-	return nil
-}
-
-func (r *Repository) fromTx(tx *transaction.Transaction, tm *TxModel) error {
-	outs, err := json.Marshal(tx.Outs)
-	if err != nil {
-		log.Println("error: failed to marshal outs to JSON format. ", err)
-		return err
-	}
-
-	tm.TxHash = tx.TxHash[:]
-	tm.TotalValue = tx.TotalValue
-	tm.Fee = tx.Fee
-	tm.SenderAddr = tx.SenderAddr[:]
-	tm.Timestamp = tx.Timestamp
-	tm.OutCount = len(tx.Outs)
-	tm.Outs = outs
-
-	return nil
-}
-
-func (r *Repository) GetTxByBlockHash(blockHash [32]byte) ([]*transaction.Transaction, error) {
-	TxModels, err := r.getTxModelByBlockHash(blockHash)
+func (tr *TxRepository) GetTxsByBlockHash(blockHash [32]byte) ([]*transaction.Transaction, error) {
+	txModels, err := tr.getTxModelByBlockHash(blockHash)
 	if err != nil {
 		log.Println("error:", err)
 		return nil, err
 	}
 
 	var transactions []*transaction.Transaction
-	for _, TxModel := range TxModels {
+	for _, txModel := range txModels {
 		var t *transaction.Transaction
-		if err := r.toTx(TxModel, t); err != nil {
+		if err := txModel.ToTx(t); err != nil {
 			return nil, err
 		}
 		transactions = append(transactions, t)
@@ -72,15 +29,15 @@ func (r *Repository) GetTxByBlockHash(blockHash [32]byte) ([]*transaction.Transa
 	return transactions, nil
 }
 
-func (r *Repository) getTxModelByBlockHash(blockHash [32]byte) ([]*TxModel, error) {
-	rows, err := r.find("get_txs_by_block_hash.sql", map[string]interface{}{"blockHash": blockHash[:]})
+func (tr *TxRepository) getTxModelByBlockHash(blockHash [32]byte) ([]*models.TxModel, error) {
+	rows, err := tr.query("get_txs_by_block_hash.sql", map[string]interface{}{"blockHash": blockHash[:]})
 	if err != nil {
 		return nil, err
 	}
 
-	var txModels []*TxModel
+	var txModels []*models.TxModel
 	for rows.Next() {
-		txModel := &TxModel{}
+		txModel := &models.TxModel{}
 		if err := rows.StructScan(txModel); err != nil {
 			log.Println("error:", err)
 			return nil, err

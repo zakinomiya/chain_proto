@@ -2,9 +2,11 @@ package models
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"go_chain/block"
 	"go_chain/common"
+	"go_chain/transaction"
 )
 
 type BlockModel struct {
@@ -21,12 +23,9 @@ type BlockModel struct {
 }
 
 func (bm *BlockModel) FromBlock(b *block.Block) error {
-	var transactions string
-	for i, tx := range b.Transactions {
-		if i != 0 {
-			transactions += "!!!"
-		}
-		transactions += tx.TxHashStr()
+	transactions, err := json.Marshal(b.Transactions)
+	if err != nil {
+		return err
 	}
 
 	bm.Height = b.Height
@@ -36,7 +35,7 @@ func (bm *BlockModel) FromBlock(b *block.Block) error {
 	bm.Nonce = b.Nonce
 	bm.ExtraNonce = b.ExtraNonce
 	bm.TxCount = len(b.Transactions)
-	bm.Transactions = transactions
+	bm.Transactions = string(transactions)
 	bm.Hash = fmt.Sprintf("%x", b.Hash)
 	bm.PrevBlockHash = fmt.Sprintf("%x", b.PrevBlockHash)
 
@@ -56,8 +55,9 @@ func (bm *BlockModel) ToBlock(b *block.Block) error {
 	prevBlockHash, err := hex.DecodeString(bm.PrevBlockHash)
 
 	hash := common.ReadByteInto32(h)
-	transactions, err := r.GetTxByBlockHash(hash)
-	if err != nil {
+
+	var transactions []*transaction.Transaction
+	if err := json.Unmarshal([]byte(bm.Transactions), &transactions); err != nil {
 		return err
 	}
 

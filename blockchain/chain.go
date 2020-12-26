@@ -42,7 +42,7 @@ func New(chainID uint32, repository *repository.Repository) *Blockchain {
 }
 
 func initializeBlockchain() error {
-	b, err := blockchain.repository.GetLatestBlock()
+	b, err := blockchain.repository.Block.GetLatestBlock()
 
 	if err != nil {
 		log.Println("error: Failed to initialise blockchain")

@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"go_chain/block"
+	"go_chain/transaction"
 	"io/ioutil"
 	"log"
 
@@ -8,44 +10,40 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type database struct {
-	db       *sqlx.DB
-	dbPath   string
-	dbDriver string
-}
-
 type Repository struct {
-	*database
-}
-
-func New(dbPath string, dbDriver string) *Repository {
-	return &Repository{
-		database: &database{
-			dbPath:   dbPath,
-			dbDriver: dbDriver,
-		},
+	Block interface {
+		GetBlockByHash(hash string) (*block.Block, error)
+		GetBlocksByRange(start uint32, end uint32) ([]*block.Block, error)
+		GetLatestBlock() (*block.Block, error)
+		Insert(b *block.Block) error
+	}
+	Tx interface {
+		GetTxByBlockHash(blockHash [32]byte) ([]*transaction.Transaction, error)
 	}
 }
 
-func (r *Repository) Connect() error {
-	log.Printf("debug: DBInfo driver=%s, dbpath=%s\n", r.dbDriver, r.dbPath)
-	db, err := sqlx.Open(r.dbDriver, r.dbPath)
+func New(dbPath string, dbDriver string) (*Repository, error) {
+	log.Printf("debug: DBInfo driver=%s, dbpath=%s\n", dbDriver, dbPath)
+	db, err := sqlx.Open(dbDriver, dbPath)
 	if err != nil {
 		log.Println(err)
-		return err
+		return nil, err
 	}
-	r.db = db
 
-	err = r.exec("initialize.sql", map[string]interface{}{})
+	database := &database{
+		db:       db,
+		dbPath:   dbPath,
+		dbDriver: dbDriver,
+	}
+
+	err = database.command("initialize.sql", map[string]interface{}{})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
-}
-
-func (r *Repository) Close() {
-	r.db.Close()
+	return &Repository{
+		Block: &BlockRepository{database: database},
+	}, nil
 }
 
 func readSQL(filename string) (string, error) {

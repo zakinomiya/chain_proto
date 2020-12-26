@@ -10,11 +10,11 @@ import (
 )
 
 type BlockRepository struct {
-	*commands
+	*database
 }
 
 func (br *BlockRepository) GetBlockByHash(hash string) (*block.Block, error) {
-	rows, err := br.find("get_block_by_hash.sql", map[string]interface{}{"hash": hash})
+	rows, err := br.query("get_block_by_hash.sql", map[string]interface{}{"hash": hash})
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (br *BlockRepository) GetBlocksByRange(start uint32, end uint32) ([]*block.
 		return nil, errors.New("start height should be less than or equal to end height")
 	}
 
-	rows, err := br.find("get_blocks_by_range.sql", map[string]interface{}{"start": start, "end": end})
+	rows, err := br.query("get_blocks_by_range.sql", map[string]interface{}{"start": start, "end": end})
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (br *BlockRepository) GetBlocksByRange(start uint32, end uint32) ([]*block.
 }
 
 func (br *BlockRepository) GetLatestBlock() (*block.Block, error) {
-	rows, err := br.find("get_latest_block.sql", nil)
+	rows, err := br.query("get_latest_block.sql", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (br *BlockRepository) GetLatestBlock() (*block.Block, error) {
 func (br BlockRepository) Insert(b *block.Block) error {
 	bm := &models.BlockModel{}
 	bm.FromBlock(b)
-	return r.exec("insert_block.sql", bm)
+	return br.command("insert_block.sql", bm)
 }
 
 func (br BlockRepository) scanBlock(bm *models.BlockModel, rows *sqlx.Rows) error {
