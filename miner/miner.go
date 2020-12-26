@@ -12,42 +12,9 @@ import (
 	"time"
 )
 
-type State int
-
-const (
-	unknown State = iota
-	running
-	stopping
-	stopped
-	restarting
-)
-
-type event int
-
-const (
-	none event = iota + 1
-	found
-	interrupted
-)
-
 const (
 	defaultMaxWorkersNum = 5
 )
-
-func (s State) String() string {
-	switch s {
-	case unknown:
-		return "UNKNOWN"
-	case stopping:
-		return "STOPPING"
-	case stopped:
-		return "STOPPED"
-	case restarting:
-		return "RESTARTING"
-	default:
-		return "UNKNOWN"
-	}
-}
 
 type Blockchain interface {
 	CurrentBlockHeight() uint32

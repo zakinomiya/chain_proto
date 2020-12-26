@@ -3,7 +3,7 @@ package blockchain
 import (
 	"fmt"
 	"go_chain/block"
-	"go_chain/repository"
+	"go_chain/db/repository"
 	"log"
 	"os"
 	"sync"

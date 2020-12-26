@@ -6,7 +6,9 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type commands struct{}
+type commands struct {
+	database *database
+}
 
 func newCommands() *commands {
 	return &commands{}
@@ -32,8 +34,23 @@ func (c *commands) delete() {
 
 }
 
-func (c *commands) find() {
+func (c *commands) find(filename string, data interface{}) (*sqlx.Rows, error) {
+	args := data
+	if args == nil {
+		args = map[string]interface{}{}
+	}
 
+	stmt, err := readSQL(filename)
+	if err != nil {
+		log.Printf("sql file not found. filename=%s\n", filename)
+		return nil, err
+	}
+
+	rows, err := d.db.NamedQuery(stmt, args)
+	if err != nil {
+		return nil, err
+	}
+	return rows, nil
 }
 
 func (c *commands) findAll() {
@@ -57,23 +74,4 @@ func (d *database) exec(filename string, data interface{}) error {
 	}
 
 	return nil
-}
-
-func (d *database) find(filename string, data interface{}) (*sqlx.Rows, error) {
-	args := data
-	if args == nil {
-		args = map[string]interface{}{}
-	}
-
-	stmt, err := readSQL(filename)
-	if err != nil {
-		log.Printf("sql file not found. filename=%s\n", filename)
-		return nil, err
-	}
-
-	rows, err := d.db.NamedQuery(stmt, args)
-	if err != nil {
-		return nil, err
-	}
-	return rows, nil
 }
