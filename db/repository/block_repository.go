@@ -1,9 +1,12 @@
 package repository
 
 import (
+	"database/sql"
 	"errors"
+	"go_chain/account"
 	"go_chain/block"
 	"go_chain/db/models"
+	"go_chain/transaction"
 	"log"
 
 	"github.com/jmoiron/sqlx"
@@ -11,23 +14,25 @@ import (
 
 type BlockRepository struct {
 	*database
+	account     *AccountRepository
+	transcation *TxRepository
 }
 
 func (br *BlockRepository) GetBlockByHash(hash string) (*block.Block, error) {
-	rows, err := br.query("get_block_by_hash.sql", map[string]interface{}{"hash": hash})
+	row, err := br.queryRow("get_block_by_hash.sql", map[string]interface{}{"hash": hash})
 	if err != nil {
 		return nil, err
 	}
 
-	rows.Next()
 	bm := &models.BlockModel{}
-	if err := br.scanBlock(bm, rows); err != nil {
+	if err := row.StructScan(&bm); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
 		return nil, err
 	}
 
-	block := &block.Block{}
-	bm.ToBlock(block)
-	return block, nil
+	return bm.ToBlock()
 }
 
 func (br *BlockRepository) GetBlocksByRange(start uint32, end uint32) ([]*block.Block, error) {
@@ -35,7 +40,7 @@ func (br *BlockRepository) GetBlocksByRange(start uint32, end uint32) ([]*block.
 		return nil, errors.New("start height should be less than or equal to end height")
 	}
 
-	rows, err := br.query("get_blocks_by_range.sql", map[string]interface{}{"start": start, "end": end})
+	rows, err := br.queryRows("get_blocks_by_range.sql", map[string]interface{}{"start": start, "end": end})
 	if err != nil {
 		return nil, err
 	}
@@ -43,49 +48,125 @@ func (br *BlockRepository) GetBlocksByRange(start uint32, end uint32) ([]*block.
 	blocks := []*block.Block{}
 	for rows.Next() {
 		bm := &models.BlockModel{}
-		if err := br.scanBlock(bm, rows); err != nil {
+		if err := rows.StructScan(&bm); err != nil {
+			if err == sql.ErrNoRows {
+				return nil, nil
+			}
 			log.Printf("debug: Failed to scan block. height=%d\n", bm.Height)
 			return nil, err
 		}
-		block := &block.Block{}
-		bm.ToBlock(block)
+		block, err := bm.ToBlock()
+		if err != nil {
+			return nil, err
+		}
 		blocks = append(blocks, block)
 	}
+
 	return blocks, nil
 }
 
 func (br *BlockRepository) GetLatestBlock() (*block.Block, error) {
-	rows, err := br.query("get_latest_block.sql", nil)
+	log.Println("debug: action=GetLatestBlock")
+	row, err := br.queryRow("get_latest_block.sql", nil)
 	if err != nil {
 		return nil, err
 	}
 
-	block := block.New(0, 0, [32]byte{}, nil)
-	if rows.Next() {
-		bm := &models.BlockModel{}
-		if err = br.scanBlock(bm, rows); err != nil {
-			log.Printf("debug: Failed to scan block. height=%d\n", bm.Height)
-			return nil, err
+	bm := &models.BlockModel{}
+	if err = row.StructScan(bm); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
 		}
-		bm.ToBlock(block)
-		log.Printf("info: latest block height=%d", block.Height)
-	} else {
-		return nil, nil
+		log.Printf("debug: Failed to scan block. height=%d\n", bm.Height)
+		return nil, err
 	}
 
-	return block, nil
+	log.Printf("info: latest block height=%d", bm.Height)
+
+	return bm.ToBlock()
 }
 
 func (br BlockRepository) Insert(b *block.Block) error {
-	bm := &models.BlockModel{}
-	bm.FromBlock(b)
-	return br.command("insert_block.sql", bm)
-}
-
-func (br BlockRepository) scanBlock(bm *models.BlockModel, rows *sqlx.Rows) error {
-	if err := rows.StructScan(&bm); err != nil {
-		log.Println("error:", err)
+	log.Println("debug: action=BlockRepository.Insert")
+	tx, err := br.db.Beginx()
+	if err != nil {
 		return err
 	}
+
+	if err := br.insert(tx, b); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	return nil
+}
+
+func (br *BlockRepository) insert(tx *sqlx.Tx, b *block.Block) error {
+	filename := "insert_block.sql"
+	processedAccounts, err := br.processTxs(b.Transactions)
+	if err != nil {
+		return err
+	}
+
+	bm := &models.BlockModel{}
+	bm.FromBlock(b)
+
+	if err := br.txCommand(tx, filename, bm); err != nil {
+		return err
+	}
+	if err := br.account.bulkInsert(tx, processedAccounts); err != nil {
+		return err
+	}
+	if err := br.transcation.bulkInsert(tx, b.Transactions); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (br *BlockRepository) processTxs(txs []*transaction.Transaction) ([]*account.Account, error) {
+	log.Println("debug: action=processTxs")
+	accountMap := map[string]*account.Account{}
+
+	for _, tx := range txs {
+		log.Printf("debug: SenderAddr=%s", tx.SenderAddr)
+		sender := accountMap[tx.SenderAddr]
+		if sender == nil {
+			sender = account.New(tx.SenderAddr)
+			accountMap[tx.SenderAddr] = sender
+		}
+
+		for _, output := range tx.Outs {
+			log.Printf("debug: RecipientAddr=%s", output.RecipientAddr)
+			recipient := accountMap[output.RecipientAddr]
+			if recipient == nil {
+				recipient = account.New(output.RecipientAddr)
+				accountMap[output.RecipientAddr] = recipient
+			}
+
+			if tx.TxType == "coinbase" {
+				log.Printf("debug: sending coinbase tx to %s\n", recipient.Addr)
+				recipient.Receive(output.Value)
+				continue
+			}
+
+			if err := sender.Send(output.Value, recipient); err != nil {
+				log.Printf("error: failed to send amount from %s to %s\n", sender.Addr, recipient.Addr)
+				return nil, err
+			}
+		}
+	}
+
+	accounts := []*account.Account{}
+	for _, account := range accountMap {
+		accounts = append(accounts, account)
+	}
+
+	log.Printf("debug: action=processTxs. accounts=%+v\n", accounts)
+	return accounts, nil
 }

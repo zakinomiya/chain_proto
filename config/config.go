@@ -60,7 +60,7 @@ var Config *Configurations
 func init() {
 	gopath := os.Getenv("GOPATH")
 	if gopath == "" {
-		log.Println("Please set GOPATH to run the server")
+		log.Fatalln("Please set GOPATH to run the server")
 	}
 
 	conf, err := readConfig(gopath + "/src/go_chain/config/config.yaml")

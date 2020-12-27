@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"go_chain/account"
 	"go_chain/block"
 	"go_chain/transaction"
 	"io/ioutil"
@@ -18,7 +19,13 @@ type Repository struct {
 		Insert(b *block.Block) error
 	}
 	Tx interface {
-		GetTxByBlockHash(blockHash [32]byte) ([]*transaction.Transaction, error)
+		GetTxsByBlockHash(blockHash [32]byte) ([]*transaction.Transaction, error)
+		BulkInsert(txs []*transaction.Transaction) error
+	}
+	Account interface {
+		BulkInsert(accounts []*account.Account) error
+		Insert(account *account.Account) error
+		GetAccount(addr string) (*account.Account, error)
 	}
 }
 
@@ -36,22 +43,26 @@ func New(dbPath string, dbDriver string) (*Repository, error) {
 		dbDriver: dbDriver,
 	}
 
-	err = database.command("initialize.sql", map[string]interface{}{})
+	sql, err := ioutil.ReadFile("./db/sql/initialize.sql")
 	if err != nil {
 		return nil, err
 	}
 
-	return &Repository{
-		Block: &BlockRepository{database: database},
-	}, nil
-}
-
-func readSQL(filename string) (string, error) {
-	sql, err := ioutil.ReadFile("./repository/sql/" + filename)
+	_, err = database.db.Exec(string(sql))
 	if err != nil {
-		log.Printf("error: Error retrieving sql file. filename=%s\n", filename)
-		return "", err
+		return nil, err
 	}
 
-	return string(sql), nil
+	ar := &AccountRepository{database: database}
+	tr := &TxRepository{database: database}
+
+	return &Repository{
+		Block: &BlockRepository{
+			database:    database,
+			account:     ar,
+			transcation: tr,
+		},
+		Tx:      tr,
+		Account: ar,
+	}, nil
 }

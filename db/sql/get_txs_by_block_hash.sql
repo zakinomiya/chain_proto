@@ -1,11 +1,11 @@
 SELECT
     txHash,
-    blockHash ,
-    pendingNo ,
-    totalValue ,
-    fee ,
-    senderAddr ,
-    outCount ,
+    blockHash,
+    pendingNo,
+    totalValue,
+    fee,
+    senderAddr,
+    outCount,
     outs,
     timestamp
 FROM transactions

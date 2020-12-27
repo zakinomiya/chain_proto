@@ -27,8 +27,8 @@ func New(config *config.Configurations) (*Server, error) {
 		return nil, errors.New("No miner key provided")
 	}
 
-	repository := repository.New(config.DbPath, config.Driver)
-	if err := repository.Connect(); err != nil {
+	repository, err := repository.New(config.DbPath, config.Driver)
+	if err != nil {
 		return nil, err
 	}
 
@@ -51,8 +51,17 @@ func (server *Server) Start() error {
 	log.Printf("info: Starting MVB node. ChainID=%d\n", server.config.ChainID)
 
 	for _, s := range server.services {
-		log.Printf("Starting service %s \n", s.ServiceName())
-		go s.Start()
+		stream := make(chan struct{})
+		go func() {
+			defer close(stream)
+			if err := s.Start(); err != nil {
+				return
+			}
+		}()
+		// Wait until service starts
+		select {
+		case <-stream:
+		}
 		log.Printf("Successfully started service %s \n", s.ServiceName())
 	}
 

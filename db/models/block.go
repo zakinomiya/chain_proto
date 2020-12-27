@@ -42,14 +42,14 @@ func (bm *BlockModel) FromBlock(b *block.Block) error {
 	return nil
 }
 
-func (bm *BlockModel) ToBlock(b *block.Block) error {
+func (bm *BlockModel) ToBlock() (*block.Block, error) {
 	h, err := hex.DecodeString(bm.Hash)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	merkleRoot, err := hex.DecodeString(bm.MerkleRoot)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	prevBlockHash, err := hex.DecodeString(bm.PrevBlockHash)
@@ -58,18 +58,15 @@ func (bm *BlockModel) ToBlock(b *block.Block) error {
 
 	var transactions []*transaction.Transaction
 	if err := json.Unmarshal([]byte(bm.Transactions), &transactions); err != nil {
-		return err
+		return nil, err
 	}
 
+	b := block.New(bm.Height, bm.Bits, common.ReadByteInto32(prevBlockHash), transactions)
 	b.Hash = hash
-	b.Height = bm.Height
 	b.MerkleRoot = merkleRoot
-	b.PrevBlockHash = common.ReadByteInto32(prevBlockHash)
 	b.Timestamp = bm.Timestamp
-	b.Bits = bm.Bits
 	b.ExtraNonce = bm.ExtraNonce
 	b.Nonce = bm.Nonce
-	b.Transactions = transactions
 
-	return nil
+	return b, nil
 }

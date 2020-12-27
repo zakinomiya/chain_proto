@@ -119,9 +119,18 @@ func (b *Block) TxCount() int {
 ///     - hash = the calculated result from properties in the block
 ///     - hash clears its difficulty
 func (b *Block) Verify() bool {
+	coinbaseCount := 0
 	for _, tx := range b.Transactions {
+		if tx.TxType == "coinbase" {
+			if coinbaseCount == 1 {
+				log.Println("error: this block contains more than 2 coinbase transactions.")
+				return false
+			}
+			coinbaseCount++
+		}
+
 		if !tx.Verify() {
-			log.Println("info: block contains a invalid transaction.")
+			log.Println("error: block contains a invalid transaction.")
 			return false
 		}
 	}

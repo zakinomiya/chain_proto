@@ -4,6 +4,8 @@ import (
 	"go_chain/db/models"
 	"go_chain/transaction"
 	"log"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type TxRepository struct {
@@ -30,7 +32,7 @@ func (tr *TxRepository) GetTxsByBlockHash(blockHash [32]byte) ([]*transaction.Tr
 }
 
 func (tr *TxRepository) getTxModelByBlockHash(blockHash [32]byte) ([]*models.TxModel, error) {
-	rows, err := tr.query("get_txs_by_block_hash.sql", map[string]interface{}{"blockHash": blockHash[:]})
+	rows, err := tr.queryRows("get_txs_by_block_hash.sql", map[string]interface{}{"blockHash": blockHash[:]})
 	if err != nil {
 		return nil, err
 	}
@@ -46,4 +48,26 @@ func (tr *TxRepository) getTxModelByBlockHash(blockHash [32]byte) ([]*models.TxM
 	}
 
 	return txModels, nil
+}
+
+func (tr *TxRepository) BulkInsert(txs []*transaction.Transaction) error {
+	return tr.bulkInsert(nil, txs)
+}
+
+func (tr *TxRepository) bulkInsert(tx *sqlx.Tx, txs []*transaction.Transaction) error {
+	filename := "insert_tx.sql"
+	txModels := make([]*models.TxModel, len(txs))
+	for _, tx := range txs {
+		txModel := &models.TxModel{}
+		if err := txModel.FromTx(tx); err != nil {
+			return err
+		}
+		txModels = append(txModels, txModel)
+	}
+
+	if tx != nil {
+		return tr.txCommand(tx, filename, txModels)
+	}
+
+	return tr.command(filename, txModels)
 }
