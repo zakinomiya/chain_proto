@@ -136,7 +136,7 @@ func (br *BlockRepository) processTxs(txs []*transaction.Transaction) ([]*accoun
 	for _, tx := range txs {
 		log.Printf("debug: SenderAddr=%s", tx.SenderAddr)
 		sender := accountMap[tx.SenderAddr]
-		if sender == nil {
+		if sender == nil && tx.TxType != "coinbase" {
 			sender = account.New(tx.SenderAddr)
 			accountMap[tx.SenderAddr] = sender
 		}
