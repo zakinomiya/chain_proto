@@ -41,6 +41,7 @@ func (ar *AccountRepository) insert(tx *sqlx.Tx, account *account.Account) error
 	return ar.command(filename, am)
 }
 
+// BulkInsert receives a slice of accounts and stores them into the db.
 func (ar *AccountRepository) BulkInsert(accounts []*account.Account) error {
 	return ar.bulkInsert(nil, accounts)
 }
