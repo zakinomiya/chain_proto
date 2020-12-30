@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"go_chain/account"
-	"go_chain/block"
-	"go_chain/transaction"
+	"chain_proto/account"
+	"chain_proto/block"
+	"chain_proto/transaction"
 	"io/ioutil"
 	"log"
 

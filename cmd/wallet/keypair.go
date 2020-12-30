@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"go_chain/wallet"
+	"chain_proto/wallet"
 	"io/ioutil"
 	"os"
 	"path/filepath"

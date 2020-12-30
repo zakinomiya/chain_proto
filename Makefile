@@ -1,4 +1,4 @@
-PROJECT_NAME = go_chain
+PROJECT_NAME = chain_proto
 OUT_DIR = bin
 
 # Go varibales

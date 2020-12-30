@@ -1,8 +1,8 @@
 package main
 
 import (
-	"go_chain/config"
-	"go_chain/server"
+	"chain_proto/config"
+	"chain_proto/server"
 	"log"
 	"os"
 	"os/signal"

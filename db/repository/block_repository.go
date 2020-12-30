@@ -3,10 +3,10 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"go_chain/account"
-	"go_chain/block"
-	"go_chain/db/models"
-	"go_chain/transaction"
+	"chain_proto/account"
+	"chain_proto/block"
+	"chain_proto/db/models"
+	"chain_proto/transaction"
 	"log"
 
 	"github.com/jmoiron/sqlx"

@@ -1,7 +1,7 @@
 package models
 
 import (
-	"go_chain/account"
+	"chain_proto/account"
 	"log"
 )
 

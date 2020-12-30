@@ -2,9 +2,9 @@ package block
 
 import (
 	"encoding/hex"
-	"go_chain/common"
-	"go_chain/transaction"
-	"go_chain/wallet"
+	"chain_proto/common"
+	"chain_proto/transaction"
+	"chain_proto/wallet"
 	"io/ioutil"
 	"log"
 

@@ -2,12 +2,12 @@ package server
 
 import (
 	"errors"
-	"go_chain/blockchain"
-	"go_chain/config"
-	"go_chain/db/repository"
-	"go_chain/gateway"
-	"go_chain/miner"
-	"go_chain/wallet"
+	"chain_proto/blockchain"
+	"chain_proto/config"
+	"chain_proto/db/repository"
+	"chain_proto/gateway"
+	"chain_proto/miner"
+	"chain_proto/wallet"
 	"log"
 )
 

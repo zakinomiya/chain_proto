@@ -1,20 +1,21 @@
 package models
 
 import (
+	"chain_proto/common"
+	"chain_proto/transaction"
 	"encoding/json"
-	"go_chain/common"
-	"go_chain/transaction"
 	"log"
 )
 
 type TxModel struct {
-	TxHash     []byte
-	TotalValue uint32
-	Fee        uint32
-	SenderAddr string
-	Timestamp  int64
-	OutCount   int
-	Outs       []byte
+	TxHash     []byte `db:"txHash"`
+	BlockHash  string `db:"blockHash"`
+	TotalValue uint32 `db:"totalValue"`
+	Fee        uint32 `db:"fee"`
+	SenderAddr string `db:"senderAddr"`
+	Timestamp  int64  `db:"timestamp"`
+	OutCount   int    `db:"outCount"`
+	Outs       []byte `db:"outs"`
 }
 
 func (tm *TxModel) ToTx(tx *transaction.Transaction) error {

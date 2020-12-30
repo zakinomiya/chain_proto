@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"go_chain/account"
-	"go_chain/db/models"
+	"chain_proto/account"
+	"chain_proto/db/models"
 
 	"github.com/jmoiron/sqlx"
 )

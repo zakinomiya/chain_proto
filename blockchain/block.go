@@ -1,7 +1,7 @@
 package blockchain
 
 import (
-	"go_chain/block"
+	"chain_proto/block"
 	"log"
 )
 

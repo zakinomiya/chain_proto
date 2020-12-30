@@ -1,8 +1,8 @@
 package transaction
 
 import (
-	"go_chain/common"
-	"go_chain/wallet"
+	"chain_proto/common"
+	"chain_proto/wallet"
 )
 
 func NewCoinbase(w *wallet.Wallet, value uint32) *Transaction {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"go_chain/common"
-	"go_chain/config"
+	"chain_proto/common"
+	"chain_proto/config"
 )
 
 func init() {

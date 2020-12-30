@@ -9,7 +9,7 @@ IF NOT EXISTS blocks
     timestamp INTEGER,
     bits INTEGER,
     nonce INTEGER,
-    transactions TEXT,
+    transactions BLOB,
     txCount INTEGER
 );
 
@@ -18,12 +18,11 @@ IF NOT EXISTS transactions
 (
     txHash TEXT NOT NULL PRIMARY KEY,
     blockHash TEXT,
-    pendingNo TEXT,
     totalValue INTEGER,
     fee INTEGER,
     senderAddr TEXT,
     outCount INTEGER,
-    outs TEXT,
+    outs BLOB,
     timestamp INTEGER
 );
 

@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"go_chain/block"
-	"go_chain/db/models"
+	"chain_proto/block"
+	"chain_proto/db/models"
 	"testing"
 )
 

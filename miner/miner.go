@@ -2,10 +2,10 @@ package miner
 
 import (
 	"fmt"
-	"go_chain/block"
-	"go_chain/blockchain"
-	"go_chain/transaction"
-	"go_chain/wallet"
+	"chain_proto/block"
+	"chain_proto/blockchain"
+	"chain_proto/transaction"
+	"chain_proto/wallet"
 	"log"
 	"strings"
 	"sync"

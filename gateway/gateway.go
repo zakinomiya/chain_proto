@@ -2,13 +2,13 @@ package gateway
 
 import (
 	"context"
-	"go_chain/config"
+	"chain_proto/config"
 	"log"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 
-	gw "go_chain/gateway/gw"
+	gw "chain_proto/gateway/gw"
 )
 
 type Gateway struct {

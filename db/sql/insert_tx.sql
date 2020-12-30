@@ -3,7 +3,6 @@ INSERT INTO transactions
     (
     txHash,
     blockHash,
-    pendingNo,
     totalValue,
     fee,
     senderAddr,
@@ -14,7 +13,6 @@ INSERT INTO transactions
 VALUES
     (
         :txHash,
-        :blockHash,
         :pendingNo,
         :totalValue,
         :fee,

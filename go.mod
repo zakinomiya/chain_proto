@@ -1,4 +1,4 @@
-module go_chain
+module chain_proto
 
 go 1.14
 
@@ -18,7 +18,6 @@ require (
 	golang.org/x/sys v0.0.0-20201214095126-aec9a390925b // indirect
 	google.golang.org/genproto v0.0.0-20201019141844-1ed22bb0c154
 	google.golang.org/grpc v1.33.1
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.0.1 // indirect
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/yaml.v2 v2.3.0
 )

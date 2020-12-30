@@ -1,7 +1,7 @@
 package config
 
 import (
-	"go_chain/common"
+	"chain_proto/common"
 	"io/ioutil"
 	"log"
 	"os"
@@ -63,7 +63,7 @@ func init() {
 		log.Fatalln("Please set GOPATH to run the server")
 	}
 
-	conf, err := readConfig(gopath + "/src/go_chain/config/config.yaml")
+	conf, err := readConfig(gopath + "/src/chain_proto/config/config.yaml")
 	if err != nil {
 		log.Printf("error: Failed to read config file. ERROR: %v.\n", err)
 		os.Exit(1)

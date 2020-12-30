@@ -1,7 +1,7 @@
 package gateway
 
 import (
-	"go_chain/config"
+	"chain_proto/config"
 	"testing"
 )
 

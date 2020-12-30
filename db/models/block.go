@@ -4,9 +4,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"go_chain/block"
-	"go_chain/common"
-	"go_chain/transaction"
+	"chain_proto/block"
+	"chain_proto/common"
+	"chain_proto/transaction"
 )
 
 type BlockModel struct {

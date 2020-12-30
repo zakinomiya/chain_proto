@@ -1,6 +1,6 @@
 package miner
 
-import "go_chain/transaction"
+import "chain_proto/transaction"
 
 /// GetPooledTransactions returns transactions in the pool.
 /// note this function returns the new slice of transactions.

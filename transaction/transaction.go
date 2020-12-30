@@ -2,11 +2,11 @@ package transaction
 
 import (
 	"bytes"
+	"chain_proto/common"
+	"chain_proto/wallet"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"go_chain/common"
-	"go_chain/wallet"
 )
 
 type TxType string
@@ -74,17 +74,6 @@ func (tx *Transaction) CalcHash() error {
 	tx.TxHash = sha256.Sum256(hash.Sum(tx.ToBytes()))
 	return nil
 }
-
-// func (tx *Transaction) addHash(h hash.Hash, strs []string) error {
-// 	for _, s := range strs {
-// 		_, err := h.Write([]byte(s))
-// 		if err != nil {
-// 			return err
-// 		}
-// 	}
-
-// 	return nil
-// }
 
 func (tx *Transaction) Verify() bool {
 	return true
