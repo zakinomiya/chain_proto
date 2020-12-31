@@ -5,6 +5,7 @@ import (
 	"chain_proto/common"
 	"chain_proto/wallet"
 	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 )
@@ -51,6 +52,45 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 		Signature:  t.Signature.String(),
 		Outs:       t.Outs,
 	})
+}
+
+// TODO implements
+func (t *Transaction) UnmarshalJSON(buf []byte) error {
+	type te struct {
+		TxHash     string    `json:"txHash"`
+		TxType     TxType    `json:"txType"`
+		TotalValue uint32    `json:"totalValue"`
+		Fee        uint32    `json:"fee"`
+		SenderAddr string    `json:"senderAddr"`
+		Timestamp  int64     `json:"timestamp"`
+		Signature  string    `json:"signature"`
+		Outs       []*Output `json:"outs"`
+	}
+	teS := &te{}
+	err := json.Unmarshal(buf, &teS)
+	if err != nil {
+		return err
+	}
+
+	bhex, err := hex.DecodeString(teS.TxHash)
+	if err != nil {
+		return err
+	}
+
+	t.TxHash = common.ReadByteInto32(bhex)
+	t.TxType = teS.TxType
+	t.TotalValue = teS.TotalValue
+	t.Fee = teS.Fee
+	t.SenderAddr = teS.SenderAddr
+	t.Timestamp = teS.Timestamp
+	t.Outs = teS.Outs
+
+	s, err := wallet.DecodeSigString(teS.Signature)
+	if err != nil {
+		return err
+	}
+	t.Signature = s
+	return nil
 }
 
 func (tx *Transaction) ToBytes() []byte {

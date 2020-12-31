@@ -1,12 +1,12 @@
 package models
 
 import (
-	"encoding/hex"
-	"encoding/json"
-	"fmt"
 	"chain_proto/block"
 	"chain_proto/common"
 	"chain_proto/transaction"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
 )
 
 type BlockModel struct {

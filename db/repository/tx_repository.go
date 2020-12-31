@@ -56,10 +56,10 @@ func (tr *TxRepository) BulkInsert(txs []*transaction.Transaction) error {
 
 func (tr *TxRepository) bulkInsert(tx *sqlx.Tx, txs []*transaction.Transaction) error {
 	filename := "insert_tx.sql"
-	txModels := make([]*models.TxModel, len(txs))
-	for _, tx := range txs {
+	txModels := make([]*models.TxModel, 0, len(txs))
+	for _, t := range txs {
 		txModel := &models.TxModel{}
-		if err := txModel.FromTx(tx); err != nil {
+		if err := txModel.FromTx(t); err != nil {
 			return err
 		}
 		txModels = append(txModels, txModel)

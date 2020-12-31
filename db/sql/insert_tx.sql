@@ -1,8 +1,6 @@
--- TODO write tx insert sql
 INSERT INTO transactions
     (
     txHash,
-    blockHash,
     totalValue,
     fee,
     senderAddr,
@@ -13,7 +11,6 @@ INSERT INTO transactions
 VALUES
     (
         :txHash,
-        :pendingNo,
         :totalValue,
         :fee,
         :senderAddr,

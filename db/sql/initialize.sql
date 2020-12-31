@@ -17,7 +17,6 @@ CREATE TABLE
 IF NOT EXISTS transactions
 (
     txHash TEXT NOT NULL PRIMARY KEY,
-    blockHash TEXT,
     totalValue INTEGER,
     fee INTEGER,
     senderAddr TEXT,

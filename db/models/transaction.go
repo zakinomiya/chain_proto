@@ -8,8 +8,8 @@ import (
 )
 
 type TxModel struct {
-	TxHash     []byte `db:"txHash"`
-	BlockHash  string `db:"blockHash"`
+	TxHash []byte `db:"txHash" json:"txhash"`
+	//	BlockHash  string `db:"lockHash"`
 	TotalValue uint32 `db:"totalValue"`
 	Fee        uint32 `db:"fee"`
 	SenderAddr string `db:"senderAddr"`
