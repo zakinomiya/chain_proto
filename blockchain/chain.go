@@ -1,31 +1,21 @@
 package blockchain
 
 import (
-	"fmt"
 	"chain_proto/block"
 	"chain_proto/db/repository"
+	"fmt"
 	"log"
 	"os"
 	"sync"
 )
 
-// BlockchainEvents represents varieties of events the blockchain invokes
-// Subscribers should register a channel which events will be streamed into.
-type BlockchainEvents string
-
-const (
-	// NewBlock event is invokes when a new block is added to the chain
-	NewBlock BlockchainEvents = "NEW_BLOCK"
-)
-
 // Blockchain is a struct of the chain
 type Blockchain struct {
-	mutex         sync.Mutex
-	chainID       uint32
-	subscriptions map[string]chan BlockchainEvents
-	height        uint32
-	blocks        []*block.Block
-	repository    *repository.Repository
+	mutex      sync.Mutex
+	chainID    uint32
+	height     uint32
+	blocks     []*block.Block
+	repository *repository.Repository
 }
 
 var blockchain *Blockchain
@@ -34,9 +24,8 @@ var once sync.Once
 // New returns a new blockchain
 func New(chainID uint32, repository *repository.Repository) *Blockchain {
 	blockchain = &Blockchain{
-		chainID:       chainID,
-		repository:    repository,
-		subscriptions: make(map[string]chan BlockchainEvents),
+		chainID:    chainID,
+		repository: repository,
 	}
 	return blockchain
 }
@@ -106,25 +95,4 @@ func (bc *Blockchain) LatestBlock() *block.Block {
 // TODO implement Difficulty
 func (bc *Blockchain) Difficulty() uint32 {
 	return 5
-}
-
-// Subscribe regeisters a new channel to the subscription.
-// Blockchain events are streaming through the channel
-func (bc *Blockchain) Subscribe(key string) <-chan BlockchainEvents {
-	ch := make(chan BlockchainEvents)
-	bc.subscriptions[key] = ch
-	return ch
-}
-
-// Unsubscribe delets a subscription with the specified key.
-func (bc *Blockchain) Unsubscribe(key string) {
-	delete(bc.subscriptions, key)
-}
-
-// SendEvent sends events to the subscribed channels.
-func (bc *Blockchain) SendEvent(eventName BlockchainEvents) {
-	for key, ch := range bc.subscriptions {
-		log.Printf("debug: sending event(%s) to the subsctiption(%s)\n", eventName, key)
-		ch <- eventName
-	}
 }
