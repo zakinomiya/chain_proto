@@ -55,8 +55,8 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 }
 
 // TODO implements
-func (t *Transaction) UnmarshalJSON(buf []byte) error {
-	type te struct {
+func (t *Transaction) UnmarshalJSON(b []byte) error {
+	tx := &struct {
 		TxHash     string    `json:"txHash"`
 		TxType     TxType    `json:"txType"`
 		TotalValue uint32    `json:"totalValue"`
@@ -65,27 +65,26 @@ func (t *Transaction) UnmarshalJSON(buf []byte) error {
 		Timestamp  int64     `json:"timestamp"`
 		Signature  string    `json:"signature"`
 		Outs       []*Output `json:"outs"`
-	}
-	teS := &te{}
-	err := json.Unmarshal(buf, &teS)
+	}{}
+	err := json.Unmarshal(b, &tx)
 	if err != nil {
 		return err
 	}
 
-	bhex, err := hex.DecodeString(teS.TxHash)
+	hash, err := hex.DecodeString(tx.TxHash)
 	if err != nil {
 		return err
 	}
 
-	t.TxHash = common.ReadByteInto32(bhex)
-	t.TxType = teS.TxType
-	t.TotalValue = teS.TotalValue
-	t.Fee = teS.Fee
-	t.SenderAddr = teS.SenderAddr
-	t.Timestamp = teS.Timestamp
-	t.Outs = teS.Outs
+	t.TxHash = common.ReadByteInto32(hash)
+	t.TxType = tx.TxType
+	t.TotalValue = tx.TotalValue
+	t.Fee = tx.Fee
+	t.SenderAddr = tx.SenderAddr
+	t.Timestamp = tx.Timestamp
+	t.Outs = tx.Outs
 
-	s, err := wallet.DecodeSigString(teS.Signature)
+	s, err := wallet.DecodeSigString(tx.Signature)
 	if err != nil {
 		return err
 	}

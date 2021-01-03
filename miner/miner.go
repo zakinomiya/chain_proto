@@ -1,11 +1,11 @@
 package miner
 
 import (
-	"fmt"
 	"chain_proto/block"
 	"chain_proto/blockchain"
 	"chain_proto/transaction"
 	"chain_proto/wallet"
+	"fmt"
 	"log"
 	"strings"
 	"sync"
@@ -14,6 +14,7 @@ import (
 
 const (
 	defaultMaxWorkersNum = 5
+	miningWaitTime       = time.Second * 10
 )
 
 type Blockchain interface {
@@ -26,31 +27,26 @@ type Blockchain interface {
 }
 
 type Miner struct {
-	enabled          bool
-	concurrent       bool
-	maxWorkersNum    int
-	wg               *sync.WaitGroup
-	blockchainEvents <-chan blockchain.BlockchainEvents
-	exit             chan struct{}
-	transactionPool  []*transaction.Transaction
-	blockchain       Blockchain
-	minerWallet      *wallet.Wallet
+	enabled         bool
+	concurrent      bool
+	maxWorkersNum   int
+	wg              *sync.WaitGroup
+	exit            chan struct{}
+	transactionPool []*transaction.Transaction
+	blockchain      Blockchain
+	minerWallet     *wallet.Wallet
 }
 
 func New(bc Blockchain, w *wallet.Wallet, enabled bool, concurrent bool, maxWorkersNum int) *Miner {
-	// listening blockchain updates
-	ch := bc.Subscribe("Miner")
-
 	return &Miner{
-		enabled:          enabled,
-		concurrent:       concurrent,
-		maxWorkersNum:    maxWorkersNum,
-		wg:               &sync.WaitGroup{},
-		blockchainEvents: ch,
-		exit:             make(chan struct{}),
-		transactionPool:  []*transaction.Transaction{},
-		blockchain:       bc,
-		minerWallet:      w,
+		enabled:         enabled,
+		concurrent:      concurrent,
+		maxWorkersNum:   maxWorkersNum,
+		wg:              &sync.WaitGroup{},
+		exit:            make(chan struct{}),
+		transactionPool: []*transaction.Transaction{},
+		blockchain:      bc,
+		minerWallet:     w,
 	}
 }
 
@@ -97,15 +93,12 @@ func (m *Miner) AddTransaction(tx *transaction.Transaction) {
 func (m *Miner) mining(workersNum int) {
 	log.Println("info: Started mining")
 	workers := []chan struct{}{}
-	events := []chan blockchain.BlockchainEvents{}
 
 	work := func() {
 		for i := 0; i < workersNum; i++ {
 			q := make(chan struct{})
-			e := make(chan blockchain.BlockchainEvents)
 			workers = append(workers, q)
-			events = append(events, e)
-			go m.worker(q, e)
+			go m.worker(q)
 			m.wg.Add(1)
 		}
 	}
@@ -122,31 +115,33 @@ func (m *Miner) mining(workersNum int) {
 
 			m.wg.Wait()
 			return
-		case event := <-m.blockchainEvents:
-			log.Println("debug: received a new event")
-			for _, e := range events {
-				e <- event
-			}
 		}
 	}
 }
 
-func (m *Miner) worker(quit chan struct{}, eventStream <-chan blockchain.BlockchainEvents) {
-	block := m.generateBlock()
-	consecutiveZeros := strings.Repeat("0", int(block.Bits))
+func (m *Miner) worker(quit chan struct{}) {
+	var block *block.Block
+	var consecutiveZeros string
 
 	for {
+		if block == nil {
+			block = m.generateBlock()
+			consecutiveZeros = strings.Repeat("0", int(block.Bits))
+		}
+
+		// Check blockchain update every 10000 calculations.
+		if block.Nonce%10000 == 0 && m.blockchain.CurrentBlockHeight()+1 != block.Height {
+			log.Printf("debug: new block already added. updating target block")
+			block = nil
+			time.Sleep(miningWaitTime)
+			continue
+		}
+
 		select {
 		case <-quit:
 			log.Println("debug: received signal. quit working")
 			m.wg.Done()
 			return
-		case event := <-eventStream:
-			log.Printf("debug: new event received: event=%s\n", event)
-			if event == blockchain.NewBlock {
-				log.Println("debug: update block")
-				block = m.generateBlock()
-			}
 		default:
 			//
 		}
@@ -155,6 +150,9 @@ func (m *Miner) worker(quit chan struct{}, eventStream <-chan blockchain.Blockch
 			block.Hash = hash
 			log.Printf("info: Found a valid nonce: %v \n", block.Nonce)
 			m.blockchain.AddBlock(block)
+			block = nil
+			time.Sleep(miningWaitTime)
+			continue
 		}
 		block.IncrementNonce()
 	}

@@ -1,12 +1,12 @@
 package repository
 
 import (
-	"database/sql"
-	"errors"
 	"chain_proto/account"
 	"chain_proto/block"
 	"chain_proto/db/models"
 	"chain_proto/transaction"
+	"database/sql"
+	"errors"
 	"log"
 
 	"github.com/jmoiron/sqlx"
@@ -129,6 +129,8 @@ func (br *BlockRepository) insert(tx *sqlx.Tx, b *block.Block) error {
 	return nil
 }
 
+// processTxs processes the transactions in a block and simulates the blockchain state after all the transactions become valid.
+// process failes when sender does not have enough balance.
 func (br *BlockRepository) processTxs(txs []*transaction.Transaction) ([]*account.Account, error) {
 	log.Println("debug: action=processTxs")
 	accountMap := map[string]*account.Account{}
@@ -137,7 +139,11 @@ func (br *BlockRepository) processTxs(txs []*transaction.Transaction) ([]*accoun
 		log.Printf("debug: SenderAddr=%s", tx.SenderAddr)
 		sender := accountMap[tx.SenderAddr]
 		if sender == nil && tx.TxType != "coinbase" {
-			sender = account.New(tx.SenderAddr)
+			s, err := br.account.GetAccount(tx.SenderAddr)
+			if err != nil {
+				return nil, err
+			}
+			sender = s
 			accountMap[tx.SenderAddr] = sender
 		}
 
@@ -145,10 +151,13 @@ func (br *BlockRepository) processTxs(txs []*transaction.Transaction) ([]*accoun
 			log.Printf("debug: RecipientAddr=%s", output.RecipientAddr)
 			recipient := accountMap[output.RecipientAddr]
 			if recipient == nil {
-				recipient = account.New(output.RecipientAddr)
+				r, err := br.account.GetAccount(output.RecipientAddr)
+				if err != nil {
+					return nil, err
+				}
+				recipient = r
 				accountMap[output.RecipientAddr] = recipient
 			}
-
 			if tx.TxType == "coinbase" {
 				log.Printf("debug: sending coinbase tx to %s\n", recipient.Addr)
 				recipient.Receive(output.Value)
@@ -161,7 +170,6 @@ func (br *BlockRepository) processTxs(txs []*transaction.Transaction) ([]*accoun
 			}
 		}
 	}
-
 	accounts := []*account.Account{}
 	for _, account := range accountMap {
 		accounts = append(accounts, account)

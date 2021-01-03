@@ -3,6 +3,7 @@ package repository
 import (
 	"chain_proto/account"
 	"chain_proto/db/models"
+	"database/sql"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -12,13 +13,17 @@ type AccountRepository struct {
 }
 
 func (ar *AccountRepository) GetAccount(addr string) (*account.Account, error) {
-	row, err := ar.queryRow("get_account", map[string]interface{}{"addr": addr})
+	row, err := ar.queryRow("get_account.sql", map[string]interface{}{"addr": addr})
 	if err != nil {
 		return nil, err
 	}
 
 	am := &models.AccountModel{}
-	if err := row.StructScan(&am); err != nil {
+	if err := row.StructScan(am); err != nil {
+		if err == sql.ErrNoRows {
+			return account.New(addr), nil
+		}
+
 		return nil, err
 	}
 

@@ -17,9 +17,6 @@ func (bc *Blockchain) ReplaceBlocks(blocks []*block.Block) {
 
 // AddBlock adds a new block to the chain.
 func (bc *Blockchain) AddBlock(block *block.Block) bool {
-	bc.mutex.Lock()
-	defer bc.mutex.Unlock()
-
 	if !block.Verify() {
 		log.Println("info: Refused adding the block")
 		return false
@@ -31,7 +28,7 @@ func (bc *Blockchain) AddBlock(block *block.Block) bool {
 	}
 
 	bc.blocks = append(bc.blocks, block)
-	bc.SendEvent(NewBlock)
+	go bc.SendEvent(NewBlock)
 
 	log.Printf("info: Adding new block: %x\n", block.Hash)
 	log.Printf("debug: block=%+v\n", block)

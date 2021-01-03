@@ -1,4 +1,4 @@
-INSERT INTO accounts
+REPLACE INTO accounts
     (
     addr,
     balance
