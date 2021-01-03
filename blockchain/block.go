@@ -28,7 +28,6 @@ func (bc *Blockchain) AddBlock(block *block.Block) bool {
 	}
 
 	bc.blocks = append(bc.blocks, block)
-	go bc.SendEvent(NewBlock)
 
 	log.Printf("info: Adding new block: %x\n", block.Hash)
 	log.Printf("debug: block=%+v\n", block)

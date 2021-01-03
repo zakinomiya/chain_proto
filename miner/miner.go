@@ -2,7 +2,6 @@ package miner
 
 import (
 	"chain_proto/block"
-	"chain_proto/blockchain"
 	"chain_proto/transaction"
 	"chain_proto/wallet"
 	"fmt"
@@ -22,8 +21,6 @@ type Blockchain interface {
 	Difficulty() uint32
 	LatestBlock() *block.Block
 	AddBlock(block *block.Block) bool
-	Subscribe(key string) <-chan blockchain.BlockchainEvents
-	Unsubscribe(key string)
 }
 
 type Miner struct {

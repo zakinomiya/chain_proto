@@ -1,8 +1,8 @@
 package gateway
 
 import (
-	"context"
 	"chain_proto/config"
+	"context"
 	"log"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
