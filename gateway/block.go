@@ -5,5 +5,7 @@ import (
 	"context"
 )
 
-func (g *Gateway) GetBlockByHash(ctx context.Context, req *gw.GetBlockByHashRequest) (*gw.GetBlockResponse, error) {
+func (g *Gateway) GetBlockByHash(ctx context.Context, req *gw.GetBlockByHashRequest) error {
+	return nil
+
 }

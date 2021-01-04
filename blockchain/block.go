@@ -34,3 +34,12 @@ func (bc *Blockchain) AddBlock(block *block.Block) bool {
 	log.Printf("info: Now the length of the chain is %d:\n", bc.LatestBlock().Height)
 	return true
 }
+
+func (bc *Blockchain) GetBlockByHash(hash string) (*block.Block, error) {
+	b, err := bc.repository.Block.GetBlockByHash(hash)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}

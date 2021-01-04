@@ -1,13 +1,13 @@
 package server
 
 import (
-	"errors"
 	"chain_proto/blockchain"
 	"chain_proto/config"
 	"chain_proto/db/repository"
 	"chain_proto/gateway"
 	"chain_proto/miner"
 	"chain_proto/wallet"
+	"errors"
 	"log"
 )
 
@@ -51,16 +51,9 @@ func (server *Server) Start() error {
 	log.Printf("info: Starting MVB node. ChainID=%d\n", server.config.ChainID)
 
 	for _, s := range server.services {
-		stream := make(chan struct{})
-		go func() {
-			defer close(stream)
-			if err := s.Start(); err != nil {
-				return
-			}
-		}()
-		// Wait until service starts
-		select {
-		case <-stream:
+		log.Printf("info: Staring service(%s)\n", s.ServiceName())
+		if err := s.Start(); err != nil {
+			return err
 		}
 		log.Printf("Successfully started service %s \n", s.ServiceName())
 	}
