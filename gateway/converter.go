@@ -65,7 +65,7 @@ func toTransaction(t *gw.Transaction) (*transaction.Transaction, error) {
 	tx.TxHash = common.ReadByteInto32(hash)
 	tx.Fee = t.GetFee()
 	tx.SenderAddr = t.GetSenderAddr()
-	tx.TxType = t.GetTxType()
+	tx.TxType = transaction.TxType(gw.Transaction_TxType_name[int32(t.GetTxType())])
 	tx.Timestamp = t.GetTimestamp()
 	tx.Signature = sig
 	tx.TotalValue = t.GetTotalValue()

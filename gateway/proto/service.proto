@@ -71,8 +71,8 @@ service HTTPService {
 
 message Transaction {
   enum TxType {
-    COINBASE = 0;
-    NORMAL = 1;
+    Coinbase = 0;
+    Normal = 1;
   }
   string tx_hash = 1;
   TxType tx_type = 2;
