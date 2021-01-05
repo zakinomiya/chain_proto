@@ -8,82 +8,116 @@ import "google/api/annotations.proto";
 option go_package = "go_chain/gateway/gw";
 
 service HTTPService {
-    rpc SendTransaction(SendTransactionRequest) returns (google.protobuf.Empty) {
-        option (google.api.http) = {
-            post: "/transactions"
-            body: "*"
-        };
-    }
-    rpc GetTransactionByHash(GetTransactionByHashRequest) returns (GetTransactionResponse) {
-        option (google.api.http) = {
-            get: "/transactions/{tx_hash}"
-        };
-    }
-    rpc SendBlock(SendBlockRequest) returns (google.protobuf.Empty) {
-        option (google.api.http) = {
-            post: "/blocks"
-            body: "*"
-        };
-    }
-    rpc GetBlockByHeight(GetBlockByHeightRequest) returns (GetBlockResponse) {
-        option (google.api.http) = {
-            post: "/blocks/{block_height}"
-        };
-    }
-    rpc GetBlockByHash(GetBlockByHashRequest) returns (GetBlockResponse) {
-        option (google.api.http) = {
-            post: "/blocks/{block_hash}"
-        };
-    }
-    rpc GetAccount(GetAccountRequest) returns (GetAccountResponse) {
-        option (google.api.http) = {
-            post: "/blocks/{addr}"
-        };
-    }
+  rpc SendTransaction(SendTransactionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/transactions"
+      body: "*"
+    };
+  }
+  rpc GetTransactionByHash(GetTransactionByHashRequest)
+      returns (GetTransactionResponse) {
+    option (google.api.http) = {
+      get: "/transactions/{tx_hash}"
+    };
+  }
+  rpc SendBlock(SendBlockRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/blocks"
+      body: "*"
+    };
+  }
+  rpc GetBlockByHeight(GetBlockByHeightRequest) returns (GetBlockResponse) {
+    option (google.api.http) = {
+      get: "/blocks/{block_height}"
+    };
+  }
+  rpc GetBlockByHash(GetBlockByHashRequest) returns (GetBlockResponse) {
+    option (google.api.http) = {
+      get: "/blocks/{block_hash}"
+    };
+  }
+  rpc GetBlocks(GetBlocksRequest) returns (GetBlocksResponse) {
+    option (google.api.http) = {
+      get: "/blocks"
+    };
+  }
+  rpc GetAccount(GetAccountRequest) returns (GetAccountResponse) {
+    option (google.api.http) = {
+      get: "/accounts/{addr}"
+    };
+  }
+  rpc SendAccount(SendAccountRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/accounts"
+      body: "*"
+    };
+  }
+  rpc SendPeer(SendPeerRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/peers"
+      body: "*"
+    };
+  }
+  rpc Sync(SyncRequest) returns (GetBlocksResponse) {
+    option (google.api.http) = {
+      post: "/sync"
+      body: "*"
+    };
+  }
 }
-
 // -----------------------------------
 //  common messages
 // -----------------------------------
 
 message Transaction {
-    string tx_hash = 1; 
-    uint32 total_value = 2;
-    float fee = 3;
-    string sender_addr = 4;
-    int64 timestamp = 5;
-    string signature = 6;
-    repeated Output outs = 7;
+  enum TxType {
+    COINBASE = 0;
+    NORMAL = 1;
+  }
+  string tx_hash = 1;
+  TxType tx_type = 2;
+  uint32 total_value = 3;
+  uint32 fee = 4;
+  string sender_addr = 5;
+  int64 timestamp = 6;
+  string signature = 7;
+  repeated Output outs = 8;
 }
 
 message Output {
-    string recipientAddr = 1;
-    float value = 2;
+  string recipientAddr = 1;
+  uint32 value = 2;
 }
 
 message Block {
-    uint32 height = 1;
-    string hash = 2; 
-    string prev_block_hash = 3;    
-    uint32 extra_nonce = 4;
-    string merkle_root = 5;   
-    uint64 timestamp = 6;    
-    uint32 bits = 7;
-    uint32 nonce = 8;
-    repeated Transaction transactions = 9;
+  uint32 height = 1;
+  string hash = 2;
+  string prev_block_hash = 3;
+  uint32 extra_nonce = 4;
+  string merkle_root = 5;
+  uint64 timestamp = 6;
+  uint32 bits = 7;
+  uint32 nonce = 8;
+  repeated Transaction transactions = 9;
 }
 
 message Account {
-    string addr = 1;
-    float balance = 2;
+  string addr = 1;
+  float balance = 2;
 }
 
 message Peer {
-    string host = 1;
+  string host = 1;
+}
+
+message Metadata {
+  string id = 1;
+  string origin = 2;
+  string chainID = 3;
 }
 
 // -----------------------------------
-//  Request & Response messages 
+//  Request & Response messages
 // -----------------------------------
 
 message GetTransactionByHashRequest {
@@ -91,18 +125,20 @@ message GetTransactionByHashRequest {
 }
 
 message SendTransactionRequest {
-  Transaction transaction = 1;
+  Metadata metadata = 1;
+  Transaction transaction = 2;
   // options. not implemented yet
 }
 
 message GetTransactionResponse {
-    int32 block_height = 1;
-    string block_hash = 2;
-    Transaction transaction = 3;
+  int32 block_height = 1;
+  string block_hash = 2;
+  Transaction transaction = 3;
 }
 
 message SendBlockRequest {
-  Block block = 1;
+  Metadata metadata = 1;
+  Block block = 2;
 }
 
 message GetBlockResponse {
@@ -114,7 +150,16 @@ message GetBlockByHashRequest {
 }
 
 message GetBlockByHeightRequest {
-  string block_height = 1;
+  int32 block_height = 1;
+}
+
+message GetBlocksRequest {
+  int32 offset = 1;
+  int32 limit = 2;
+}
+
+message GetBlocksResponse {
+  repeated Block blocks = 1;
 }
 
 message GetAccountRequest {
@@ -122,5 +167,25 @@ message GetAccountRequest {
 }
 
 message GetAccountResponse {
-  Account account = 1; 
+  Account account = 1;
 }
+
+message SendPeerRequest {
+  Metadata metadata = 1;
+  Peer peer = 2;
+}
+
+message SendAccountRequest {
+  Metadata metadata = 1;
+  Account account = 2;
+}
+
+message SyncRequest {
+  Metadata metadata = 1;
+  int32 offset = 2;
+}
+
+message SyncResponse {
+  repeated Block blocks = 1;
+}
+

@@ -1,7 +1,10 @@
 package gateway
 
 import (
+	"chain_proto/account"
+	"chain_proto/block"
 	"chain_proto/config"
+	"chain_proto/transaction"
 	"context"
 	"log"
 
@@ -11,15 +14,30 @@ import (
 	gw "chain_proto/gateway/gw"
 )
 
-type Gateway struct {
-	config     *config.Network
-	httpServer *HTTPServer
+type Blockchain interface {
+	GetBlockByHash(hash string) (*block.Block, error)
+	GetBlockByHeight(height int32) (*block.Block, error)
+	GetBlocks(offset int32, limit int32) ([]*block.Block, error)
+	AddBlock(block *block.Block) bool
+	GetLatestBlock() (*block.Block, error)
+	GetTxsByBlockHash(blockHash string) ([]*transaction.Transaction, error)
+	GetTransactionByHash(hash string) ([]*transaction.Transaction, error)
+	AddTransaction(tx *transaction.Transaction) bool
+	GetAccount(addr string) (*account.Account, error)
+	AddAccount(account *account.Account) bool
+	AddPeer(host string) bool
+	Sync(offset int) ([]*block.Block, error)
 }
 
-func New(config *config.Network) *Gateway {
+type Gateway struct {
+	httpServer *HTTPServer
+	bc         Blockchain
+}
+
+func New(bc Blockchain) *Gateway {
 	return &Gateway{
-		config:     config,
-		httpServer: NewHTTPServer(config.HTTP.Port),
+		httpServer: NewHTTPServer(config.Config.HTTP.Port),
+		bc:         bc,
 	}
 }
 
@@ -36,15 +54,15 @@ func (g *Gateway) Start() error {
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}
 
-	if g.config.RPC.Enabled {
+	if config.Config.RPC.Enabled {
 		log.Println("info: starting rpc server")
 	}
 
-	if g.config.HTTP.Enabled {
+	if config.Config.HTTP.Enabled {
 		log.Println("info: starting http server")
 	}
 
-	if g.config.Websocket.Enabled {
+	if config.Config.Websocket.Enabled {
 		log.Println("info: starting rpc server")
 	}
 

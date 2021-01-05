@@ -1,7 +1,6 @@
 package main
 
 import (
-	"chain_proto/config"
 	"chain_proto/server"
 	"log"
 	"os"
@@ -15,7 +14,7 @@ var run = &cobra.Command{
 	Use:   "run",
 	Short: "run a mining with a provided block info",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		server, err := server.New(config.Config)
+		server, err := server.New()
 		if err != nil {
 			log.Println("info: Failed to initialise the server")
 			return err

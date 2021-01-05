@@ -23,7 +23,11 @@ type HTTPServiceClient interface {
 	SendBlock(ctx context.Context, in *SendBlockRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	GetBlockByHeight(ctx context.Context, in *GetBlockByHeightRequest, opts ...grpc.CallOption) (*GetBlockResponse, error)
 	GetBlockByHash(ctx context.Context, in *GetBlockByHashRequest, opts ...grpc.CallOption) (*GetBlockResponse, error)
+	GetBlocks(ctx context.Context, in *GetBlocksRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error)
 	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error)
+	SendAccount(ctx context.Context, in *SendAccountRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	SendPeer(ctx context.Context, in *SendPeerRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	Sync(ctx context.Context, in *SyncRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error)
 }
 
 type hTTPServiceClient struct {
@@ -79,9 +83,45 @@ func (c *hTTPServiceClient) GetBlockByHash(ctx context.Context, in *GetBlockByHa
 	return out, nil
 }
 
+func (c *hTTPServiceClient) GetBlocks(ctx context.Context, in *GetBlocksRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error) {
+	out := new(GetBlocksResponse)
+	err := c.cc.Invoke(ctx, "/gw.HTTPService/GetBlocks", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *hTTPServiceClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error) {
 	out := new(GetAccountResponse)
 	err := c.cc.Invoke(ctx, "/gw.HTTPService/GetAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *hTTPServiceClient) SendAccount(ctx context.Context, in *SendAccountRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/gw.HTTPService/SendAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *hTTPServiceClient) SendPeer(ctx context.Context, in *SendPeerRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/gw.HTTPService/SendPeer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *hTTPServiceClient) Sync(ctx context.Context, in *SyncRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error) {
+	out := new(GetBlocksResponse)
+	err := c.cc.Invoke(ctx, "/gw.HTTPService/Sync", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +137,11 @@ type HTTPServiceServer interface {
 	SendBlock(context.Context, *SendBlockRequest) (*empty.Empty, error)
 	GetBlockByHeight(context.Context, *GetBlockByHeightRequest) (*GetBlockResponse, error)
 	GetBlockByHash(context.Context, *GetBlockByHashRequest) (*GetBlockResponse, error)
+	GetBlocks(context.Context, *GetBlocksRequest) (*GetBlocksResponse, error)
 	GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error)
+	SendAccount(context.Context, *SendAccountRequest) (*empty.Empty, error)
+	SendPeer(context.Context, *SendPeerRequest) (*empty.Empty, error)
+	Sync(context.Context, *SyncRequest) (*GetBlocksResponse, error)
 	mustEmbedUnimplementedHTTPServiceServer()
 }
 
@@ -120,8 +164,20 @@ func (UnimplementedHTTPServiceServer) GetBlockByHeight(context.Context, *GetBloc
 func (UnimplementedHTTPServiceServer) GetBlockByHash(context.Context, *GetBlockByHashRequest) (*GetBlockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlockByHash not implemented")
 }
+func (UnimplementedHTTPServiceServer) GetBlocks(context.Context, *GetBlocksRequest) (*GetBlocksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlocks not implemented")
+}
 func (UnimplementedHTTPServiceServer) GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
+}
+func (UnimplementedHTTPServiceServer) SendAccount(context.Context, *SendAccountRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendAccount not implemented")
+}
+func (UnimplementedHTTPServiceServer) SendPeer(context.Context, *SendPeerRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendPeer not implemented")
+}
+func (UnimplementedHTTPServiceServer) Sync(context.Context, *SyncRequest) (*GetBlocksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Sync not implemented")
 }
 func (UnimplementedHTTPServiceServer) mustEmbedUnimplementedHTTPServiceServer() {}
 
@@ -226,6 +282,24 @@ func _HTTPService_GetBlockByHash_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _HTTPService_GetBlocks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBlocksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HTTPServiceServer).GetBlocks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gw.HTTPService/GetBlocks",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HTTPServiceServer).GetBlocks(ctx, req.(*GetBlocksRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _HTTPService_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetAccountRequest)
 	if err := dec(in); err != nil {
@@ -240,6 +314,60 @@ func _HTTPService_GetAccount_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(HTTPServiceServer).GetAccount(ctx, req.(*GetAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HTTPService_SendAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HTTPServiceServer).SendAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gw.HTTPService/SendAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HTTPServiceServer).SendAccount(ctx, req.(*SendAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HTTPService_SendPeer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendPeerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HTTPServiceServer).SendPeer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gw.HTTPService/SendPeer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HTTPServiceServer).SendPeer(ctx, req.(*SendPeerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HTTPService_Sync_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HTTPServiceServer).Sync(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gw.HTTPService/Sync",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HTTPServiceServer).Sync(ctx, req.(*SyncRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -269,8 +397,24 @@ var _HTTPService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _HTTPService_GetBlockByHash_Handler,
 		},
 		{
+			MethodName: "GetBlocks",
+			Handler:    _HTTPService_GetBlocks_Handler,
+		},
+		{
 			MethodName: "GetAccount",
 			Handler:    _HTTPService_GetAccount_Handler,
+		},
+		{
+			MethodName: "SendAccount",
+			Handler:    _HTTPService_SendAccount_Handler,
+		},
+		{
+			MethodName: "SendPeer",
+			Handler:    _HTTPService_SendPeer_Handler,
+		},
+		{
+			MethodName: "Sync",
+			Handler:    _HTTPService_Sync_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

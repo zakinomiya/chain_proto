@@ -15,7 +15,7 @@ type Log struct {
 }
 
 type ChainInfo struct {
-	ChainID uint32 `yaml:"chain_id"`
+	ChainID string `yaml:"chain_id"`
 }
 
 type Miner struct {

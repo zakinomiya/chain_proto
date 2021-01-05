@@ -2,6 +2,7 @@ package miner
 
 import (
 	"chain_proto/block"
+	"chain_proto/config"
 	"chain_proto/transaction"
 	"chain_proto/wallet"
 	"fmt"
@@ -24,9 +25,6 @@ type Blockchain interface {
 }
 
 type Miner struct {
-	enabled         bool
-	concurrent      bool
-	maxWorkersNum   int
 	wg              *sync.WaitGroup
 	exit            chan struct{}
 	transactionPool []*transaction.Transaction
@@ -34,11 +32,8 @@ type Miner struct {
 	minerWallet     *wallet.Wallet
 }
 
-func New(bc Blockchain, w *wallet.Wallet, enabled bool, concurrent bool, maxWorkersNum int) *Miner {
+func New(bc Blockchain, w *wallet.Wallet) *Miner {
 	return &Miner{
-		enabled:         enabled,
-		concurrent:      concurrent,
-		maxWorkersNum:   maxWorkersNum,
 		wg:              &sync.WaitGroup{},
 		exit:            make(chan struct{}),
 		transactionPool: []*transaction.Transaction{},
@@ -52,17 +47,17 @@ func (m *Miner) Start() error {
 
 	workersNum := defaultMaxWorkersNum
 
-	if !m.enabled {
+	if !config.Config.Enabled {
 		log.Println("info: miner")
 		return nil
 	}
 
-	if !m.concurrent {
+	if !config.Config.Concurrent {
 		log.Println("info: [Miner] running in single mode")
 		workersNum = 1
 	} else {
 		log.Println("info: [Miner] running in conccurent mode")
-		workersNum = m.maxWorkersNum
+		workersNum = config.Config.MaxWorkersNum
 	}
 
 	go m.mining(workersNum)

@@ -22,9 +22,8 @@ var blockchain *Blockchain
 var once sync.Once
 
 // New returns a new blockchain
-func New(chainID uint32, repository *repository.Repository) *Blockchain {
+func New(repository *repository.Repository) *Blockchain {
 	blockchain = &Blockchain{
-		chainID:    chainID,
 		repository: repository,
 	}
 	return blockchain

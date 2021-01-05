@@ -18,37 +18,35 @@ type Service interface {
 }
 
 type Server struct {
-	config   *config.Configurations
 	services []Service
 }
 
-func New(config *config.Configurations) (*Server, error) {
-	if config.Miner.SecretKeyStr == "" {
+func New() (*Server, error) {
+	if config.Config.SecretKeyStr == "" {
 		return nil, errors.New("No miner key provided")
 	}
 
-	repository, err := repository.New(config.DbPath, config.Driver)
+	repository, err := repository.New()
 	if err != nil {
 		return nil, err
 	}
 
-	blockchain := blockchain.New(config.ChainID, repository)
-	wal, err := wallet.RestoreWallet(config.Miner.SecretKeyStr)
+	blockchain := blockchain.New(repository)
+	wal, err := wallet.RestoreWallet(config.Config.SecretKeyStr)
 	if err != nil {
 		return nil, err
 	}
 
-	miner := miner.New(blockchain, wal, config.Enabled, config.Concurrent, config.MaxWorkersNum)
-	gateway := gateway.New(&config.Network)
+	miner := miner.New(blockchain, wal)
+	gateway := gateway.New(blockchain)
 
 	return &Server{
-		config:   config,
 		services: []Service{blockchain, miner, gateway},
 	}, nil
 }
 
 func (server *Server) Start() error {
-	log.Printf("info: Starting MVB node. ChainID=%d\n", server.config.ChainID)
+	log.Printf("info: Starting MVB node. ChainID=%d\n", config.Config.ChainID)
 
 	for _, s := range server.services {
 		log.Printf("info: Staring service(%s)\n", s.ServiceName())
@@ -63,7 +61,7 @@ func (server *Server) Start() error {
 }
 
 func (server *Server) Stop() {
-	log.Printf("info: Stopping MVB node. ChainID=%d\n", server.config.ChainID)
+	log.Printf("info: Stopping MVB node. ChainID=%d\n", config.Config.ChainID)
 
 	for _, s := range server.services {
 		log.Printf("Stopping service %s ...\n", s.ServiceName())

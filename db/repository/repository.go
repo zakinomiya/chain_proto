@@ -3,6 +3,7 @@ package repository
 import (
 	"chain_proto/account"
 	"chain_proto/block"
+	"chain_proto/config"
 	"chain_proto/transaction"
 	"io/ioutil"
 	"log"
@@ -29,7 +30,9 @@ type Repository struct {
 	}
 }
 
-func New(dbPath string, dbDriver string) (*Repository, error) {
+func New() (*Repository, error) {
+	dbPath := config.Config.DbPath
+	dbDriver := config.Config.Driver
 	log.Printf("debug: DBInfo driver=%s, dbpath=%s\n", dbDriver, dbPath)
 	db, err := sqlx.Open(dbDriver, dbPath)
 	if err != nil {
