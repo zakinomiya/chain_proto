@@ -7,6 +7,7 @@ import (
 	"chain_proto/transaction"
 	"chain_proto/wallet"
 	"encoding/hex"
+	"fmt"
 )
 
 func toPbBlock(b *block.Block) (*gw.Block, error) {
@@ -74,6 +75,21 @@ func toTransaction(t *gw.Transaction) (*transaction.Transaction, error) {
 	return tx, nil
 }
 
+func toPbTransaction(t *transaction.Transaction) *gw.Transaction {
+
+	return &gw.Transaction{
+		TxHash:     fmt.Sprintf("%x", t.TxHash[:]),
+		TxType:     gw.Transaction_TxType(gw.Transaction_TxType_value[string(t.TxType)]),
+		TotalValue: t.TotalValue,
+		Timestamp:  t.Timestamp,
+		Fee:        t.Fee,
+		SenderAddr: t.SenderAddr,
+		Signature:  t.Signature.String(),
+		Outs:       toPbOutputs(t.Outs),
+	}
+
+}
+
 func toOutputs(pbOuts []*gw.Output) []*transaction.Output {
 	outs := make([]*transaction.Output, 0, len(pbOuts))
 	for _, pbOut := range pbOuts {
@@ -85,4 +101,18 @@ func toOutputs(pbOuts []*gw.Output) []*transaction.Output {
 	}
 
 	return outs
+}
+
+func toPbOutputs(outs []*transaction.Output) []*gw.Output {
+	pbOuts := make([]*gw.Output, 0, len(outs))
+	for _, out := range outs {
+		pbOut := &gw.Output{
+			Value:         out.Value,
+			RecipientAddr: out.RecipientAddr,
+		}
+		pbOuts = append(pbOuts, pbOut)
+
+	}
+
+	return pbOuts
 }

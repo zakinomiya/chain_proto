@@ -42,7 +42,7 @@ func (g *Gateway) GetBlocks(_ context.Context, in *gw.GetBlocksRequest) ([]*gw.B
 	return pbBlocks, nil
 }
 
-func (g *Gateway) AddBlock(_ context.Context, in *gw.SendBlockRequest) error {
+func (g *Gateway) SendBlock(_ context.Context, in *gw.SendBlockRequest) error {
 	if in.GetMetadata().ChainID != config.Config.ChainID {
 		return errors.New("error: Invalid chain Id.")
 	}

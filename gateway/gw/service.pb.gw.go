@@ -31,7 +31,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_HTTPService_SendTransaction_0(ctx context.Context, marshaler runtime.Marshaler, client HTTPServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BlockchainService_SendTransaction_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SendTransactionRequest
 	var metadata runtime.ServerMetadata
 
@@ -48,7 +48,7 @@ func request_HTTPService_SendTransaction_0(ctx context.Context, marshaler runtim
 
 }
 
-func local_request_HTTPService_SendTransaction_0(ctx context.Context, marshaler runtime.Marshaler, server HTTPServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BlockchainService_SendTransaction_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SendTransactionRequest
 	var metadata runtime.ServerMetadata
 
@@ -65,7 +65,7 @@ func local_request_HTTPService_SendTransaction_0(ctx context.Context, marshaler 
 
 }
 
-func request_HTTPService_GetTransactionByHash_0(ctx context.Context, marshaler runtime.Marshaler, client HTTPServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BlockchainService_GetTransactionByHash_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetTransactionByHashRequest
 	var metadata runtime.ServerMetadata
 
@@ -91,7 +91,7 @@ func request_HTTPService_GetTransactionByHash_0(ctx context.Context, marshaler r
 
 }
 
-func local_request_HTTPService_GetTransactionByHash_0(ctx context.Context, marshaler runtime.Marshaler, server HTTPServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BlockchainService_GetTransactionByHash_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetTransactionByHashRequest
 	var metadata runtime.ServerMetadata
 
@@ -117,7 +117,59 @@ func local_request_HTTPService_GetTransactionByHash_0(ctx context.Context, marsh
 
 }
 
-func request_HTTPService_SendBlock_0(ctx context.Context, marshaler runtime.Marshaler, client HTTPServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BlockchainService_GetTxByBlockHash_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetTxByBlockHashRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["block_hash"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "block_hash")
+	}
+
+	protoReq.BlockHash, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "block_hash", err)
+	}
+
+	msg, err := client.GetTxByBlockHash(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_BlockchainService_GetTxByBlockHash_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetTxByBlockHashRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["block_hash"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "block_hash")
+	}
+
+	protoReq.BlockHash, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "block_hash", err)
+	}
+
+	msg, err := server.GetTxByBlockHash(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_BlockchainService_SendBlock_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SendBlockRequest
 	var metadata runtime.ServerMetadata
 
@@ -134,7 +186,7 @@ func request_HTTPService_SendBlock_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_HTTPService_SendBlock_0(ctx context.Context, marshaler runtime.Marshaler, server HTTPServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BlockchainService_SendBlock_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SendBlockRequest
 	var metadata runtime.ServerMetadata
 
@@ -151,7 +203,7 @@ func local_request_HTTPService_SendBlock_0(ctx context.Context, marshaler runtim
 
 }
 
-func request_HTTPService_GetBlockByHeight_0(ctx context.Context, marshaler runtime.Marshaler, client HTTPServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BlockchainService_GetBlockByHeight_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetBlockByHeightRequest
 	var metadata runtime.ServerMetadata
 
@@ -177,7 +229,7 @@ func request_HTTPService_GetBlockByHeight_0(ctx context.Context, marshaler runti
 
 }
 
-func local_request_HTTPService_GetBlockByHeight_0(ctx context.Context, marshaler runtime.Marshaler, server HTTPServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BlockchainService_GetBlockByHeight_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetBlockByHeightRequest
 	var metadata runtime.ServerMetadata
 
@@ -203,7 +255,7 @@ func local_request_HTTPService_GetBlockByHeight_0(ctx context.Context, marshaler
 
 }
 
-func request_HTTPService_GetBlockByHash_0(ctx context.Context, marshaler runtime.Marshaler, client HTTPServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BlockchainService_GetBlockByHash_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetBlockByHashRequest
 	var metadata runtime.ServerMetadata
 
@@ -229,7 +281,7 @@ func request_HTTPService_GetBlockByHash_0(ctx context.Context, marshaler runtime
 
 }
 
-func local_request_HTTPService_GetBlockByHash_0(ctx context.Context, marshaler runtime.Marshaler, server HTTPServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BlockchainService_GetBlockByHash_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetBlockByHashRequest
 	var metadata runtime.ServerMetadata
 
@@ -256,17 +308,17 @@ func local_request_HTTPService_GetBlockByHash_0(ctx context.Context, marshaler r
 }
 
 var (
-	filter_HTTPService_GetBlocks_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_BlockchainService_GetBlocks_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_HTTPService_GetBlocks_0(ctx context.Context, marshaler runtime.Marshaler, client HTTPServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BlockchainService_GetBlocks_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetBlocksRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_HTTPService_GetBlocks_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BlockchainService_GetBlocks_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -275,14 +327,14 @@ func request_HTTPService_GetBlocks_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_HTTPService_GetBlocks_0(ctx context.Context, marshaler runtime.Marshaler, server HTTPServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BlockchainService_GetBlocks_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetBlocksRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_HTTPService_GetBlocks_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BlockchainService_GetBlocks_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -291,7 +343,7 @@ func local_request_HTTPService_GetBlocks_0(ctx context.Context, marshaler runtim
 
 }
 
-func request_HTTPService_GetAccount_0(ctx context.Context, marshaler runtime.Marshaler, client HTTPServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BlockchainService_GetAccount_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetAccountRequest
 	var metadata runtime.ServerMetadata
 
@@ -317,7 +369,7 @@ func request_HTTPService_GetAccount_0(ctx context.Context, marshaler runtime.Mar
 
 }
 
-func local_request_HTTPService_GetAccount_0(ctx context.Context, marshaler runtime.Marshaler, server HTTPServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BlockchainService_GetAccount_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetAccountRequest
 	var metadata runtime.ServerMetadata
 
@@ -343,7 +395,7 @@ func local_request_HTTPService_GetAccount_0(ctx context.Context, marshaler runti
 
 }
 
-func request_HTTPService_SendAccount_0(ctx context.Context, marshaler runtime.Marshaler, client HTTPServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BlockchainService_SendAccount_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SendAccountRequest
 	var metadata runtime.ServerMetadata
 
@@ -360,7 +412,7 @@ func request_HTTPService_SendAccount_0(ctx context.Context, marshaler runtime.Ma
 
 }
 
-func local_request_HTTPService_SendAccount_0(ctx context.Context, marshaler runtime.Marshaler, server HTTPServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BlockchainService_SendAccount_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SendAccountRequest
 	var metadata runtime.ServerMetadata
 
@@ -377,7 +429,7 @@ func local_request_HTTPService_SendAccount_0(ctx context.Context, marshaler runt
 
 }
 
-func request_HTTPService_SendPeer_0(ctx context.Context, marshaler runtime.Marshaler, client HTTPServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BlockchainService_SendPeer_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SendPeerRequest
 	var metadata runtime.ServerMetadata
 
@@ -394,7 +446,7 @@ func request_HTTPService_SendPeer_0(ctx context.Context, marshaler runtime.Marsh
 
 }
 
-func local_request_HTTPService_SendPeer_0(ctx context.Context, marshaler runtime.Marshaler, server HTTPServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BlockchainService_SendPeer_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SendPeerRequest
 	var metadata runtime.ServerMetadata
 
@@ -411,7 +463,7 @@ func local_request_HTTPService_SendPeer_0(ctx context.Context, marshaler runtime
 
 }
 
-func request_HTTPService_Sync_0(ctx context.Context, marshaler runtime.Marshaler, client HTTPServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BlockchainService_Sync_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SyncRequest
 	var metadata runtime.ServerMetadata
 
@@ -428,7 +480,7 @@ func request_HTTPService_Sync_0(ctx context.Context, marshaler runtime.Marshaler
 
 }
 
-func local_request_HTTPService_Sync_0(ctx context.Context, marshaler runtime.Marshaler, server HTTPServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BlockchainService_Sync_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SyncRequest
 	var metadata runtime.ServerMetadata
 
@@ -445,24 +497,24 @@ func local_request_HTTPService_Sync_0(ctx context.Context, marshaler runtime.Mar
 
 }
 
-// RegisterHTTPServiceHandlerServer registers the http handlers for service HTTPService to "mux".
-// UnaryRPC     :call HTTPServiceServer directly.
+// RegisterBlockchainServiceHandlerServer registers the http handlers for service BlockchainService to "mux".
+// UnaryRPC     :call BlockchainServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterHTTPServiceHandlerFromEndpoint instead.
-func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server HTTPServiceServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterBlockchainServiceHandlerFromEndpoint instead.
+func RegisterBlockchainServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server BlockchainServiceServer) error {
 
-	mux.Handle("POST", pattern_HTTPService_SendTransaction_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BlockchainService_SendTransaction_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.HTTPService/SendTransaction")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/SendTransaction")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HTTPService_SendTransaction_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_SendTransaction_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -470,22 +522,22 @@ func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_HTTPService_SendTransaction_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_SendTransaction_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_HTTPService_GetTransactionByHash_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetTransactionByHash_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.HTTPService/GetTransactionByHash")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/GetTransactionByHash")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HTTPService_GetTransactionByHash_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_GetTransactionByHash_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -493,22 +545,22 @@ func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_HTTPService_GetTransactionByHash_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetTransactionByHash_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_HTTPService_SendBlock_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetTxByBlockHash_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.HTTPService/SendBlock")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/GetTxByBlockHash")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HTTPService_SendBlock_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_GetTxByBlockHash_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -516,22 +568,22 @@ func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_HTTPService_SendBlock_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetTxByBlockHash_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_HTTPService_GetBlockByHeight_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BlockchainService_SendBlock_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.HTTPService/GetBlockByHeight")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/SendBlock")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HTTPService_GetBlockByHeight_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_SendBlock_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -539,22 +591,22 @@ func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_HTTPService_GetBlockByHeight_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_SendBlock_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_HTTPService_GetBlockByHash_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetBlockByHeight_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.HTTPService/GetBlockByHash")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/GetBlockByHeight")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HTTPService_GetBlockByHash_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_GetBlockByHeight_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -562,22 +614,22 @@ func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_HTTPService_GetBlockByHash_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetBlockByHeight_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_HTTPService_GetBlocks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetBlockByHash_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.HTTPService/GetBlocks")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/GetBlockByHash")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HTTPService_GetBlocks_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_GetBlockByHash_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -585,22 +637,22 @@ func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_HTTPService_GetBlocks_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetBlockByHash_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_HTTPService_GetAccount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetBlocks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.HTTPService/GetAccount")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/GetBlocks")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HTTPService_GetAccount_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_GetBlocks_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -608,22 +660,22 @@ func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_HTTPService_GetAccount_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetBlocks_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_HTTPService_SendAccount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetAccount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.HTTPService/SendAccount")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/GetAccount")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HTTPService_SendAccount_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_GetAccount_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -631,22 +683,22 @@ func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_HTTPService_SendAccount_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetAccount_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_HTTPService_SendPeer_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BlockchainService_SendAccount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.HTTPService/SendPeer")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/SendAccount")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HTTPService_SendPeer_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_SendAccount_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -654,22 +706,22 @@ func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_HTTPService_SendPeer_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_SendAccount_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_HTTPService_Sync_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BlockchainService_SendPeer_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.HTTPService/Sync")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/SendPeer")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HTTPService_Sync_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_SendPeer_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -677,16 +729,39 @@ func RegisterHTTPServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_HTTPService_Sync_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_SendPeer_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("POST", pattern_BlockchainService_Sync_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gw.BlockchainService/Sync")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_BlockchainService_Sync_0(rctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_BlockchainService_Sync_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterHTTPServiceHandlerFromEndpoint is same as RegisterHTTPServiceHandler but
+// RegisterBlockchainServiceHandlerFromEndpoint is same as RegisterBlockchainServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterHTTPServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterBlockchainServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -706,219 +781,239 @@ func RegisterHTTPServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.Se
 		}()
 	}()
 
-	return RegisterHTTPServiceHandler(ctx, mux, conn)
+	return RegisterBlockchainServiceHandler(ctx, mux, conn)
 }
 
-// RegisterHTTPServiceHandler registers the http handlers for service HTTPService to "mux".
+// RegisterBlockchainServiceHandler registers the http handlers for service BlockchainService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterHTTPServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterHTTPServiceHandlerClient(ctx, mux, NewHTTPServiceClient(conn))
+func RegisterBlockchainServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterBlockchainServiceHandlerClient(ctx, mux, NewBlockchainServiceClient(conn))
 }
 
-// RegisterHTTPServiceHandlerClient registers the http handlers for service HTTPService
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "HTTPServiceClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "HTTPServiceClient"
+// RegisterBlockchainServiceHandlerClient registers the http handlers for service BlockchainService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "BlockchainServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "BlockchainServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "HTTPServiceClient" to call the correct interceptors.
-func RegisterHTTPServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client HTTPServiceClient) error {
+// "BlockchainServiceClient" to call the correct interceptors.
+func RegisterBlockchainServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client BlockchainServiceClient) error {
 
-	mux.Handle("POST", pattern_HTTPService_SendTransaction_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BlockchainService_SendTransaction_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.HTTPService/SendTransaction")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/SendTransaction")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HTTPService_SendTransaction_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_SendTransaction_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_HTTPService_SendTransaction_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_SendTransaction_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_HTTPService_GetTransactionByHash_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetTransactionByHash_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.HTTPService/GetTransactionByHash")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/GetTransactionByHash")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HTTPService_GetTransactionByHash_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_GetTransactionByHash_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_HTTPService_GetTransactionByHash_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetTransactionByHash_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_HTTPService_SendBlock_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetTxByBlockHash_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.HTTPService/SendBlock")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/GetTxByBlockHash")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HTTPService_SendBlock_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_GetTxByBlockHash_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_HTTPService_SendBlock_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetTxByBlockHash_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_HTTPService_GetBlockByHeight_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BlockchainService_SendBlock_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.HTTPService/GetBlockByHeight")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/SendBlock")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HTTPService_GetBlockByHeight_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_SendBlock_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_HTTPService_GetBlockByHeight_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_SendBlock_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_HTTPService_GetBlockByHash_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetBlockByHeight_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.HTTPService/GetBlockByHash")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/GetBlockByHeight")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HTTPService_GetBlockByHash_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_GetBlockByHeight_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_HTTPService_GetBlockByHash_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetBlockByHeight_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_HTTPService_GetBlocks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetBlockByHash_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.HTTPService/GetBlocks")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/GetBlockByHash")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HTTPService_GetBlocks_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_GetBlockByHash_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_HTTPService_GetBlocks_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetBlockByHash_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_HTTPService_GetAccount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetBlocks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.HTTPService/GetAccount")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/GetBlocks")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HTTPService_GetAccount_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_GetBlocks_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_HTTPService_GetAccount_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetBlocks_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_HTTPService_SendAccount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BlockchainService_GetAccount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.HTTPService/SendAccount")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/GetAccount")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HTTPService_SendAccount_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_GetAccount_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_HTTPService_SendAccount_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_GetAccount_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_HTTPService_SendPeer_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BlockchainService_SendAccount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.HTTPService/SendPeer")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/SendAccount")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HTTPService_SendPeer_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_SendAccount_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_HTTPService_SendPeer_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_SendAccount_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_HTTPService_Sync_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BlockchainService_SendPeer_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.HTTPService/Sync")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/SendPeer")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HTTPService_Sync_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_SendPeer_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_HTTPService_Sync_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BlockchainService_SendPeer_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("POST", pattern_BlockchainService_Sync_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gw.BlockchainService/Sync")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_BlockchainService_Sync_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_BlockchainService_Sync_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -926,45 +1021,49 @@ func RegisterHTTPServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 }
 
 var (
-	pattern_HTTPService_SendTransaction_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"transactions"}, ""))
+	pattern_BlockchainService_SendTransaction_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"transactions"}, ""))
 
-	pattern_HTTPService_GetTransactionByHash_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"transactions", "tx_hash"}, ""))
+	pattern_BlockchainService_GetTransactionByHash_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"transactions", "tx_hash"}, ""))
 
-	pattern_HTTPService_SendBlock_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"blocks"}, ""))
+	pattern_BlockchainService_GetTxByBlockHash_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"transactions", "block", "block_hash"}, ""))
 
-	pattern_HTTPService_GetBlockByHeight_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"blocks", "block_height"}, ""))
+	pattern_BlockchainService_SendBlock_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"blocks"}, ""))
 
-	pattern_HTTPService_GetBlockByHash_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"blocks", "block_hash"}, ""))
+	pattern_BlockchainService_GetBlockByHeight_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"blocks", "block_height"}, ""))
 
-	pattern_HTTPService_GetBlocks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"blocks"}, ""))
+	pattern_BlockchainService_GetBlockByHash_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"blocks", "block_hash"}, ""))
 
-	pattern_HTTPService_GetAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"accounts", "addr"}, ""))
+	pattern_BlockchainService_GetBlocks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"blocks"}, ""))
 
-	pattern_HTTPService_SendAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"accounts"}, ""))
+	pattern_BlockchainService_GetAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"accounts", "addr"}, ""))
 
-	pattern_HTTPService_SendPeer_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"peers"}, ""))
+	pattern_BlockchainService_SendAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"accounts"}, ""))
 
-	pattern_HTTPService_Sync_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"sync"}, ""))
+	pattern_BlockchainService_SendPeer_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"peers"}, ""))
+
+	pattern_BlockchainService_Sync_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"sync"}, ""))
 )
 
 var (
-	forward_HTTPService_SendTransaction_0 = runtime.ForwardResponseMessage
+	forward_BlockchainService_SendTransaction_0 = runtime.ForwardResponseMessage
 
-	forward_HTTPService_GetTransactionByHash_0 = runtime.ForwardResponseMessage
+	forward_BlockchainService_GetTransactionByHash_0 = runtime.ForwardResponseMessage
 
-	forward_HTTPService_SendBlock_0 = runtime.ForwardResponseMessage
+	forward_BlockchainService_GetTxByBlockHash_0 = runtime.ForwardResponseMessage
 
-	forward_HTTPService_GetBlockByHeight_0 = runtime.ForwardResponseMessage
+	forward_BlockchainService_SendBlock_0 = runtime.ForwardResponseMessage
 
-	forward_HTTPService_GetBlockByHash_0 = runtime.ForwardResponseMessage
+	forward_BlockchainService_GetBlockByHeight_0 = runtime.ForwardResponseMessage
 
-	forward_HTTPService_GetBlocks_0 = runtime.ForwardResponseMessage
+	forward_BlockchainService_GetBlockByHash_0 = runtime.ForwardResponseMessage
 
-	forward_HTTPService_GetAccount_0 = runtime.ForwardResponseMessage
+	forward_BlockchainService_GetBlocks_0 = runtime.ForwardResponseMessage
 
-	forward_HTTPService_SendAccount_0 = runtime.ForwardResponseMessage
+	forward_BlockchainService_GetAccount_0 = runtime.ForwardResponseMessage
 
-	forward_HTTPService_SendPeer_0 = runtime.ForwardResponseMessage
+	forward_BlockchainService_SendAccount_0 = runtime.ForwardResponseMessage
 
-	forward_HTTPService_Sync_0 = runtime.ForwardResponseMessage
+	forward_BlockchainService_SendPeer_0 = runtime.ForwardResponseMessage
+
+	forward_BlockchainService_Sync_0 = runtime.ForwardResponseMessage
 )

@@ -14,12 +14,13 @@ import (
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion7
 
-// HTTPServiceClient is the client API for HTTPService service.
+// BlockchainServiceClient is the client API for BlockchainService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type HTTPServiceClient interface {
+type BlockchainServiceClient interface {
 	SendTransaction(ctx context.Context, in *SendTransactionRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	GetTransactionByHash(ctx context.Context, in *GetTransactionByHashRequest, opts ...grpc.CallOption) (*GetTransactionResponse, error)
+	GetTxByBlockHash(ctx context.Context, in *GetTxByBlockHashRequest, opts ...grpc.CallOption) (*GetTransactionsResponse, error)
 	SendBlock(ctx context.Context, in *SendBlockRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	GetBlockByHeight(ctx context.Context, in *GetBlockByHeightRequest, opts ...grpc.CallOption) (*GetBlockResponse, error)
 	GetBlockByHash(ctx context.Context, in *GetBlockByHashRequest, opts ...grpc.CallOption) (*GetBlockResponse, error)
@@ -30,110 +31,120 @@ type HTTPServiceClient interface {
 	Sync(ctx context.Context, in *SyncRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error)
 }
 
-type hTTPServiceClient struct {
+type blockchainServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewHTTPServiceClient(cc grpc.ClientConnInterface) HTTPServiceClient {
-	return &hTTPServiceClient{cc}
+func NewBlockchainServiceClient(cc grpc.ClientConnInterface) BlockchainServiceClient {
+	return &blockchainServiceClient{cc}
 }
 
-func (c *hTTPServiceClient) SendTransaction(ctx context.Context, in *SendTransactionRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *blockchainServiceClient) SendTransaction(ctx context.Context, in *SendTransactionRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/gw.HTTPService/SendTransaction", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/SendTransaction", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *hTTPServiceClient) GetTransactionByHash(ctx context.Context, in *GetTransactionByHashRequest, opts ...grpc.CallOption) (*GetTransactionResponse, error) {
+func (c *blockchainServiceClient) GetTransactionByHash(ctx context.Context, in *GetTransactionByHashRequest, opts ...grpc.CallOption) (*GetTransactionResponse, error) {
 	out := new(GetTransactionResponse)
-	err := c.cc.Invoke(ctx, "/gw.HTTPService/GetTransactionByHash", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/GetTransactionByHash", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *hTTPServiceClient) SendBlock(ctx context.Context, in *SendBlockRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *blockchainServiceClient) GetTxByBlockHash(ctx context.Context, in *GetTxByBlockHashRequest, opts ...grpc.CallOption) (*GetTransactionsResponse, error) {
+	out := new(GetTransactionsResponse)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/GetTxByBlockHash", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) SendBlock(ctx context.Context, in *SendBlockRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/gw.HTTPService/SendBlock", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/SendBlock", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *hTTPServiceClient) GetBlockByHeight(ctx context.Context, in *GetBlockByHeightRequest, opts ...grpc.CallOption) (*GetBlockResponse, error) {
+func (c *blockchainServiceClient) GetBlockByHeight(ctx context.Context, in *GetBlockByHeightRequest, opts ...grpc.CallOption) (*GetBlockResponse, error) {
 	out := new(GetBlockResponse)
-	err := c.cc.Invoke(ctx, "/gw.HTTPService/GetBlockByHeight", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/GetBlockByHeight", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *hTTPServiceClient) GetBlockByHash(ctx context.Context, in *GetBlockByHashRequest, opts ...grpc.CallOption) (*GetBlockResponse, error) {
+func (c *blockchainServiceClient) GetBlockByHash(ctx context.Context, in *GetBlockByHashRequest, opts ...grpc.CallOption) (*GetBlockResponse, error) {
 	out := new(GetBlockResponse)
-	err := c.cc.Invoke(ctx, "/gw.HTTPService/GetBlockByHash", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/GetBlockByHash", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *hTTPServiceClient) GetBlocks(ctx context.Context, in *GetBlocksRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error) {
+func (c *blockchainServiceClient) GetBlocks(ctx context.Context, in *GetBlocksRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error) {
 	out := new(GetBlocksResponse)
-	err := c.cc.Invoke(ctx, "/gw.HTTPService/GetBlocks", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/GetBlocks", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *hTTPServiceClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error) {
+func (c *blockchainServiceClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error) {
 	out := new(GetAccountResponse)
-	err := c.cc.Invoke(ctx, "/gw.HTTPService/GetAccount", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/GetAccount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *hTTPServiceClient) SendAccount(ctx context.Context, in *SendAccountRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *blockchainServiceClient) SendAccount(ctx context.Context, in *SendAccountRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/gw.HTTPService/SendAccount", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/SendAccount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *hTTPServiceClient) SendPeer(ctx context.Context, in *SendPeerRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *blockchainServiceClient) SendPeer(ctx context.Context, in *SendPeerRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/gw.HTTPService/SendPeer", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/SendPeer", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *hTTPServiceClient) Sync(ctx context.Context, in *SyncRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error) {
+func (c *blockchainServiceClient) Sync(ctx context.Context, in *SyncRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error) {
 	out := new(GetBlocksResponse)
-	err := c.cc.Invoke(ctx, "/gw.HTTPService/Sync", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/Sync", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// HTTPServiceServer is the server API for HTTPService service.
-// All implementations must embed UnimplementedHTTPServiceServer
+// BlockchainServiceServer is the server API for BlockchainService service.
+// All implementations must embed UnimplementedBlockchainServiceServer
 // for forward compatibility
-type HTTPServiceServer interface {
+type BlockchainServiceServer interface {
 	SendTransaction(context.Context, *SendTransactionRequest) (*empty.Empty, error)
 	GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionResponse, error)
+	GetTxByBlockHash(context.Context, *GetTxByBlockHashRequest) (*GetTransactionsResponse, error)
 	SendBlock(context.Context, *SendBlockRequest) (*empty.Empty, error)
 	GetBlockByHeight(context.Context, *GetBlockByHeightRequest) (*GetBlockResponse, error)
 	GetBlockByHash(context.Context, *GetBlockByHashRequest) (*GetBlockResponse, error)
@@ -142,279 +153,304 @@ type HTTPServiceServer interface {
 	SendAccount(context.Context, *SendAccountRequest) (*empty.Empty, error)
 	SendPeer(context.Context, *SendPeerRequest) (*empty.Empty, error)
 	Sync(context.Context, *SyncRequest) (*GetBlocksResponse, error)
-	mustEmbedUnimplementedHTTPServiceServer()
+	mustEmbedUnimplementedBlockchainServiceServer()
 }
 
-// UnimplementedHTTPServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedHTTPServiceServer struct {
+// UnimplementedBlockchainServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedBlockchainServiceServer struct {
 }
 
-func (UnimplementedHTTPServiceServer) SendTransaction(context.Context, *SendTransactionRequest) (*empty.Empty, error) {
+func (UnimplementedBlockchainServiceServer) SendTransaction(context.Context, *SendTransactionRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendTransaction not implemented")
 }
-func (UnimplementedHTTPServiceServer) GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionResponse, error) {
+func (UnimplementedBlockchainServiceServer) GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionByHash not implemented")
 }
-func (UnimplementedHTTPServiceServer) SendBlock(context.Context, *SendBlockRequest) (*empty.Empty, error) {
+func (UnimplementedBlockchainServiceServer) GetTxByBlockHash(context.Context, *GetTxByBlockHashRequest) (*GetTransactionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTxByBlockHash not implemented")
+}
+func (UnimplementedBlockchainServiceServer) SendBlock(context.Context, *SendBlockRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendBlock not implemented")
 }
-func (UnimplementedHTTPServiceServer) GetBlockByHeight(context.Context, *GetBlockByHeightRequest) (*GetBlockResponse, error) {
+func (UnimplementedBlockchainServiceServer) GetBlockByHeight(context.Context, *GetBlockByHeightRequest) (*GetBlockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlockByHeight not implemented")
 }
-func (UnimplementedHTTPServiceServer) GetBlockByHash(context.Context, *GetBlockByHashRequest) (*GetBlockResponse, error) {
+func (UnimplementedBlockchainServiceServer) GetBlockByHash(context.Context, *GetBlockByHashRequest) (*GetBlockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlockByHash not implemented")
 }
-func (UnimplementedHTTPServiceServer) GetBlocks(context.Context, *GetBlocksRequest) (*GetBlocksResponse, error) {
+func (UnimplementedBlockchainServiceServer) GetBlocks(context.Context, *GetBlocksRequest) (*GetBlocksResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlocks not implemented")
 }
-func (UnimplementedHTTPServiceServer) GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error) {
+func (UnimplementedBlockchainServiceServer) GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
 }
-func (UnimplementedHTTPServiceServer) SendAccount(context.Context, *SendAccountRequest) (*empty.Empty, error) {
+func (UnimplementedBlockchainServiceServer) SendAccount(context.Context, *SendAccountRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendAccount not implemented")
 }
-func (UnimplementedHTTPServiceServer) SendPeer(context.Context, *SendPeerRequest) (*empty.Empty, error) {
+func (UnimplementedBlockchainServiceServer) SendPeer(context.Context, *SendPeerRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendPeer not implemented")
 }
-func (UnimplementedHTTPServiceServer) Sync(context.Context, *SyncRequest) (*GetBlocksResponse, error) {
+func (UnimplementedBlockchainServiceServer) Sync(context.Context, *SyncRequest) (*GetBlocksResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Sync not implemented")
 }
-func (UnimplementedHTTPServiceServer) mustEmbedUnimplementedHTTPServiceServer() {}
+func (UnimplementedBlockchainServiceServer) mustEmbedUnimplementedBlockchainServiceServer() {}
 
-// UnsafeHTTPServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to HTTPServiceServer will
+// UnsafeBlockchainServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BlockchainServiceServer will
 // result in compilation errors.
-type UnsafeHTTPServiceServer interface {
-	mustEmbedUnimplementedHTTPServiceServer()
+type UnsafeBlockchainServiceServer interface {
+	mustEmbedUnimplementedBlockchainServiceServer()
 }
 
-func RegisterHTTPServiceServer(s grpc.ServiceRegistrar, srv HTTPServiceServer) {
-	s.RegisterService(&_HTTPService_serviceDesc, srv)
+func RegisterBlockchainServiceServer(s grpc.ServiceRegistrar, srv BlockchainServiceServer) {
+	s.RegisterService(&_BlockchainService_serviceDesc, srv)
 }
 
-func _HTTPService_SendTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_SendTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendTransactionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HTTPServiceServer).SendTransaction(ctx, in)
+		return srv.(BlockchainServiceServer).SendTransaction(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.HTTPService/SendTransaction",
+		FullMethod: "/gw.BlockchainService/SendTransaction",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HTTPServiceServer).SendTransaction(ctx, req.(*SendTransactionRequest))
+		return srv.(BlockchainServiceServer).SendTransaction(ctx, req.(*SendTransactionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HTTPService_GetTransactionByHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_GetTransactionByHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTransactionByHashRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HTTPServiceServer).GetTransactionByHash(ctx, in)
+		return srv.(BlockchainServiceServer).GetTransactionByHash(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.HTTPService/GetTransactionByHash",
+		FullMethod: "/gw.BlockchainService/GetTransactionByHash",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HTTPServiceServer).GetTransactionByHash(ctx, req.(*GetTransactionByHashRequest))
+		return srv.(BlockchainServiceServer).GetTransactionByHash(ctx, req.(*GetTransactionByHashRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HTTPService_SendBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_GetTxByBlockHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTxByBlockHashRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).GetTxByBlockHash(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gw.BlockchainService/GetTxByBlockHash",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).GetTxByBlockHash(ctx, req.(*GetTxByBlockHashRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_SendBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendBlockRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HTTPServiceServer).SendBlock(ctx, in)
+		return srv.(BlockchainServiceServer).SendBlock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.HTTPService/SendBlock",
+		FullMethod: "/gw.BlockchainService/SendBlock",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HTTPServiceServer).SendBlock(ctx, req.(*SendBlockRequest))
+		return srv.(BlockchainServiceServer).SendBlock(ctx, req.(*SendBlockRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HTTPService_GetBlockByHeight_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_GetBlockByHeight_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetBlockByHeightRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HTTPServiceServer).GetBlockByHeight(ctx, in)
+		return srv.(BlockchainServiceServer).GetBlockByHeight(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.HTTPService/GetBlockByHeight",
+		FullMethod: "/gw.BlockchainService/GetBlockByHeight",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HTTPServiceServer).GetBlockByHeight(ctx, req.(*GetBlockByHeightRequest))
+		return srv.(BlockchainServiceServer).GetBlockByHeight(ctx, req.(*GetBlockByHeightRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HTTPService_GetBlockByHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_GetBlockByHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetBlockByHashRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HTTPServiceServer).GetBlockByHash(ctx, in)
+		return srv.(BlockchainServiceServer).GetBlockByHash(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.HTTPService/GetBlockByHash",
+		FullMethod: "/gw.BlockchainService/GetBlockByHash",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HTTPServiceServer).GetBlockByHash(ctx, req.(*GetBlockByHashRequest))
+		return srv.(BlockchainServiceServer).GetBlockByHash(ctx, req.(*GetBlockByHashRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HTTPService_GetBlocks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_GetBlocks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetBlocksRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HTTPServiceServer).GetBlocks(ctx, in)
+		return srv.(BlockchainServiceServer).GetBlocks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.HTTPService/GetBlocks",
+		FullMethod: "/gw.BlockchainService/GetBlocks",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HTTPServiceServer).GetBlocks(ctx, req.(*GetBlocksRequest))
+		return srv.(BlockchainServiceServer).GetBlocks(ctx, req.(*GetBlocksRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HTTPService_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HTTPServiceServer).GetAccount(ctx, in)
+		return srv.(BlockchainServiceServer).GetAccount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.HTTPService/GetAccount",
+		FullMethod: "/gw.BlockchainService/GetAccount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HTTPServiceServer).GetAccount(ctx, req.(*GetAccountRequest))
+		return srv.(BlockchainServiceServer).GetAccount(ctx, req.(*GetAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HTTPService_SendAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_SendAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HTTPServiceServer).SendAccount(ctx, in)
+		return srv.(BlockchainServiceServer).SendAccount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.HTTPService/SendAccount",
+		FullMethod: "/gw.BlockchainService/SendAccount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HTTPServiceServer).SendAccount(ctx, req.(*SendAccountRequest))
+		return srv.(BlockchainServiceServer).SendAccount(ctx, req.(*SendAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HTTPService_SendPeer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_SendPeer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendPeerRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HTTPServiceServer).SendPeer(ctx, in)
+		return srv.(BlockchainServiceServer).SendPeer(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.HTTPService/SendPeer",
+		FullMethod: "/gw.BlockchainService/SendPeer",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HTTPServiceServer).SendPeer(ctx, req.(*SendPeerRequest))
+		return srv.(BlockchainServiceServer).SendPeer(ctx, req.(*SendPeerRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HTTPService_Sync_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_Sync_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SyncRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HTTPServiceServer).Sync(ctx, in)
+		return srv.(BlockchainServiceServer).Sync(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.HTTPService/Sync",
+		FullMethod: "/gw.BlockchainService/Sync",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HTTPServiceServer).Sync(ctx, req.(*SyncRequest))
+		return srv.(BlockchainServiceServer).Sync(ctx, req.(*SyncRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _HTTPService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "gw.HTTPService",
-	HandlerType: (*HTTPServiceServer)(nil),
+var _BlockchainService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "gw.BlockchainService",
+	HandlerType: (*BlockchainServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "SendTransaction",
-			Handler:    _HTTPService_SendTransaction_Handler,
+			Handler:    _BlockchainService_SendTransaction_Handler,
 		},
 		{
 			MethodName: "GetTransactionByHash",
-			Handler:    _HTTPService_GetTransactionByHash_Handler,
+			Handler:    _BlockchainService_GetTransactionByHash_Handler,
+		},
+		{
+			MethodName: "GetTxByBlockHash",
+			Handler:    _BlockchainService_GetTxByBlockHash_Handler,
 		},
 		{
 			MethodName: "SendBlock",
-			Handler:    _HTTPService_SendBlock_Handler,
+			Handler:    _BlockchainService_SendBlock_Handler,
 		},
 		{
 			MethodName: "GetBlockByHeight",
-			Handler:    _HTTPService_GetBlockByHeight_Handler,
+			Handler:    _BlockchainService_GetBlockByHeight_Handler,
 		},
 		{
 			MethodName: "GetBlockByHash",
-			Handler:    _HTTPService_GetBlockByHash_Handler,
+			Handler:    _BlockchainService_GetBlockByHash_Handler,
 		},
 		{
 			MethodName: "GetBlocks",
-			Handler:    _HTTPService_GetBlocks_Handler,
+			Handler:    _BlockchainService_GetBlocks_Handler,
 		},
 		{
 			MethodName: "GetAccount",
-			Handler:    _HTTPService_GetAccount_Handler,
+			Handler:    _BlockchainService_GetAccount_Handler,
 		},
 		{
 			MethodName: "SendAccount",
-			Handler:    _HTTPService_SendAccount_Handler,
+			Handler:    _BlockchainService_SendAccount_Handler,
 		},
 		{
 			MethodName: "SendPeer",
-			Handler:    _HTTPService_SendPeer_Handler,
+			Handler:    _BlockchainService_SendPeer_Handler,
 		},
 		{
 			MethodName: "Sync",
-			Handler:    _HTTPService_Sync_Handler,
+			Handler:    _BlockchainService_Sync_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
