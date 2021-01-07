@@ -21,7 +21,7 @@ type Blockchain interface {
 	AddBlock(block *block.Block) bool
 	GetLatestBlock() (*block.Block, error)
 	GetTxsByBlockHash(blockHash string) ([]*transaction.Transaction, error)
-	GetTransactionByHash(hash string) ([]*transaction.Transaction, error)
+	GetTransactionByHash(hash string) (*transaction.Transaction, error)
 	AddTransaction(tx *transaction.Transaction) bool
 	GetAccount(addr string) (*account.Account, error)
 	AddAccount(account *account.Account) bool

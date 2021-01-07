@@ -82,8 +82,8 @@ message Transaction {
   }
   string tx_hash = 1;
   TxType tx_type = 2;
-  uint32 total_value = 3;
-  uint32 fee = 4;
+  float total_value = 3;
+  float fee = 4;
   string sender_addr = 5;
   int64 timestamp = 6;
   string signature = 7;
@@ -92,7 +92,7 @@ message Transaction {
 
 message Output {
   string recipientAddr = 1;
-  uint32 value = 2;
+  float value = 2;
 }
 
 message Block {
@@ -117,7 +117,7 @@ message Peer {
 }
 
 message Metadata {
-  string id = 1;
+  string message_id = 1;
   string origin = 2;
   string chainID = 3;
 }

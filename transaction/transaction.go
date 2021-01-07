@@ -20,8 +20,8 @@ const (
 type Transaction struct {
 	TxType
 	TxHash     [32]byte
-	TotalValue uint32
-	Fee        uint32
+	TotalValue float32
+	Fee        float32
 	SenderAddr string
 	Timestamp  int64
 	Signature  *wallet.Signature
@@ -36,8 +36,8 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
 		TxHash     string    `json:"txHash"`
 		TxType     TxType    `json:"txType"`
-		TotalValue uint32    `json:"totalValue"`
-		Fee        uint32    `json:"fee"`
+		TotalValue float32   `json:"totalValue"`
+		Fee        float32   `json:"fee"`
 		SenderAddr string    `json:"senderAddr"`
 		Timestamp  int64     `json:"timestamp"`
 		Signature  string    `json:"signature"`
@@ -59,8 +59,8 @@ func (t *Transaction) UnmarshalJSON(b []byte) error {
 	tx := &struct {
 		TxHash     string    `json:"txHash"`
 		TxType     TxType    `json:"txType"`
-		TotalValue uint32    `json:"totalValue"`
-		Fee        uint32    `json:"fee"`
+		TotalValue float32   `json:"totalValue"`
+		Fee        float32   `json:"fee"`
 		SenderAddr string    `json:"senderAddr"`
 		Timestamp  int64     `json:"timestamp"`
 		Signature  string    `json:"signature"`
@@ -120,7 +120,7 @@ func (tx *Transaction) Verify() bool {
 
 type Output struct {
 	RecipientAddr string
-	Value         uint32
+	Value         float32
 }
 
 func (o *Output) MarshalJSON() ([]byte, error) {

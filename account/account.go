@@ -8,7 +8,7 @@ import (
 // Account is a model of user in the blockchain.
 type Account struct {
 	Addr    string
-	Balance uint32
+	Balance float32
 }
 
 // New initialises a new Account struct
@@ -18,7 +18,7 @@ func New(addr string) *Account {
 }
 
 // Send sends a specified amount of coins from an account to another
-func (a *Account) Send(amount uint32, recipient *Account) error {
+func (a *Account) Send(amount float32, recipient *Account) error {
 	if a.Balance < amount {
 		return errors.New("error: balance not enough")
 	}
@@ -28,7 +28,7 @@ func (a *Account) Send(amount uint32, recipient *Account) error {
 }
 
 // Receive sums a specified amount of coins to the current balance
-func (a *Account) Receive(amount uint32) {
-	log.Printf("info: account(%s) received %d coins\n", a.Addr, amount)
+func (a *Account) Receive(amount float32) {
+	log.Printf("info: account(%s) received %f coins\n", a.Addr, amount)
 	a.Balance += amount
 }
