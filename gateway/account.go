@@ -3,8 +3,6 @@ package gateway
 import (
 	gw "chain_proto/gateway/gw"
 	"context"
-
-	"google.golang.org/grpc/metadata"
 )
 
 func (g *Gateway) GetAccount(_ context.Context, in *gw.GetAccountRequest) (*gw.GetAccountResponse, error) {
@@ -19,11 +17,4 @@ func (g *Gateway) GetAccount(_ context.Context, in *gw.GetAccountRequest) (*gw.G
 			Balance: acc.Balance,
 		},
 	}, nil
-}
-
-func (g *Gateway) SendAccount(ctx context.Context, in *gw.GetAccountRequest) (*gw.GetAccountResponse, error) {
-	// Check metadata
-
-	meta, err := metadata.FromIncomingContext(ctx)
-
 }

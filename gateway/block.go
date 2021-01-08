@@ -1,30 +1,61 @@
 package gateway
 
 import (
-	"chain_proto/config"
 	gw "chain_proto/gateway/gw"
 	"context"
-	"errors"
+
+	"github.com/golang/protobuf/ptypes/empty"
 )
 
-func (g *Gateway) GetBlockByHash(_ context.Context, in *gw.GetBlockByHashRequest) (*gw.Block, error) {
-	b, err := g.bc.GetBlockByHash(in.GetBlockHash())
+func (g *Gateway) GetLatestBlock(_ context.Context, in *gw.GetBlockByHashRequest) (*gw.GetBlockResponse, error) {
+	blk, err := g.bc.GetLatestBlock()
 	if err != nil {
 		return nil, err
 	}
 
-	return toPbBlock(b)
-}
-
-func (g *Gateway) GetBlockByHeight(_ context.Context, in *gw.GetBlockByHeightRequest) (*gw.Block, error) {
-	b, err := g.bc.GetBlockByHeight(in.GetBlockHeight())
+	pbBlk, err := toPbBlock(blk)
 	if err != nil {
 		return nil, err
 	}
-	return toPbBlock(b)
+
+	return &gw.GetBlockResponse{
+		Block: pbBlk,
+	}, nil
 }
 
-func (g *Gateway) GetBlocks(_ context.Context, in *gw.GetBlocksRequest) ([]*gw.Block, error) {
+func (g *Gateway) GetBlockByHash(_ context.Context, in *gw.GetBlockByHashRequest) (*gw.GetBlockResponse, error) {
+	blk, err := g.bc.GetBlockByHash(in.GetBlockHash())
+	if err != nil {
+		return nil, err
+	}
+
+	pbBlk, err := toPbBlock(blk)
+	if err != nil {
+		return nil, err
+	}
+
+	return &gw.GetBlockResponse{
+		Block: pbBlk,
+	}, nil
+}
+
+func (g *Gateway) GetBlockByHeight(_ context.Context, in *gw.GetBlockByHeightRequest) (*gw.GetBlockResponse, error) {
+	blk, err := g.bc.GetBlockByHeight(in.GetBlockHeight())
+	if err != nil {
+		return nil, err
+	}
+
+	pbBlk, err := toPbBlock(blk)
+	if err != nil {
+		return nil, err
+	}
+
+	return &gw.GetBlockResponse{
+		Block: pbBlk,
+	}, nil
+}
+
+func (g *Gateway) GetBlocks(_ context.Context, in *gw.GetBlocksRequest) (*gw.GetBlocksResponse, error) {
 	blks, err := g.bc.GetBlocks(in.GetOffset(), in.GetLimit())
 	if err != nil {
 		return nil, err
@@ -39,22 +70,20 @@ func (g *Gateway) GetBlocks(_ context.Context, in *gw.GetBlocksRequest) ([]*gw.B
 		pbBlocks = append(pbBlocks, pbBlock)
 	}
 
-	return pbBlocks, nil
+	return &gw.GetBlocksResponse{
+		Blocks: pbBlocks,
+	}, nil
 }
 
-func (g *Gateway) SendBlock(_ context.Context, in *gw.SendBlockRequest) error {
-	if in.GetMetadata().ChainID != config.Config.ChainID {
-		return errors.New("error: Invalid chain Id.")
-	}
-
+func (g *Gateway) SendBlock(_ context.Context, in *gw.SendBlockRequest) (*empty.Empty, error) {
 	blk, err := toBlock(in.GetBlock())
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	if !g.bc.AddBlock(blk) {
-		return err
+	if err := g.bc.AddBlock(blk); err != nil {
+		return nil, err
 	}
 
-	return nil
+	return &empty.Empty{}, nil
 }

@@ -4,9 +4,11 @@ import (
 	gw "chain_proto/gateway/gw"
 	"context"
 	"errors"
+
+	"github.com/golang/protobuf/ptypes/empty"
 )
 
-func (g *Gateway) GetTxsByBlockHash(_ context.Context, in *gw.GetTxByBlockHashRequest) ([]*gw.Transaction, error) {
+func (g *Gateway) GetTxsByBlockHash(_ context.Context, in *gw.GetTxByBlockHashRequest) (*gw.GetTransactionsResponse, error) {
 	txs, err := g.bc.GetTxsByBlockHash(in.GetBlockHash())
 	if err != nil {
 		return nil, err
@@ -17,26 +19,30 @@ func (g *Gateway) GetTxsByBlockHash(_ context.Context, in *gw.GetTxByBlockHashRe
 		pbTxs = append(pbTxs, toPbTransaction(tx))
 	}
 
-	return pbTxs, nil
+	return &gw.GetTransactionsResponse{
+		Transactions: pbTxs,
+	}, nil
 }
 
-func (g *Gateway) GetTransactionByHash(_ context.Context, in *gw.GetTransactionByHashRequest) (*gw.Transaction, error) {
+func (g *Gateway) GetTransactionByHash(_ context.Context, in *gw.GetTransactionByHashRequest) (*gw.GetTransactionResponse, error) {
 	tx, err := g.bc.GetTransactionByHash(in.GetTxHash())
 	if err != nil {
 		return nil, err
 	}
 
-	return toPbTransaction(tx), nil
+	return &gw.GetTransactionResponse{
+		Transaction: toPbTransaction(tx),
+	}, nil
 }
 
-func (g *Gateway) SendTransaction(_ context.Context, in *gw.SendTransactionRequest) error {
+func (g *Gateway) SendTransaction(_ context.Context, in *gw.SendTransactionRequest) (*empty.Empty, error) {
 	tx, err := toTransaction(in.GetTransaction())
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if !g.bc.AddTransaction(tx) {
-		return errors.New("error: Faliled to add a new transacation")
+	if err := g.bc.AddTransaction(tx); err != nil {
+		return nil, errors.New("error: Faliled to add a new transacation")
 	}
 
-	return nil
+	return &empty.Empty{}, nil
 }

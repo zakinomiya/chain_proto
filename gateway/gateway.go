@@ -18,14 +18,13 @@ type Blockchain interface {
 	GetBlockByHash(hash string) (*block.Block, error)
 	GetBlockByHeight(height int32) (*block.Block, error)
 	GetBlocks(offset int32, limit int32) ([]*block.Block, error)
-	AddBlock(block *block.Block) bool
+	AddBlock(block *block.Block) error
 	GetLatestBlock() (*block.Block, error)
 	GetTxsByBlockHash(blockHash string) ([]*transaction.Transaction, error)
 	GetTransactionByHash(hash string) (*transaction.Transaction, error)
-	AddTransaction(tx *transaction.Transaction) bool
+	AddTransaction(tx *transaction.Transaction) error
 	GetAccount(addr string) (*account.Account, error)
-	AddAccount(account *account.Account) bool
-	AddPeer(host string) bool
+	AddPeer(host string) error
 	Sync(offset int) ([]*block.Block, error)
 }
 
@@ -69,7 +68,7 @@ func (g *Gateway) Start() error {
 	log.Println("info: successfully started servers")
 
 	go func() {
-		if err := gw.RegisterHTTPServiceHandlerFromEndpoint(ctx, mux, "localhost:8081", opts); err != nil {
+		if err := gw.RegisterBlockchainServiceHandlerFromEndpoint(ctx, mux, "localhost:8081", opts); err != nil {
 			log.Fatalln("Failed to start the http server")
 		}
 	}()

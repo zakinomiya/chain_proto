@@ -8,7 +8,8 @@ import "google/api/annotations.proto";
 option go_package = "go_chain/gateway/gw";
 
 service BlockchainService {
-  rpc SendTransaction(SendTransactionRequest) returns (google.protobuf.Empty) {
+  rpc PropagateTransaction(PropageteTransactionRequest)
+      returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/transactions"
       body: "*"
@@ -26,7 +27,7 @@ service BlockchainService {
       get: "/transactions/block/{block_hash}"
     };
   }
-  rpc SendBlock(SendBlockRequest) returns (google.protobuf.Empty) {
+  rpc PropagateBlock(PropageteBlockRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/blocks"
       body: "*"
@@ -52,13 +53,7 @@ service BlockchainService {
       get: "/accounts/{addr}"
     };
   }
-  rpc SendAccount(SendAccountRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      post: "/accounts"
-      body: "*"
-    };
-  }
-  rpc SendPeer(SendPeerRequest) returns (google.protobuf.Empty) {
+  rpc PropagatePeer(PropagetePeerRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/peers"
       body: "*"
@@ -116,12 +111,6 @@ message Peer {
   string host = 1;
 }
 
-message Metadata {
-  string message_id = 1;
-  string origin = 2;
-  string chainID = 3;
-}
-
 // -----------------------------------
 //  Request & Response messages
 // -----------------------------------
@@ -130,9 +119,8 @@ message GetTransactionByHashRequest {
   string tx_hash = 1;
 }
 
-message SendTransactionRequest {
-  Metadata metadata = 1;
-  Transaction transaction = 2;
+message PropageteTransactionRequest {
+  Transaction transaction = 1;
   // options. not implemented yet
 }
 
@@ -150,9 +138,8 @@ message GetTxByBlockHashRequest {
   string block_hash = 1;
 }
 
-message SendBlockRequest {
-  Metadata metadata = 1;
-  Block block = 2;
+message PropageteBlockRequest {
+  Block block = 1;
 }
 
 message GetBlockResponse {
@@ -184,19 +171,12 @@ message GetAccountResponse {
   Account account = 1;
 }
 
-message SendPeerRequest {
-  Metadata metadata = 1;
-  Peer peer = 2;
-}
-
-message SendAccountRequest {
-  Metadata metadata = 1;
-  Account account = 2;
+message PropagetePeerRequest {
+  Peer peer = 1;
 }
 
 message SyncRequest {
-  Metadata metadata = 1;
-  int32 offset = 2;
+  int32 offset = 1;
 }
 
 message SyncResponse {
