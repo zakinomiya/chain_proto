@@ -8,6 +8,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 )
 
 type TxType string
@@ -20,8 +22,8 @@ const (
 type Transaction struct {
 	TxType
 	TxHash     [32]byte
-	TotalValue float32
-	Fee        float32
+	TotalValue decimal.Decimal
+	Fee        decimal.Decimal
 	SenderAddr string
 	Timestamp  int64
 	Signature  *wallet.Signature
@@ -36,8 +38,8 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
 		TxHash     string    `json:"txHash"`
 		TxType     TxType    `json:"txType"`
-		TotalValue float32   `json:"totalValue"`
-		Fee        float32   `json:"fee"`
+		TotalValue string    `json:"totalValue"`
+		Fee        string    `json:"fee"`
 		SenderAddr string    `json:"senderAddr"`
 		Timestamp  int64     `json:"timestamp"`
 		Signature  string    `json:"signature"`
@@ -45,8 +47,8 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 	}{
 		TxHash:     fmt.Sprintf("%x", t.TxHash),
 		TxType:     t.TxType,
-		TotalValue: t.TotalValue,
-		Fee:        t.Fee,
+		TotalValue: t.TotalValue.String(),
+		Fee:        t.Fee.String(),
 		SenderAddr: t.SenderAddr,
 		Timestamp:  t.Timestamp,
 		Signature:  t.Signature.String(),
@@ -54,13 +56,12 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 	})
 }
 
-// TODO implements
 func (t *Transaction) UnmarshalJSON(b []byte) error {
 	tx := &struct {
 		TxHash     string    `json:"txHash"`
 		TxType     TxType    `json:"txType"`
-		TotalValue float32   `json:"totalValue"`
-		Fee        float32   `json:"fee"`
+		TotalValue string    `json:"totalValue"`
+		Fee        string    `json:"fee"`
 		SenderAddr string    `json:"senderAddr"`
 		Timestamp  int64     `json:"timestamp"`
 		Signature  string    `json:"signature"`
@@ -76,10 +77,20 @@ func (t *Transaction) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
+	totalValue, err := decimal.NewFromString(tx.TotalValue)
+	if err != nil {
+		return err
+	}
+
+	fee, err := decimal.NewFromString(tx.Fee)
+	if err != nil {
+		return err
+	}
+
 	t.TxHash = common.ReadByteInto32(hash)
 	t.TxType = tx.TxType
-	t.TotalValue = tx.TotalValue
-	t.Fee = tx.Fee
+	t.TotalValue = totalValue
+	t.Fee = fee
 	t.SenderAddr = tx.SenderAddr
 	t.Timestamp = tx.Timestamp
 	t.Outs = tx.Outs
@@ -96,8 +107,8 @@ func (tx *Transaction) ToBytes() []byte {
 	buf := &bytes.Buffer{}
 	buf.Write(tx.TxHash[:])
 	buf.Write([]byte(tx.TxType))
-	buf.Write(common.IntToByteSlice(int(tx.TotalValue)))
-	buf.Write(common.IntToByteSlice(int(tx.Fee)))
+	buf.Write([]byte(tx.TotalValue.String()))
+	buf.Write([]byte(tx.Fee.String()))
 	buf.Write([]byte(tx.SenderAddr))
 	buf.Write(common.IntToByteSlice(int(tx.Timestamp)))
 
@@ -114,22 +125,23 @@ func (tx *Transaction) CalcHash() error {
 	return nil
 }
 
+// TODO implement
 func (tx *Transaction) Verify() bool {
 	return true
 }
 
 type Output struct {
 	RecipientAddr string
-	Value         float32
+	Value         decimal.Decimal
 }
 
 func (o *Output) MarshalJSON() ([]byte, error) {
 	return json.Marshal(
 		&struct {
 			RecipientAddr string `json:"recipientAddr"`
-			Value         uint32 `json:"value"`
+			Value         string `json:"value"`
 		}{
 			RecipientAddr: o.RecipientAddr,
-			Value:         o.Value,
+			Value:         o.Value.String(),
 		})
 }

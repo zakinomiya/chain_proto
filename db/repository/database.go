@@ -55,7 +55,7 @@ func (d *database) queryRows(filename string, data interface{}) (*sqlx.Rows, err
 
 	stmt, err := d.prepareNamed(d.db.PrepareNamed, filename)
 	if err != nil {
-		log.Printf("sql file not found. filename=%s\n", filename)
+		log.Printf("error: failed to prepare sql statement. err=%v\n", err)
 		return nil, err
 	}
 

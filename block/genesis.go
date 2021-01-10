@@ -1,14 +1,15 @@
 package block
 
 import (
-	"encoding/hex"
 	"chain_proto/common"
 	"chain_proto/transaction"
 	"chain_proto/wallet"
+	"encoding/hex"
 	"io/ioutil"
 	"log"
 
 	"github.com/go-yaml/yaml"
+	"github.com/shopspring/decimal"
 )
 
 type genesis struct {
@@ -17,20 +18,19 @@ type genesis struct {
 	Timestamp     int64  `yaml:"timestamp"`
 	Bits          uint32 `yaml:"bits"`
 	Nonce         uint32 `yaml:"nonce"`
-	Height        uint32 `yaml:"height"`
 	Hash          string `yaml:"hash"`
 	ExtraNonce    uint32 `yaml:"extraNonce"`
 	Transactions  []struct {
 		TxHash     string             `yaml:"txHash"`
 		TxType     transaction.TxType `yaml:"txType"`
-		TotalValue uint32             `yaml:"totalValue"`
-		Fee        uint32             `yaml:"fee"`
+		TotalValue string             `yaml:"totalValue"`
+		Fee        string             `yaml:"fee"`
 		SenderAddr string             `yaml:"senderAddr"`
 		Timestamp  int64              `yaml:"timestamp"`
 		Signature  string             `yaml:"signature"`
 		Outs       []struct {
 			RecipientAddr string `yaml:"recipientAddr"`
-			Value         uint32 `yaml:"value"`
+			Value         string `yaml:"value"`
 		} `yaml:"outs"`
 	} `yaml:"transactions"`
 }
@@ -60,21 +60,26 @@ func NewGenesisBlock() (*Block, error) {
 			log.Println("error:", t.TxHash)
 			return nil, err
 		}
+
+		totalValue, _ := decimal.NewFromString(t.TotalValue)
+		fee, _ := decimal.NewFromString(t.Fee)
+
 		tx := transaction.New()
 		tx.TxHash = common.ReadByteInto32(txHash)
 		tx.TxType = t.TxType
 		tx.SenderAddr = t.SenderAddr
 		tx.Timestamp = t.Timestamp
-		tx.TotalValue = t.TotalValue
-		tx.Fee = t.Fee
+		tx.TotalValue = totalValue
+		tx.Fee = fee
 		sig, err := wallet.DecodeSigString(t.Signature)
 		tx.Signature = sig
 
 		var outs []*transaction.Output
 		for _, o := range t.Outs {
+			value, _ := decimal.NewFromString(o.Value)
 			out := &transaction.Output{}
 			out.RecipientAddr = o.RecipientAddr
-			out.Value = o.Value
+			out.Value = value
 			if err != nil {
 				return nil, err
 			}
@@ -104,7 +109,7 @@ func NewGenesisBlock() (*Block, error) {
 	}
 
 	b := &Block{
-		Height:       gen.Height,
+		Height:       0,
 		Hash:         common.ReadByteInto32(hash),
 		ExtraNonce:   gen.ExtraNonce,
 		Transactions: transactions,

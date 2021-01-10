@@ -10,5 +10,4 @@ SELECT
     nonce,
     transactions
 FROM blocks
-WHERE blocks.height >= :start AND blocks.height<:
-end;
+LIMIT :limit OFFSET :offset;

@@ -4,6 +4,7 @@ import (
 	"chain_proto/account"
 	"chain_proto/block"
 	"chain_proto/config"
+	"chain_proto/peer"
 	"chain_proto/transaction"
 	"io/ioutil"
 	"log"
@@ -14,19 +15,26 @@ import (
 
 type Repository struct {
 	Block interface {
-		GetBlockByHash(hash string) (*block.Block, error)
-		GetBlocksByRange(start uint32, end uint32) ([]*block.Block, error)
-		GetLatestBlock() (*block.Block, error)
+		GetByHash(hash [32]byte) (*block.Block, error)
+		GetByHeight(height uint32) (*block.Block, error)
+		GetByRange(offset uint32, limit uint32) ([]*block.Block, error)
+		GetLatest() (*block.Block, error)
 		Insert(b *block.Block) error
 	}
 	Tx interface {
-		GetTxsByBlockHash(blockHash [32]byte) ([]*transaction.Transaction, error)
+		GetByBlockHash(blockHash [32]byte) ([]*transaction.Transaction, error)
+		GetByHash(hash [32]byte) (*transaction.Transaction, error)
 		BulkInsert(txs []*transaction.Transaction) error
 	}
 	Account interface {
 		BulkInsert(accounts []*account.Account) error
 		Insert(account *account.Account) error
-		GetAccount(addr string) (*account.Account, error)
+		Get(addr string) (*account.Account, error)
+	}
+	Peer interface {
+		GetAll() ([]*peer.Peer, error)
+		Get(host string) (*peer.Peer, error)
+		AddOrReplace(peer *peer.Peer) error
 	}
 }
 

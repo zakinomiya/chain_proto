@@ -8,11 +8,11 @@ bits: 5
 transactions:
   - txHash: a480487ae7c7bd343e9e16adb3a8a5a9698f959c9da9dbe070c00dbbfd98ed88
     txType: "coinbase"
-    totalValue: 25
-    fee: 0
+    totalValue: "25.000"
+    fee: "0.000"
     senderAddr:
     signature: gye7B9BiFIbi/xmHpc3iu1V2dvkKRxakvCiVKbi8tm6RehikD0V3oF0KD6dyrFBJLct9QqD/enpbTjyljsXc8w==
     timestamp: 1607348357
     outs:
       - recipientAddr: HcdQdFYiHZNeYYqZ35yoHqg11naLFyKoqu8mUmtokBWW
-        value: 25
+        value: "25.000"

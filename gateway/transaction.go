@@ -1,15 +1,22 @@
 package gateway
 
 import (
+	"chain_proto/common"
 	gw "chain_proto/gateway/gw"
 	"context"
+	"encoding/hex"
 	"errors"
 
 	"github.com/golang/protobuf/ptypes/empty"
 )
 
-func (g *Gateway) GetTxsByBlockHash(_ context.Context, in *gw.GetTxByBlockHashRequest) (*gw.GetTransactionsResponse, error) {
-	txs, err := g.bc.GetTxsByBlockHash(in.GetBlockHash())
+func (bs *BlockchainService) GetTxsByBlockHash(_ context.Context, in *gw.GetTxByBlockHashRequest) (*gw.GetTransactionsResponse, error) {
+	blockHash, err := hex.DecodeString(in.GetBlockHash())
+	if err != nil {
+		return nil, err
+	}
+
+	txs, err := bs.bc.GetTxsByBlockHash(common.ReadByteInto32(blockHash))
 	if err != nil {
 		return nil, err
 	}
@@ -24,8 +31,13 @@ func (g *Gateway) GetTxsByBlockHash(_ context.Context, in *gw.GetTxByBlockHashRe
 	}, nil
 }
 
-func (g *Gateway) GetTransactionByHash(_ context.Context, in *gw.GetTransactionByHashRequest) (*gw.GetTransactionResponse, error) {
-	tx, err := g.bc.GetTransactionByHash(in.GetTxHash())
+func (bs *BlockchainService) GetTransactionByHash(_ context.Context, in *gw.GetTransactionByHashRequest) (*gw.GetTransactionResponse, error) {
+	hash, err := hex.DecodeString(in.GetTxHash())
+	if err != nil {
+		return nil, err
+	}
+
+	tx, err := bs.bc.GetTransactionByHash(common.ReadByteInto32(hash))
 	if err != nil {
 		return nil, err
 	}
@@ -35,12 +47,12 @@ func (g *Gateway) GetTransactionByHash(_ context.Context, in *gw.GetTransactionB
 	}, nil
 }
 
-func (g *Gateway) SendTransaction(_ context.Context, in *gw.SendTransactionRequest) (*empty.Empty, error) {
+func (bs *BlockchainService) PropagateTransaction(_ context.Context, in *gw.PropagateTransactionRequest) (*empty.Empty, error) {
 	tx, err := toTransaction(in.GetTransaction())
 	if err != nil {
 		return nil, err
 	}
-	if err := g.bc.AddTransaction(tx); err != nil {
+	if err := bs.bc.AddTransaction(tx); err != nil {
 		return nil, errors.New("error: Faliled to add a new transacation")
 	}
 

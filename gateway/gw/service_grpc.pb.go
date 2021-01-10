@@ -4,7 +4,6 @@ package gw
 
 import (
 	context "context"
-
 	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -19,17 +18,16 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BlockchainServiceClient interface {
-	SendTransaction(ctx context.Context, in *SendTransactionRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	PropagateTransaction(ctx context.Context, in *PropagateTransactionRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	GetTransactionByHash(ctx context.Context, in *GetTransactionByHashRequest, opts ...grpc.CallOption) (*GetTransactionResponse, error)
-	GetTxByBlockHash(ctx context.Context, in *GetTxByBlockHashRequest, opts ...grpc.CallOption) (*GetTransactionsResponse, error)
-	SendBlock(ctx context.Context, in *SendBlockRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetTxsByBlockHash(ctx context.Context, in *GetTxByBlockHashRequest, opts ...grpc.CallOption) (*GetTransactionsResponse, error)
+	PropagateBlock(ctx context.Context, in *PropagateBlockRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	GetBlockByHeight(ctx context.Context, in *GetBlockByHeightRequest, opts ...grpc.CallOption) (*GetBlockResponse, error)
 	GetBlockByHash(ctx context.Context, in *GetBlockByHashRequest, opts ...grpc.CallOption) (*GetBlockResponse, error)
 	GetBlocks(ctx context.Context, in *GetBlocksRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error)
 	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error)
-	SendAccount(ctx context.Context, in *SendAccountRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	SendPeer(ctx context.Context, in *SendPeerRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	Sync(ctx context.Context, in *SyncRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error)
+	Connect(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*ConnectResponse, error)
+	Sync(ctx context.Context, in *SyncRequest, opts ...grpc.CallOption) (BlockchainService_SyncClient, error)
 }
 
 type blockchainServiceClient struct {
@@ -40,9 +38,9 @@ func NewBlockchainServiceClient(cc grpc.ClientConnInterface) BlockchainServiceCl
 	return &blockchainServiceClient{cc}
 }
 
-func (c *blockchainServiceClient) SendTransaction(ctx context.Context, in *SendTransactionRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *blockchainServiceClient) PropagateTransaction(ctx context.Context, in *PropagateTransactionRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/gw.BlockchainService/SendTransaction", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/PropagateTransaction", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -58,18 +56,18 @@ func (c *blockchainServiceClient) GetTransactionByHash(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *blockchainServiceClient) GetTxByBlockHash(ctx context.Context, in *GetTxByBlockHashRequest, opts ...grpc.CallOption) (*GetTransactionsResponse, error) {
+func (c *blockchainServiceClient) GetTxsByBlockHash(ctx context.Context, in *GetTxByBlockHashRequest, opts ...grpc.CallOption) (*GetTransactionsResponse, error) {
 	out := new(GetTransactionsResponse)
-	err := c.cc.Invoke(ctx, "/gw.BlockchainService/GetTxByBlockHash", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/GetTxsByBlockHash", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blockchainServiceClient) SendBlock(ctx context.Context, in *SendBlockRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *blockchainServiceClient) PropagateBlock(ctx context.Context, in *PropagateBlockRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/gw.BlockchainService/SendBlock", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/PropagateBlock", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -112,48 +110,61 @@ func (c *blockchainServiceClient) GetAccount(ctx context.Context, in *GetAccount
 	return out, nil
 }
 
-func (c *blockchainServiceClient) SendAccount(ctx context.Context, in *SendAccountRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/gw.BlockchainService/SendAccount", in, out, opts...)
+func (c *blockchainServiceClient) Connect(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*ConnectResponse, error) {
+	out := new(ConnectResponse)
+	err := c.cc.Invoke(ctx, "/gw.BlockchainService/Connect", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blockchainServiceClient) SendPeer(ctx context.Context, in *SendPeerRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/gw.BlockchainService/SendPeer", in, out, opts...)
+func (c *blockchainServiceClient) Sync(ctx context.Context, in *SyncRequest, opts ...grpc.CallOption) (BlockchainService_SyncClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_BlockchainService_serviceDesc.Streams[0], "/gw.BlockchainService/Sync", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &blockchainServiceSyncClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
 }
 
-func (c *blockchainServiceClient) Sync(ctx context.Context, in *SyncRequest, opts ...grpc.CallOption) (*GetBlocksResponse, error) {
-	out := new(GetBlocksResponse)
-	err := c.cc.Invoke(ctx, "/gw.BlockchainService/Sync", in, out, opts...)
-	if err != nil {
+type BlockchainService_SyncClient interface {
+	Recv() (*SyncResponse, error)
+	grpc.ClientStream
+}
+
+type blockchainServiceSyncClient struct {
+	grpc.ClientStream
+}
+
+func (x *blockchainServiceSyncClient) Recv() (*SyncResponse, error) {
+	m := new(SyncResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
-	return out, nil
+	return m, nil
 }
 
 // BlockchainServiceServer is the server API for BlockchainService service.
 // All implementations must embed UnimplementedBlockchainServiceServer
 // for forward compatibility
 type BlockchainServiceServer interface {
-	SendTransaction(context.Context, *SendTransactionRequest) (*empty.Empty, error)
+	PropagateTransaction(context.Context, *PropagateTransactionRequest) (*empty.Empty, error)
 	GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionResponse, error)
-	GetTxByBlockHash(context.Context, *GetTxByBlockHashRequest) (*GetTransactionsResponse, error)
-	SendBlock(context.Context, *SendBlockRequest) (*empty.Empty, error)
+	GetTxsByBlockHash(context.Context, *GetTxByBlockHashRequest) (*GetTransactionsResponse, error)
+	PropagateBlock(context.Context, *PropagateBlockRequest) (*empty.Empty, error)
 	GetBlockByHeight(context.Context, *GetBlockByHeightRequest) (*GetBlockResponse, error)
 	GetBlockByHash(context.Context, *GetBlockByHashRequest) (*GetBlockResponse, error)
 	GetBlocks(context.Context, *GetBlocksRequest) (*GetBlocksResponse, error)
 	GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error)
-	SendAccount(context.Context, *SendAccountRequest) (*empty.Empty, error)
-	SendPeer(context.Context, *SendPeerRequest) (*empty.Empty, error)
-	Sync(context.Context, *SyncRequest) (*GetBlocksResponse, error)
+	Connect(context.Context, *empty.Empty) (*ConnectResponse, error)
+	Sync(*SyncRequest, BlockchainService_SyncServer) error
 	mustEmbedUnimplementedBlockchainServiceServer()
 }
 
@@ -161,17 +172,17 @@ type BlockchainServiceServer interface {
 type UnimplementedBlockchainServiceServer struct {
 }
 
-func (UnimplementedBlockchainServiceServer) SendTransaction(context.Context, *SendTransactionRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendTransaction not implemented")
+func (UnimplementedBlockchainServiceServer) PropagateTransaction(context.Context, *PropagateTransactionRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PropagateTransaction not implemented")
 }
 func (UnimplementedBlockchainServiceServer) GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionByHash not implemented")
 }
-func (UnimplementedBlockchainServiceServer) GetTxByBlockHash(context.Context, *GetTxByBlockHashRequest) (*GetTransactionsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTxByBlockHash not implemented")
+func (UnimplementedBlockchainServiceServer) GetTxsByBlockHash(context.Context, *GetTxByBlockHashRequest) (*GetTransactionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTxsByBlockHash not implemented")
 }
-func (UnimplementedBlockchainServiceServer) SendBlock(context.Context, *SendBlockRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendBlock not implemented")
+func (UnimplementedBlockchainServiceServer) PropagateBlock(context.Context, *PropagateBlockRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PropagateBlock not implemented")
 }
 func (UnimplementedBlockchainServiceServer) GetBlockByHeight(context.Context, *GetBlockByHeightRequest) (*GetBlockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlockByHeight not implemented")
@@ -185,14 +196,11 @@ func (UnimplementedBlockchainServiceServer) GetBlocks(context.Context, *GetBlock
 func (UnimplementedBlockchainServiceServer) GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
 }
-func (UnimplementedBlockchainServiceServer) SendAccount(context.Context, *SendAccountRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendAccount not implemented")
+func (UnimplementedBlockchainServiceServer) Connect(context.Context, *empty.Empty) (*ConnectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Connect not implemented")
 }
-func (UnimplementedBlockchainServiceServer) SendPeer(context.Context, *SendPeerRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendPeer not implemented")
-}
-func (UnimplementedBlockchainServiceServer) Sync(context.Context, *SyncRequest) (*GetBlocksResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Sync not implemented")
+func (UnimplementedBlockchainServiceServer) Sync(*SyncRequest, BlockchainService_SyncServer) error {
+	return status.Errorf(codes.Unimplemented, "method Sync not implemented")
 }
 func (UnimplementedBlockchainServiceServer) mustEmbedUnimplementedBlockchainServiceServer() {}
 
@@ -207,20 +215,20 @@ func RegisterBlockchainServiceServer(s grpc.ServiceRegistrar, srv BlockchainServ
 	s.RegisterService(&_BlockchainService_serviceDesc, srv)
 }
 
-func _BlockchainService_SendTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendTransactionRequest)
+func _BlockchainService_PropagateTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PropagateTransactionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlockchainServiceServer).SendTransaction(ctx, in)
+		return srv.(BlockchainServiceServer).PropagateTransaction(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.BlockchainService/SendTransaction",
+		FullMethod: "/gw.BlockchainService/PropagateTransaction",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).SendTransaction(ctx, req.(*SendTransactionRequest))
+		return srv.(BlockchainServiceServer).PropagateTransaction(ctx, req.(*PropagateTransactionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -243,38 +251,38 @@ func _BlockchainService_GetTransactionByHash_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlockchainService_GetTxByBlockHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_GetTxsByBlockHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTxByBlockHashRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlockchainServiceServer).GetTxByBlockHash(ctx, in)
+		return srv.(BlockchainServiceServer).GetTxsByBlockHash(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.BlockchainService/GetTxByBlockHash",
+		FullMethod: "/gw.BlockchainService/GetTxsByBlockHash",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).GetTxByBlockHash(ctx, req.(*GetTxByBlockHashRequest))
+		return srv.(BlockchainServiceServer).GetTxsByBlockHash(ctx, req.(*GetTxByBlockHashRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlockchainService_SendBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendBlockRequest)
+func _BlockchainService_PropagateBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PropagateBlockRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlockchainServiceServer).SendBlock(ctx, in)
+		return srv.(BlockchainServiceServer).PropagateBlock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.BlockchainService/SendBlock",
+		FullMethod: "/gw.BlockchainService/PropagateBlock",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).SendBlock(ctx, req.(*SendBlockRequest))
+		return srv.(BlockchainServiceServer).PropagateBlock(ctx, req.(*PropagateBlockRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -351,58 +359,43 @@ func _BlockchainService_GetAccount_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlockchainService_SendAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendAccountRequest)
+func _BlockchainService_Connect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(empty.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlockchainServiceServer).SendAccount(ctx, in)
+		return srv.(BlockchainServiceServer).Connect(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gw.BlockchainService/SendAccount",
+		FullMethod: "/gw.BlockchainService/Connect",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).SendAccount(ctx, req.(*SendAccountRequest))
+		return srv.(BlockchainServiceServer).Connect(ctx, req.(*empty.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlockchainService_SendPeer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendPeerRequest)
-	if err := dec(in); err != nil {
-		return nil, err
+func _BlockchainService_Sync_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SyncRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
 	}
-	if interceptor == nil {
-		return srv.(BlockchainServiceServer).SendPeer(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/gw.BlockchainService/SendPeer",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).SendPeer(ctx, req.(*SendPeerRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	return srv.(BlockchainServiceServer).Sync(m, &blockchainServiceSyncServer{stream})
 }
 
-func _BlockchainService_Sync_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SyncRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BlockchainServiceServer).Sync(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/gw.BlockchainService/Sync",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).Sync(ctx, req.(*SyncRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+type BlockchainService_SyncServer interface {
+	Send(*SyncResponse) error
+	grpc.ServerStream
+}
+
+type blockchainServiceSyncServer struct {
+	grpc.ServerStream
+}
+
+func (x *blockchainServiceSyncServer) Send(m *SyncResponse) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 var _BlockchainService_serviceDesc = grpc.ServiceDesc{
@@ -410,20 +403,20 @@ var _BlockchainService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*BlockchainServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SendTransaction",
-			Handler:    _BlockchainService_SendTransaction_Handler,
+			MethodName: "PropagateTransaction",
+			Handler:    _BlockchainService_PropagateTransaction_Handler,
 		},
 		{
 			MethodName: "GetTransactionByHash",
 			Handler:    _BlockchainService_GetTransactionByHash_Handler,
 		},
 		{
-			MethodName: "GetTxByBlockHash",
-			Handler:    _BlockchainService_GetTxByBlockHash_Handler,
+			MethodName: "GetTxsByBlockHash",
+			Handler:    _BlockchainService_GetTxsByBlockHash_Handler,
 		},
 		{
-			MethodName: "SendBlock",
-			Handler:    _BlockchainService_SendBlock_Handler,
+			MethodName: "PropagateBlock",
+			Handler:    _BlockchainService_PropagateBlock_Handler,
 		},
 		{
 			MethodName: "GetBlockByHeight",
@@ -442,18 +435,16 @@ var _BlockchainService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _BlockchainService_GetAccount_Handler,
 		},
 		{
-			MethodName: "SendAccount",
-			Handler:    _BlockchainService_SendAccount_Handler,
-		},
-		{
-			MethodName: "SendPeer",
-			Handler:    _BlockchainService_SendPeer_Handler,
-		},
-		{
-			MethodName: "Sync",
-			Handler:    _BlockchainService_Sync_Handler,
+			MethodName: "Connect",
+			Handler:    _BlockchainService_Connect_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Sync",
+			Handler:       _BlockchainService_Sync_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "service.proto",
 }

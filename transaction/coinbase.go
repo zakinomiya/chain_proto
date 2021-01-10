@@ -2,23 +2,28 @@ package transaction
 
 import (
 	"chain_proto/common"
+	"chain_proto/config"
 	"chain_proto/wallet"
+
+	"github.com/shopspring/decimal"
 )
 
-func NewCoinbase(w *wallet.Wallet, value uint32) *Transaction {
+func NewCoinbase(w *wallet.Wallet, value string) *Transaction {
 	tx := New()
 
-	tx.Fee = 0
+	totalValue, _ := decimal.NewFromString(value)
+
+	tx.Fee = decimal.New(0, config.MaxDecimalDigit)
 	tx.SenderAddr = ""
 	tx.Timestamp = common.Timestamp()
-	tx.TotalValue = value
+	tx.TotalValue = totalValue
 	tx.TxType = "coinbase"
 	sig, _ := w.Sign(append(tx.TxHash[:], w.PubKeyBytes()...))
 	tx.Signature = sig
 	tx.Outs = []*Output{
 		{
 			RecipientAddr: w.Address(),
-			Value:         value,
+			Value:         totalValue,
 		},
 	}
 	tx.CalcHash()

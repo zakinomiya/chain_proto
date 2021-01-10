@@ -57,6 +57,10 @@ type Configurations struct {
 
 var Config *Configurations
 
+const (
+	MaxDecimalDigit = 3
+)
+
 func init() {
 	gopath := os.Getenv("GOPATH")
 	if gopath == "" {

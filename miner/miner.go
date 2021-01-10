@@ -21,7 +21,7 @@ type Blockchain interface {
 	CurrentBlockHeight() uint32
 	Difficulty() uint32
 	LatestBlock() *block.Block
-	AddBlock(block *block.Block) bool
+	AddBlock(block *block.Block) error
 }
 
 type Miner struct {
@@ -151,7 +151,7 @@ func (m *Miner) worker(quit chan struct{}) {
 }
 
 func (m *Miner) generateBlock() *block.Block {
-	coinbase := transaction.NewCoinbase(m.minerWallet, 25)
+	coinbase := transaction.NewCoinbase(m.minerWallet, "25.000")
 	txs := append([]*transaction.Transaction{coinbase}, m.GetPooledTransactions(10)...)
 	block := block.New(m.blockchain.CurrentBlockHeight()+1, m.blockchain.Difficulty(), m.blockchain.LatestBlock().Hash, txs)
 	return block

@@ -3,7 +3,10 @@ package common
 import (
 	"math/rand"
 	"strconv"
+	"strings"
 	"time"
+
+	"github.com/shopspring/decimal"
 )
 
 func IntToByteSlice(b int) []byte {
@@ -29,4 +32,11 @@ func ReadByteInto32(h []byte) [32]byte {
 // Yup. I will live for billions of years.
 func Timestamp() int64 {
 	return time.Now().Unix()
+}
+
+// ToDecimal returns decimal type from a string.
+// Caller may specify prefix to be removed from the string.
+func ToDecimal(decStr string, prefix string) (decimal.Decimal, error) {
+	d := strings.TrimPrefix(decStr, prefix)
+	return decimal.NewFromString(d)
 }

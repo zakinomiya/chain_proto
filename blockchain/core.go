@@ -3,11 +3,16 @@ package blockchain
 import (
 	"chain_proto/block"
 	"chain_proto/db/repository"
+	"chain_proto/transaction"
 	"fmt"
 	"log"
 	"os"
 	"sync"
 )
+
+type Miner interface {
+	AddTransaction(tx *transaction.Transaction) error
+}
 
 // Blockchain is a struct of the chain
 type Blockchain struct {
@@ -16,6 +21,7 @@ type Blockchain struct {
 	height     uint32
 	blocks     []*block.Block
 	repository *repository.Repository
+	miner      Miner
 }
 
 var blockchain *Blockchain
@@ -30,28 +36,26 @@ func New(repository *repository.Repository) *Blockchain {
 }
 
 func initializeBlockchain() error {
-	b, err := blockchain.repository.Block.GetLatestBlock()
-	if err != nil {
-		log.Println("error: Failed to initialise blockchain")
-		return err
-	}
+	b, err := blockchain.repository.Block.GetLatest()
 
-	if b == nil {
+	if err == repository.ErrNotFound {
 		log.Println("info: No blocks found in the db. Creating the genesis block")
 		genesis, err := block.NewGenesisBlock()
 		if err != nil {
 			return err
 		}
 
-		if !blockchain.AddBlock(genesis) {
-			return fmt.Errorf("error: failed to add the genesis block")
+		if err := blockchain.AddBlock(genesis); err != nil {
+			return fmt.Errorf("error: failed to add the genesis block. err=%s\n", err)
 		}
 		return nil
+	} else {
+		return err
 	}
 
 	log.Println("info: Block record found in the db. Restoring the blockchain")
 	blockchain.height = b.Height
-	blockchain.ReplaceBlocks([]*block.Block{b})
+	blockchain.blocks = []*block.Block{b}
 	return nil
 }
 
@@ -60,7 +64,7 @@ func (bc *Blockchain) ServiceName() string {
 	return "Blockchain"
 }
 
-// Start starts intialises and starts the blockchain
+// Start intialises and starts the blockchain
 // There must be only one blockchain during the runtime.
 func (bc *Blockchain) Start() error {
 	once.Do(func() {
@@ -77,17 +81,6 @@ func (bc *Blockchain) Start() error {
 // TODO inplement Stop
 func (bc *Blockchain) Stop() {
 	return
-}
-
-// CurrentBlockHeight returns the height of the latest block in the chain.
-// The value does not necessarilly match the length of Blockchain.blocks.
-func (bc *Blockchain) CurrentBlockHeight() uint32 {
-	return bc.LatestBlock().Height
-}
-
-// LatestBlock returns the block at the last index of the Blockchain.blocks.
-func (bc *Blockchain) LatestBlock() *block.Block {
-	return bc.blocks[len(bc.blocks)-1]
 }
 
 // Difficulty returns the next mining target.

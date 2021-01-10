@@ -4,6 +4,7 @@ import (
 	"chain_proto/account"
 	"chain_proto/db/models"
 	"database/sql"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -12,7 +13,7 @@ type AccountRepository struct {
 	*database
 }
 
-func (ar *AccountRepository) GetAccount(addr string) (*account.Account, error) {
+func (ar *AccountRepository) Get(addr string) (*account.Account, error) {
 	row, err := ar.queryRow("get_account.sql", map[string]interface{}{"addr": addr})
 	if err != nil {
 		return nil, err
@@ -27,7 +28,12 @@ func (ar *AccountRepository) GetAccount(addr string) (*account.Account, error) {
 		return nil, err
 	}
 
-	return am.ToAccount(), nil
+	acc, err := am.ToAccount()
+	if err != nil {
+		return nil, err
+	}
+
+	return acc, nil
 }
 
 func (ar *AccountRepository) Insert(account *account.Account) error {
@@ -52,6 +58,7 @@ func (ar *AccountRepository) BulkInsert(accounts []*account.Account) error {
 }
 
 func (ar *AccountRepository) bulkInsert(tx *sqlx.Tx, accounts []*account.Account) error {
+	log.Printf("debug: accounts=%+v\n", accounts)
 	filename := "insert_account.sql"
 	accountModels := []*models.AccountModel{}
 	for _, account := range accounts {

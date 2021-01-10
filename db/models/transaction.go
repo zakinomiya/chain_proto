@@ -7,11 +7,15 @@ import (
 	"log"
 )
 
+const (
+	txPrefix = "T"
+)
+
 type TxModel struct {
 	TxHash []byte `db:"txHash" json:"txhash"`
 	//	BlockHash  string `db:"lockHash"`
-	TotalValue uint32 `db:"totalValue"`
-	Fee        uint32 `db:"fee"`
+	TotalValue string `db:"totalValue"`
+	Fee        string `db:"fee"`
 	SenderAddr string `db:"senderAddr"`
 	Timestamp  int64  `db:"timestamp"`
 	OutCount   int    `db:"outCount"`
@@ -26,11 +30,22 @@ func (tm *TxModel) ToTx(tx *transaction.Transaction) error {
 		return err
 	}
 
+	totalValue, err := common.ToDecimal(tm.TotalValue, txPrefix)
+	if err != nil {
+		return err
+	}
+
+	fee, err := common.ToDecimal(tm.Fee, txPrefix)
+	if err != nil {
+		return err
+	}
+
 	tx.TxHash = common.ReadByteInto32(tm.TxHash)
-	tx.TotalValue = tm.TotalValue
+	tx.TxHash = common.ReadByteInto32(tm.TxHash)
+	tx.TotalValue = totalValue
 	tx.Timestamp = tm.Timestamp
 	tx.SenderAddr = tm.SenderAddr
-	tx.Fee = tm.Fee
+	tx.Fee = fee
 	tx.Outs = outs
 
 	return nil
@@ -44,8 +59,8 @@ func (tm *TxModel) FromTx(tx *transaction.Transaction) error {
 	}
 
 	tm.TxHash = tx.TxHash[:]
-	tm.TotalValue = tx.TotalValue
-	tm.Fee = tx.Fee
+	tm.TotalValue = txPrefix + tx.TotalValue.String()
+	tm.Fee = txPrefix + tx.Fee.String()
 	tm.SenderAddr = tx.SenderAddr[:]
 	tm.Timestamp = tx.Timestamp
 	tm.OutCount = len(tx.Outs)

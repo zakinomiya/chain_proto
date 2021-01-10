@@ -17,8 +17,8 @@ CREATE TABLE
 IF NOT EXISTS transactions
 (
     txHash TEXT NOT NULL PRIMARY KEY,
-    totalValue INTEGER,
-    fee INTEGER,
+    totalValue TEXT,
+    fee TEXT,
     senderAddr TEXT,
     outCount INTEGER,
     outs BLOB,
@@ -29,5 +29,5 @@ CREATE TABLE
 IF NOT EXISTS accounts
 (
     addr TEXT NOT NULL PRIMARY KEY, 
-    balance INTEGER
+    balance TEXT
 );

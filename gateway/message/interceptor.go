@@ -14,6 +14,7 @@ import (
 
 func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+		log.Printf("debug: new request received. funcName=%s\n", info.FullMethod)
 		if !strings.Contains(info.FullMethod, "Propagate") || !strings.Contains(info.FullMethod, "Sync") {
 			return handler(ctx, req)
 		}

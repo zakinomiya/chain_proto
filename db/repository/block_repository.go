@@ -18,8 +18,8 @@ type BlockRepository struct {
 	transcation *TxRepository
 }
 
-func (br *BlockRepository) GetBlockByHash(hash string) (*block.Block, error) {
-	row, err := br.queryRow("get_block_by_hash.sql", map[string]interface{}{"hash": hash})
+func (br *BlockRepository) GetByHash(hash [32]byte) (*block.Block, error) {
+	row, err := br.queryRow("get_block_by_hash.sql", map[string]interface{}{"hash": hash[:]})
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (br *BlockRepository) GetBlockByHash(hash string) (*block.Block, error) {
 	bm := &models.BlockModel{}
 	if err := row.StructScan(&bm); err != nil {
 		if err == sql.ErrNoRows {
-			return nil, nil
+			return nil, ErrNotFound
 		}
 		return nil, err
 	}
@@ -35,12 +35,29 @@ func (br *BlockRepository) GetBlockByHash(hash string) (*block.Block, error) {
 	return bm.ToBlock()
 }
 
-func (br *BlockRepository) GetBlocksByRange(start uint32, end uint32) ([]*block.Block, error) {
-	if start > end {
-		return nil, errors.New("start height should be less than or equal to end height")
+func (br *BlockRepository) GetByHeight(height uint32) (*block.Block, error) {
+	row, err := br.queryRow("get_block_by_height.sql", map[string]interface{}{"height": height})
+	if err != nil {
+		return nil, err
 	}
 
-	rows, err := br.queryRows("get_blocks_by_range.sql", map[string]interface{}{"start": start, "end": end})
+	bm := &models.BlockModel{}
+	if err := row.StructScan(&bm); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrNotFound
+		}
+		return nil, err
+	}
+
+	return bm.ToBlock()
+}
+
+func (br *BlockRepository) GetByRange(offset uint32, limit uint32) ([]*block.Block, error) {
+	if offset > limit {
+		return nil, errors.New("offset height should be less than or equal to limit height")
+	}
+
+	rows, err := br.queryRows("get_blocks_by_range.sql", map[string]interface{}{"offset": offset, "limit": limit})
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +67,7 @@ func (br *BlockRepository) GetBlocksByRange(start uint32, end uint32) ([]*block.
 		bm := &models.BlockModel{}
 		if err := rows.StructScan(&bm); err != nil {
 			if err == sql.ErrNoRows {
-				return nil, nil
+				return nil, ErrNotFound
 			}
 			log.Printf("debug: Failed to scan block. height=%d\n", bm.Height)
 			return nil, err
@@ -65,7 +82,7 @@ func (br *BlockRepository) GetBlocksByRange(start uint32, end uint32) ([]*block.
 	return blocks, nil
 }
 
-func (br *BlockRepository) GetLatestBlock() (*block.Block, error) {
+func (br *BlockRepository) GetLatest() (*block.Block, error) {
 	log.Println("debug: action=GetLatestBlock")
 	row, err := br.queryRow("get_latest_block.sql", nil)
 	if err != nil {
@@ -75,7 +92,7 @@ func (br *BlockRepository) GetLatestBlock() (*block.Block, error) {
 	bm := &models.BlockModel{}
 	if err = row.StructScan(bm); err != nil {
 		if err == sql.ErrNoRows {
-			return nil, nil
+			return nil, ErrNotFound
 		}
 		log.Printf("debug: Failed to scan block. height=%d\n", bm.Height)
 		return nil, err
@@ -137,9 +154,10 @@ func (br *BlockRepository) processTxs(txs []*transaction.Transaction) ([]*accoun
 
 	for _, tx := range txs {
 		log.Printf("debug: SenderAddr=%s", tx.SenderAddr)
-		sender := accountMap[tx.SenderAddr]
-		if sender == nil && tx.TxType != "coinbase" {
-			s, err := br.account.GetAccount(tx.SenderAddr)
+		sender, ok := accountMap[tx.SenderAddr]
+		// In cases where tx type is coinbase, sender should be blank.
+		if !ok && tx.TxType != "coinbase" {
+			s, err := br.account.Get(tx.SenderAddr)
 			if err != nil {
 				return nil, err
 			}
@@ -149,9 +167,9 @@ func (br *BlockRepository) processTxs(txs []*transaction.Transaction) ([]*accoun
 
 		for _, output := range tx.Outs {
 			log.Printf("debug: RecipientAddr=%s", output.RecipientAddr)
-			recipient := accountMap[output.RecipientAddr]
-			if recipient == nil {
-				r, err := br.account.GetAccount(output.RecipientAddr)
+			recipient, ok := accountMap[output.RecipientAddr]
+			if !ok {
+				r, err := br.account.Get(output.RecipientAddr)
 				if err != nil {
 					return nil, err
 				}

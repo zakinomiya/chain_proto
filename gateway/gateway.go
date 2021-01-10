@@ -1,42 +1,40 @@
 package gateway
 
 import (
-	"chain_proto/account"
-	"chain_proto/block"
 	"chain_proto/config"
-	"chain_proto/transaction"
+	gw "chain_proto/gateway/gw"
+	"chain_proto/gateway/message"
 	"context"
 	"log"
+	"net"
+	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
-
-	gw "chain_proto/gateway/gw"
+	"google.golang.org/grpc/reflection"
 )
 
-type Blockchain interface {
-	GetBlockByHash(hash string) (*block.Block, error)
-	GetBlockByHeight(height int32) (*block.Block, error)
-	GetBlocks(offset int32, limit int32) ([]*block.Block, error)
-	AddBlock(block *block.Block) error
-	GetLatestBlock() (*block.Block, error)
-	GetTxsByBlockHash(blockHash string) ([]*transaction.Transaction, error)
-	GetTransactionByHash(hash string) (*transaction.Transaction, error)
-	AddTransaction(tx *transaction.Transaction) error
-	GetAccount(addr string) (*account.Account, error)
-	AddPeer(host string) error
-	Sync(offset int) ([]*block.Block, error)
-}
-
 type Gateway struct {
-	httpServer *HTTPServer
-	bc         Blockchain
+	grpcServer *grpc.Server
+	httpServer *http.Server
 }
 
 func New(bc Blockchain) *Gateway {
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(message.UnaryServerInterceptor()),
+	)
+
+	blockchainService := NewBlockchainService(bc)
+	gw.RegisterBlockchainServiceServer(grpcServer, blockchainService)
+	reflection.Register(grpcServer)
+
+	httpServer := &http.Server{
+		Addr: ":" + config.Config.HTTP.Port,
+	}
+
 	return &Gateway{
-		httpServer: NewHTTPServer(config.Config.HTTP.Port),
-		bc:         bc,
+		grpcServer: grpcServer,
+		httpServer: httpServer,
 	}
 }
 
@@ -47,38 +45,55 @@ func (g *Gateway) ServiceName() string {
 // Start starts servers.
 // TODO run servers as goroutines
 func (g *Gateway) Start() error {
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-	mux := runtime.NewServeMux()
-	opts := []grpc.DialOption{grpc.WithInsecure()}
+	log.Println("info: Opening the gate")
 
-	if config.Config.RPC.Enabled {
-		log.Println("info: starting rpc server")
+	if err := g.startGrpcServer(); err != nil {
+		return err
 	}
 
-	if config.Config.HTTP.Enabled {
-		log.Println("info: starting http server")
-	}
+	g.startHTTPServer()
+	log.Println("info: Successfully opened the gate")
+	return nil
+}
 
-	if config.Config.Websocket.Enabled {
-		log.Println("info: starting rpc server")
+func (g *Gateway) startGrpcServer() error {
+	log.Println("info: Starting grpc server")
+	lis, err := net.Listen("tcp", ":"+config.Config.RPC.Port)
+	if err != nil {
+		return err
 	}
-
-	log.Println("info: successfully started servers")
 
 	go func() {
-		if err := gw.RegisterBlockchainServiceHandlerFromEndpoint(ctx, mux, "localhost:8081", opts); err != nil {
-			log.Fatalln("Failed to start the http server")
+		if err := g.grpcServer.Serve(lis); err != nil {
+			log.Fatalln("fatal: Failed to start grpc server. err=", err)
 		}
 	}()
 
-	// Start HTTP server (and proxy calls to gRPC server endpoint)
+	return nil
+}
+
+func (g *Gateway) startHTTPServer() error {
+	log.Println("info: Starting http server")
+	mux := runtime.NewServeMux()
+	options := []grpc.DialOption{grpc.WithInsecure()}
+
+	if err := gw.RegisterBlockchainServiceHandlerFromEndpoint(context.Background(), mux, g.httpServer.Addr, options); err != nil {
+		return err
+	}
+
+	g.httpServer.Handler = mux
+	go func() {
+		if err := g.httpServer.ListenAndServe(); err != nil {
+			log.Fatalln("fatal: failed to start http server. err=", err)
+		}
+	}()
+
 	return nil
 }
 
 func (g *Gateway) Stop() {
-	if err := g.httpServer.Shutdown(context.Background()); err != nil {
-		log.Fatalln("Failed to stop http server")
-	}
+	log.Println("info: stopping gateway")
+	g.httpServer.Shutdown(context.Background())
+	g.grpcServer.GracefulStop()
+	log.Println("info: successfully stopped all the server")
 }

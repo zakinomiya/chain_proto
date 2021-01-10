@@ -4,6 +4,8 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"testing"
+
+	"github.com/shopspring/decimal"
 )
 
 func TestReadByteInto32(t *testing.T) {
@@ -38,5 +40,13 @@ func TestIsValidPort(t *testing.T) {
 		if expected[i] != r {
 			t.Errorf("FAIL: port=%s should be %t but %t", ports[i], expected[i], r)
 		}
+	}
+}
+
+func TestToDecimal(t *testing.T) {
+	dec, _ := ToDecimal("B123.456789", "B")
+	t.Log("dec=", dec)
+	if dec.Cmp(decimal.NewFromFloat32(123.45)) != 0 {
+		t.Errorf("not match. dec=%v\n", dec)
 	}
 }
