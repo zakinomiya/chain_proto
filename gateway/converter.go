@@ -12,16 +12,6 @@ import (
 	"fmt"
 )
 
-// Height        uint32         `protobuf:"varint,1,opt,name=height,proto3" json:"height,omitempty"`
-//	Hash          string         `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`
-//	PrevBlockHash string         `protobuf:"bytes,3,opt,name=prev_block_hash,json=prevBlockHash,proto3" json:"prev_block_hash,omitempty"`
-//	ExtraNonce    uint32         `protobuf:"varint,4,opt,name=extra_nonce,json=extraNonce,proto3" json:"extra_nonce,omitempty"`
-//	MerkleRoot    string         `protobuf:"bytes,5,opt,name=merkle_root,json=merkleRoot,proto3" json:"merkle_root,omitempty"`
-//	Timestamp     uint64         `protobuf:"varint,6,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-//	Bits          uint32         `protobuf:"varint,7,opt,name=bits,proto3" json:"bits,omitempty"`
-//	Nonce         uint32         `protobuf:"varint,8,opt,name=nonce,proto3" json:"nonce,omitempty"`
-//	Transactions  []*Transaction `protobuf:"bytes,9,rep,name=transactions,proto3" json:"transactions,omitempty"`
-
 func toPbBlock(b *block.Block) (*gw.Block, error) {
 	pbTxs := make([]*gw.Transaction, 0, len(b.Transactions))
 	for _, tx := range b.Transactions {
@@ -108,7 +98,7 @@ func toTransaction(t *gw.Transaction) (*transaction.Transaction, error) {
 	tx.TxHash = common.ReadByteInto32(hash)
 	tx.Fee = fee
 	tx.SenderAddr = t.GetSenderAddr()
-	tx.TxType = transaction.TxType(gw.Transaction_TxType_name[int32(t.GetTxType())])
+	tx.TxType = transaction.Normal
 	tx.Timestamp = t.GetTimestamp()
 	tx.Signature = sig
 	tx.TotalValue = totalValue
@@ -120,7 +110,6 @@ func toTransaction(t *gw.Transaction) (*transaction.Transaction, error) {
 func toPbTransaction(t *transaction.Transaction) *gw.Transaction {
 	return &gw.Transaction{
 		TxHash:     fmt.Sprintf("%x", t.TxHash[:]),
-		TxType:     gw.Transaction_TxType(gw.Transaction_TxType_value[string(t.TxType)]),
 		TotalValue: t.TotalValue.StringFixed(config.MaxDecimalDigit),
 		Timestamp:  t.Timestamp,
 		Fee:        t.Fee.StringFixed(config.MaxDecimalDigit),
@@ -128,7 +117,6 @@ func toPbTransaction(t *transaction.Transaction) *gw.Transaction {
 		Signature:  t.Signature.String(),
 		Outs:       toPbOutputs(t.Outs),
 	}
-
 }
 
 func toOutputs(pbOuts []*gw.Output) ([]*transaction.Output, error) {

@@ -15,6 +15,8 @@ import (
 )
 
 type Gateway struct {
+	grpcPort   string
+	httpPort   string
 	grpcServer *grpc.Server
 	httpServer *http.Server
 }
@@ -28,11 +30,11 @@ func New(bc Blockchain) *Gateway {
 	gw.RegisterBlockchainServiceServer(grpcServer, blockchainService)
 	reflection.Register(grpcServer)
 
-	httpServer := &http.Server{
-		Addr: ":" + config.Config.HTTP.Port,
-	}
+	httpServer := &http.Server{}
 
 	return &Gateway{
+		httpPort:   ":" + config.Config.HTTP.Port,
+		grpcPort:   ":" + config.Config.RPC.Port,
 		grpcServer: grpcServer,
 		httpServer: httpServer,
 	}
@@ -58,7 +60,7 @@ func (g *Gateway) Start() error {
 
 func (g *Gateway) startGrpcServer() error {
 	log.Println("info: Starting grpc server")
-	lis, err := net.Listen("tcp", ":"+config.Config.RPC.Port)
+	lis, err := net.Listen("tcp", g.grpcPort)
 	if err != nil {
 		return err
 	}
@@ -77,11 +79,13 @@ func (g *Gateway) startHTTPServer() error {
 	mux := runtime.NewServeMux()
 	options := []grpc.DialOption{grpc.WithInsecure()}
 
-	if err := gw.RegisterBlockchainServiceHandlerFromEndpoint(context.Background(), mux, g.httpServer.Addr, options); err != nil {
+	if err := gw.RegisterBlockchainServiceHandlerFromEndpoint(context.Background(), mux, g.grpcPort, options); err != nil {
 		return err
 	}
 
+	g.httpServer.Addr = g.httpPort
 	g.httpServer.Handler = mux
+
 	go func() {
 		if err := g.httpServer.ListenAndServe(); err != nil {
 			log.Fatalln("fatal: failed to start http server. err=", err)

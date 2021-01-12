@@ -65,23 +65,19 @@ service BlockchainService {
     };
   }
 }
+
 // -----------------------------------
 //  common messages
 // -----------------------------------
 
 message Transaction {
-  enum TxType {
-    Coinbase = 0;
-    Normal = 1;
-  }
   string tx_hash = 1;
-  TxType tx_type = 2;
-  string total_value = 3;
-  string fee = 4;
-  string sender_addr = 5;
-  int64 timestamp = 6;
-  string signature = 7;
-  repeated Output outs = 8;
+  string total_value = 2;
+  string fee = 3;
+  string sender_addr = 4;
+  int64 timestamp = 5;
+  string signature = 6;
+  repeated Output outs = 7;
 }
 
 message Output {

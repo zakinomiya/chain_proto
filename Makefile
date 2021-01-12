@@ -26,7 +26,7 @@ proto:
 	protoc -I $(PROTO_DIR) -I $(GOOGLEAPIS_DIR)\
 	  --go_out $(PB_OUT_DIR) --go_opt paths=source_relative --plugin=$(GOBIN)/protoc-gen-go\
 	  --go-grpc_out $(PB_OUT_DIR) --go-grpc_opt paths=source_relative --plugin=$(GOBIN)/protoc-gen-go-grpc\
-	  --grpc-gateway_out $(PB_OUT_DIR) --plugin=$(GOBIN)/protoc-gen-grpc-gateway \
+	  --grpc-gateway_out $(PB_OUT_DIR) --plugin=$(GOBIN)/protoc-gen-grpc-gateway\
       --grpc-gateway_opt logtostderr=true \
       --grpc-gateway_opt paths=source_relative \
       --grpc-gateway_opt generate_unbound_methods=true \

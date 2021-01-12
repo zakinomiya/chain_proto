@@ -34,5 +34,6 @@ func (bc *Blockchain) AddTransaction(tx *transaction.Transaction) error {
 		return errors.New("invalid transaction")
 	}
 
-	return bc.miner.AddTransaction(tx)
+	bc.miner.AddTransaction(tx)
+	return nil
 }

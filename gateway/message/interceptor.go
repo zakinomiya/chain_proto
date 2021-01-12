@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -35,4 +36,21 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 
 		return handler(ctx, req)
 	}
+}
+
+func UnaryClientInterceptor() grpc.UnaryClientInterceptor {
+	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		log.Printf("debug: new outgoing grpc request. endpoint=%s. method=%s\n", cc.Target(), method)
+		ctx = context.WithValue(ctx, "chainID", config.Config.ChainID, "messageID", genMessageID())
+		if err := invoker(ctx, method, req, reply, cc, opts...); err != nil {
+			log.Printf("debug: invoke method(%s) request to %s failed\n", method, cc.Target())
+			return err
+		}
+		log.Printf("debug: invoke method(%s) request to %s succeeded\n", method, cc.Target())
+		return nil
+	}
+}
+
+func genMessageID() string {
+	return uuid.New()
 }

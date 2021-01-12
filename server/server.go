@@ -40,13 +40,14 @@ func New() (*Server, error) {
 	miner := miner.New(blockchain, wal)
 	gateway := gateway.New(blockchain)
 
+	blockchain.SetMiner(miner)
 	return &Server{
 		services: []Service{blockchain, miner, gateway},
 	}, nil
 }
 
 func (server *Server) Start() error {
-	log.Printf("info: Starting MVB node. ChainID=%d\n", config.Config.ChainID)
+	log.Printf("info: Starting MVB node. ChainID=%s\n", config.Config.ChainID)
 
 	for _, s := range server.services {
 		log.Printf("info: Staring service(%s)\n", s.ServiceName())
@@ -61,7 +62,7 @@ func (server *Server) Start() error {
 }
 
 func (server *Server) Stop() {
-	log.Printf("info: Stopping MVB node. ChainID=%d\n", config.Config.ChainID)
+	log.Printf("info: Stopping MVB node. ChainID=%s\n", config.Config.ChainID)
 
 	for _, s := range server.services {
 		log.Printf("Stopping service %s ...\n", s.ServiceName())
