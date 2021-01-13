@@ -37,7 +37,6 @@ func (p *Peer) Connect(opts ...grpc.DialOption) (*grpc.ClientConn, error) {
 	if p.conn == nil {
 		conn, err := grpc.Dial(p.Addr(), opts...)
 		if err != nil {
-			p.FailCount += 1
 			return nil, err
 		}
 		p.conn = conn
