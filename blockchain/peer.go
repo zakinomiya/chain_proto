@@ -7,7 +7,7 @@ import (
 
 func (bc *Blockchain) AddPeer(addr string, network string) error {
 	p := peer.New(addr, network)
-	bc.client.AddNeighbours(p)
+	bc.client.AddNeighbour(p)
 	return bc.repository.Peer.AddOrReplace(p)
 }
 

@@ -9,4 +9,4 @@ SELECT
     nonce,
     transactions
 FROM blocks
-WHERE blocks.prevBlockHash=:hash;
+WHERE hash=:hash;

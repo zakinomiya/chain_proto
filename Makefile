@@ -11,7 +11,7 @@ GOOGLEAPIS_DIR = gateway/proto/googleapis
 
 all: cli
 
-cli: wallet server
+cli: wallet server client
 
 clean: 
 	rm data/blockchain.db
@@ -21,6 +21,9 @@ wallet:
 
 server: 
 	go build -o $(OUT_DIR)/server $(PROJECT_NAME)/cmd/server
+
+client: 
+	go build -o $(OUT_DIR)/client $(PROJECT_NAME)/cmd/client
 
 proto:
 	protoc -I $(PROTO_DIR) -I $(GOOGLEAPIS_DIR)\
@@ -32,4 +35,4 @@ proto:
       --grpc-gateway_opt generate_unbound_methods=true \
 	  $(PROTO_DIR)/*.proto
 
-.PHONY: wallet server cli proto clean
+.PHONY: wallet server cli proto clean client

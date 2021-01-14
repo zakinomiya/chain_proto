@@ -2,11 +2,15 @@ package gateway
 
 import (
 	"chain_proto/common"
+	"chain_proto/db/repository"
 	gw "chain_proto/gateway/gw"
 	"context"
 	"encoding/hex"
+	"log"
 
 	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (bs *BlockchainService) GetLatestBlock(_ context.Context, in *gw.GetBlockByHashRequest) (*gw.GetBlockResponse, error) {
@@ -24,16 +28,22 @@ func (bs *BlockchainService) GetLatestBlock(_ context.Context, in *gw.GetBlockBy
 func (bs *BlockchainService) GetBlockByHash(_ context.Context, in *gw.GetBlockByHashRequest) (*gw.GetBlockResponse, error) {
 	blockHash, err := hex.DecodeString(in.GetBlockHash())
 	if err != nil {
+		log.Println("error: 3")
 		return nil, err
 	}
 
 	blk, err := bs.bc.GetBlockByHash(common.ReadByteInto32(blockHash))
 	if err != nil {
+		if err == repository.ErrNotFound {
+			return nil, status.Errorf(codes.NotFound, "No block with block hash(%s) found", in.GetBlockHash())
+		}
+
 		return nil, err
 	}
 
 	pbBlk, err := toPbBlock(blk)
 	if err != nil {
+		log.Println("error: 1")
 		return nil, err
 	}
 

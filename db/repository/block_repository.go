@@ -7,6 +7,7 @@ import (
 	"chain_proto/transaction"
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/jmoiron/sqlx"
@@ -19,13 +20,13 @@ type BlockRepository struct {
 }
 
 func (br *BlockRepository) GetByHash(hash [32]byte) (*block.Block, error) {
-	row, err := br.queryRow("get_block_by_hash.sql", map[string]interface{}{"hash": hash[:]})
+	row, err := br.queryRow("get_block_by_hash.sql", map[string]interface{}{"hash": fmt.Sprintf("%x", hash)})
 	if err != nil {
 		return nil, err
 	}
 
 	bm := &models.BlockModel{}
-	if err := row.StructScan(&bm); err != nil {
+	if err := row.StructScan(bm); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
 		}
@@ -42,7 +43,7 @@ func (br *BlockRepository) GetByHeight(height uint32) (*block.Block, error) {
 	}
 
 	bm := &models.BlockModel{}
-	if err := row.StructScan(&bm); err != nil {
+	if err := row.StructScan(bm); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
 		}
@@ -65,7 +66,7 @@ func (br *BlockRepository) GetByRange(offset uint32, limit uint32) ([]*block.Blo
 	blocks := []*block.Block{}
 	for rows.Next() {
 		bm := &models.BlockModel{}
-		if err := rows.StructScan(&bm); err != nil {
+		if err := rows.StructScan(bm); err != nil {
 			if err == sql.ErrNoRows {
 				return nil, ErrNotFound
 			}

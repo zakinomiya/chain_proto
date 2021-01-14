@@ -26,12 +26,12 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 			return nil, status.Error(codes.Internal, "request failed")
 		}
 
-		chainID := md.Get("X-chain-id")[0]
+		chainID := md.Get("chainID")[0]
 		if chainID != config.Config.ChainID {
 			return nil, status.Errorf(codes.InvalidArgument, "invalid chainID. ChainID is %s, but given %s.\n", config.Config.ChainID, chainID)
 		}
 
-		messageID := md.Get("X-message-id")[0]
+		messageID := md.Get("messageID")[0]
 		ctx = context.WithValue(ctx, "MessageID", messageID)
 
 		return handler(ctx, req)
@@ -41,7 +41,8 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 func UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 		log.Printf("debug: new outgoing grpc request. endpoint=%s. method=%s\n", cc.Target(), method)
-		ctx = context.WithValue(ctx, "chainID", config.Config.ChainID, "messageID", genMessageID())
+
+		ctx = metadata.AppendToOutgoingContext(ctx, "chainID", config.Config.ChainID, "messageID", genMessageID())
 		if err := invoker(ctx, method, req, reply, cc, opts...); err != nil {
 			log.Printf("debug: invoke method(%s) request to %s failed\n", method, cc.Target())
 			return err
@@ -52,5 +53,5 @@ func UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 }
 
 func genMessageID() string {
-	return uuid.New()
+	return uuid.New().String()
 }

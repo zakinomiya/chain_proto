@@ -1,9 +1,9 @@
 package main
 
 import (
+	"chain_proto/wallet"
 	"errors"
 	"fmt"
-	"chain_proto/wallet"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -67,12 +67,6 @@ var restoreKeyPair = &cobra.Command{
 	},
 }
 
-func init() {
-	setCommonFlags(newKeyPair, restoreKeyPair)
-
-	rootCmd.AddCommand(newKeyPair, restoreKeyPair)
-}
-
 func storeKeypair(dir string, keypairName string, wallet *wallet.Wallet) error {
 	keypairYml := []yaml.MapItem{
 		{
@@ -99,7 +93,6 @@ func storeKeypair(dir string, keypairName string, wallet *wallet.Wallet) error {
 	}
 
 	if err := ioutil.WriteFile(filepath.Join(dir, keypairName+".yml"), ymlByte, 0400); err != nil {
-		fmt.Println("JJJJ")
 		return err
 	}
 
@@ -116,4 +109,9 @@ func setCommonFlags(cmds ...*cobra.Command) {
 	if keypairName == "" {
 		keypairName = defaultKeyPairName
 	}
+}
+
+func init() {
+	setCommonFlags(newKeyPair, restoreKeyPair)
+	rootCmd.AddCommand(newKeyPair, restoreKeyPair)
 }

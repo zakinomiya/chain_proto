@@ -67,16 +67,18 @@ func (c *Client) PropagateBlock(ctx context.Context, b *block.Block) error {
 		return err
 	}
 
-	req := func(p *peer.Peer) {
+	req := func(p *peer.Peer) error {
 		conn, err := p.Connect(grpc.WithInsecure(), grpc.WithUnaryInterceptor(message.UnaryClientInterceptor()))
 		if err != nil {
-			return
+			return err
 		}
 
 		s := gw.NewBlockchainServiceClient(conn)
-		if _, err := s.PropagateBlock(ctx, &gw.PropagateBlockRequest{Block: pbBlock}, nil); err != nil {
-			return
+		if _, err := s.PropagateBlock(ctx, &gw.PropagateBlockRequest{Block: pbBlock}); err != nil {
+			return err
 		}
+
+		return nil
 	}
 
 	c.propagate(req)
@@ -97,7 +99,7 @@ func (c *Client) PropagateTransaction(tx *transaction.Transaction) error {
 		}
 
 		s := gw.NewBlockchainServiceClient(conn)
-		_, err := s.PropagateTransaction(ctx, &gw.PropagateTransactionRequest{Transaction: pbTransaction}, nil)
+		_, err = s.PropagateTransaction(ctx, &gw.PropagateTransactionRequest{Transaction: pbTransaction})
 		if err != nil {
 			return err
 		}
@@ -110,17 +112,17 @@ func (c *Client) PropagateTransaction(tx *transaction.Transaction) error {
 }
 
 func (c *Client) GetBlockByHash(ctx context.Context, hash [32]byte) (*block.Block, error) {
-
 	req := func(p *peer.Peer) (interface{}, error) {
 		conn, err := p.Connect(grpc.WithInsecure(), grpc.WithUnaryInterceptor(message.UnaryClientInterceptor()))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("err: failed to connect to peer(%s) %s\n", p.Addr(), err)
 		}
+		defer conn.Close()
 
 		s := gw.NewBlockchainServiceClient(conn)
-		res, err := s.GetBlockByHash(ctx, &gw.GetBlockByHashRequest{BlockHash: fmt.Sprintf("%x", hash)}, nil)
+		res, err := s.GetBlockByHash(ctx, &gw.GetBlockByHashRequest{BlockHash: fmt.Sprintf("%x", hash)})
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%+v. err: failed to get response. action=GetBlockByHash.\n", err)
 		}
 
 		return res, nil
@@ -174,7 +176,7 @@ func (c *Client) propagate(reqFunc withoutReturnFn) {
 //it is intended to this function when making requests where the origin of the response is not inportant.
 func (c *Client) invoke(reqFunc withReturnFn) (interface{}, error) {
 	ch := make(chan interface{})
-	errCnt := 0
+	errList := make([]error, 0)
 	maxErrCnt := len(c.neighbours)
 
 	for _, p := range c.neighbours {
@@ -182,7 +184,7 @@ func (c *Client) invoke(reqFunc withReturnFn) (interface{}, error) {
 			res, err := reqFunc(p)
 			if err != nil {
 				p.FailCount += 1
-				errCnt += 1
+				errList = append(errList, err)
 				return
 			}
 			ch <- res
@@ -194,8 +196,8 @@ func (c *Client) invoke(reqFunc withReturnFn) (interface{}, error) {
 		case r := <-ch:
 			return r, nil
 		default:
-			if errCnt >= maxErrCnt {
-				return nil, errors.New("error: failed to invoke rpc method")
+			if len(errList) >= maxErrCnt {
+				return nil, errors.New(fmt.Sprintf("error: failed to invoke rpc method. errs=%+v", errList))
 			}
 		}
 	}
