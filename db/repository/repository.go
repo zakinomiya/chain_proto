@@ -3,10 +3,8 @@ package repository
 import (
 	"chain_proto/account"
 	"chain_proto/block"
-	"chain_proto/config"
 	"chain_proto/peer"
 	"chain_proto/transaction"
-	"io/ioutil"
 	"log"
 
 	"github.com/jmoiron/sqlx"
@@ -38,9 +36,7 @@ type Repository struct {
 	}
 }
 
-func New() (*Repository, error) {
-	dbPath := config.Config.DbPath
-	dbDriver := config.Config.Driver
+func New(dbPath string, dbDriver string, sqlPath string) (*Repository, error) {
 	log.Printf("debug: DBInfo driver=%s, dbpath=%s\n", dbDriver, dbPath)
 	db, err := sqlx.Open(dbDriver, dbPath)
 	if err != nil {
@@ -48,28 +44,29 @@ func New() (*Repository, error) {
 		return nil, err
 	}
 
-	database := &database{
+	d := &database{
 		db:       db,
 		dbPath:   dbPath,
 		dbDriver: dbDriver,
+		sqlPath:  sqlPath,
 	}
 
-	sql, err := ioutil.ReadFile("./db/sql/initialize.sql")
+	sql, err := d.rawSQL("initialize.sql")
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = database.db.Exec(string(sql))
+	_, err = d.db.Exec(sql)
 	if err != nil {
 		return nil, err
 	}
 
-	ar := &AccountRepository{database: database}
-	tr := &TxRepository{database: database}
+	ar := &AccountRepository{database: d}
+	tr := &TxRepository{database: d}
 
 	return &Repository{
 		Block: &BlockRepository{
-			database:    database,
+			database:    d,
 			account:     ar,
 			transcation: tr,
 		},

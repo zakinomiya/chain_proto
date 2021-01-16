@@ -3,6 +3,7 @@ package repository
 import (
 	"io/ioutil"
 	"log"
+	"path/filepath"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -11,6 +12,7 @@ type database struct {
 	db       *sqlx.DB
 	dbPath   string
 	dbDriver string
+	sqlPath  string
 }
 
 type prepareFunc func(query string) (*sqlx.NamedStmt, error)
@@ -19,15 +21,24 @@ func (d *database) disconnect() {
 	d.db.Close()
 }
 
-// prepareNamed reads a sql file and preapare named query with it
-func (d *database) prepareNamed(fn prepareFunc, filename string) (*sqlx.NamedStmt, error) {
-	sql, err := ioutil.ReadFile("./db/sql/" + filename)
+func (d *database) rawSQL(filename string) (string, error) {
+	sql, err := ioutil.ReadFile(filepath.Join(d.sqlPath, filename))
 	if err != nil {
 		log.Printf("error: Error retrieving sql file. filename=%s\n", filename)
+		return "", err
+	}
+
+	return string(sql), nil
+}
+
+// prepareNamed reads a sql file and preapare named query with it
+func (d *database) prepareNamed(fn prepareFunc, filename string) (*sqlx.NamedStmt, error) {
+	sql, err := d.rawSQL(filename)
+	if err != nil {
 		return nil, err
 	}
 
-	return fn(string(sql))
+	return fn(sql)
 }
 
 // queryRow queries a single row
@@ -86,14 +97,13 @@ func (d *database) command(filename string, data interface{}) error {
 	return nil
 }
 
-// transaction receives several actions(sql statement) and exectues them as a transaction.
 func (d *database) txCommand(tx *sqlx.Tx, filename string, data interface{}) error {
 	stmt, err := d.prepareNamed(tx.PrepareNamed, filename)
 	if err != nil {
 		return err
 	}
 
-	sql, _ := ioutil.ReadFile("./db/sql/" + filename)
+	sql, _ := d.rawSQL(filename)
 
 	log.Printf("debug: action=txCommand. sql=%s", string(sql))
 	if _, err := tx.NamedExec(string(sql), data); err != nil {
