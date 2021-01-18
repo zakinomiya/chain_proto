@@ -28,6 +28,7 @@ type Miner struct {
 type Db struct {
 	DbPath   string `yaml:"db_path"`
 	Driver   string `yaml:"driver"`
+	SQLPath  string `yaml:"sqlPath"`
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
 }

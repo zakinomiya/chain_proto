@@ -26,7 +26,7 @@ func New() (*Server, error) {
 		return nil, errors.New("No miner key provided")
 	}
 
-	repository, err := repository.New()
+	repository, err := repository.New(config.Config.DbPath, config.Config.Driver, config.Config.SQLPath)
 	if err != nil {
 		return nil, err
 	}

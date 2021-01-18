@@ -2,12 +2,12 @@ package block
 
 import (
 	"bytes"
+	"chain_proto/common"
+	"chain_proto/transaction"
 	"crypto"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"chain_proto/common"
-	"chain_proto/transaction"
 	"log"
 	"math/rand"
 	"strconv"
@@ -75,6 +75,11 @@ func New(height uint32, bits uint32, prevBlockHash [32]byte, txs []*transaction.
 	b.SetMerkleRoot()
 
 	return b
+}
+
+func (b *Block) String() string {
+	str, _ := json.Marshal(b)
+	return string(str)
 }
 
 func (b *Block) SetExtranNonce() {

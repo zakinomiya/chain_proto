@@ -9,16 +9,19 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// IntToByteSlice will convert an integer value to a byte slice.
+// Note the converted value is not an integer itself, but a string-representation of the given value.
 func IntToByteSlice(b int) []byte {
 	return []byte(strconv.Itoa(b))
 }
 
-/// Pseudo random uint32
+// RandomUint32 return a randomly generated uint32 value
+// Not safe to use as a key or anything randomness matters.
 func RandomUint32() uint32 {
 	return rand.Uint32()
 }
 
-//  Read first 32 bytes of the
+// ReadByteInto32 reads first 32 bytes of the given slice and returns 32-byte fixed length array.
 func ReadByteInto32(h []byte) [32]byte {
 	var bytes [32]byte
 	for i, b := range h[0:32] {

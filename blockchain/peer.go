@@ -5,12 +5,15 @@ import (
 	"chain_proto/peer"
 )
 
+// AddPeer registers a new peer to the client
 func (bc *Blockchain) AddPeer(addr string, network string) error {
 	p := peer.New(addr, network)
 	bc.client.AddNeighbour(p)
 	return bc.repository.Peer.AddOrReplace(p)
 }
 
+// GetPeers returns the registered peers.
+// If no peers are found, an empty slice will be returned.
 func (bc *Blockchain) GetPeers() ([]*peer.Peer, error) {
 	peers, err := bc.repository.Peer.GetAll()
 	if err != nil {

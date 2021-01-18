@@ -26,7 +26,7 @@ func TestWallet(t *testing.T) {
 		t.Log("Signature verified")
 		t.Logf("r=%x, s=%x", sig.R.Bytes(), sig.S.Bytes())
 	} else {
-		t.Log("Invalid signature")
+		t.Errorf("Invalid signature")
 	}
 }
 
@@ -42,6 +42,7 @@ func TestVerify(t *testing.T) {
 	_, err := hex.Decode(privKey, privKeyBytes)
 	if err != nil {
 		t.Error(err)
+		t.FailNow()
 	}
 
 	w, err := RestoreWallet(fmt.Sprintf("%x", privKey))
@@ -59,7 +60,7 @@ func TestVerify(t *testing.T) {
 		t.Log("Signature verified")
 		t.Logf("r=%x, s=%x", sig.R.Bytes(), sig.S.Bytes())
 	} else {
-		t.Log("Invalid signature")
+		t.Errorf("Invalid signature")
 	}
 }
 
@@ -75,7 +76,7 @@ func TestDecodeSigString(t *testing.T) {
 	sig, err := DecodeSigString(sigStr)
 	if err != nil {
 		t.Error(err)
-		return
+		t.FailNow()
 	}
 
 	t.Logf("r=%s, s=%s", sig.R.String(), sig.S.String())

@@ -10,6 +10,7 @@ import (
 	"sync"
 )
 
+// Miner is an interface of miner functionalities that the blockchain will use
 type Miner interface {
 	AddTransaction(tx *transaction.Transaction)
 }
@@ -35,6 +36,7 @@ func New(repository *repository.Repository) *Blockchain {
 	return blockchain
 }
 
+// SetMiner sets miner to the blockchain
 func (bc *Blockchain) SetMiner(m Miner) {
 	bc.miner = m
 }

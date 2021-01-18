@@ -20,6 +20,7 @@ func (bc *Blockchain) GetTxsByBlockHash(blockHash [32]byte) ([]*transaction.Tran
 	return txs, nil
 }
 
+// GetTransactionByHash returns a transaction with the given transaction hash.
 func (bc *Blockchain) GetTransactionByHash(hash [32]byte) (*transaction.Transaction, error) {
 	tx, err := bc.repository.Tx.GetByHash(hash)
 	if err != nil {
@@ -29,6 +30,8 @@ func (bc *Blockchain) GetTransactionByHash(hash [32]byte) (*transaction.Transact
 	return tx, nil
 }
 
+// AddTransaction will pass a transaction to its registered miner.
+// Calling this function does not garantee the transaction will be successfully stored in block.
 func (bc *Blockchain) AddTransaction(tx *transaction.Transaction) error {
 	if !tx.Verify() {
 		return errors.New("invalid transaction")

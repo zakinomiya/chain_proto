@@ -13,6 +13,7 @@ func (bc *Blockchain) Blocks() []*block.Block {
 	return bc.blocks
 }
 
+// GetBlocks returns blocks at block height within the given offset and offset+limit.
 func (bc *Blockchain) GetBlocks(offset uint32, limit uint32) ([]*block.Block, error) {
 	blks, err := bc.repository.Block.GetByRange(offset, limit)
 	if err != nil {
