@@ -13,7 +13,6 @@ type Signature struct {
 }
 
 func DecodeSigString(sigString string) (*Signature, error) {
-
 	rbuf, err := base64.StdEncoding.DecodeString(sigString)
 	if err != nil {
 		log.Println("debug: failed to the decode signature string:", sigString)

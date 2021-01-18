@@ -17,6 +17,7 @@ require (
 	github.com/jmoiron/sqlx v1.2.1-0.20200324155115-ee514944af4b
 	github.com/mattn/go-sqlite3 v1.14.6
 	github.com/mwitkow/go-proto-validators v0.3.2
+	github.com/pkg/errors v0.8.1
 	github.com/shopspring/decimal v1.2.0
 	github.com/spf13/cobra v1.1.1
 	github.com/stretchr/objx v0.3.0 // indirect

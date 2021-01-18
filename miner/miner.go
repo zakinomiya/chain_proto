@@ -78,10 +78,6 @@ func (m *Miner) interrupt() {
 	m.exit <- struct{}{}
 }
 
-func (m *Miner) AddTransaction(tx *transaction.Transaction) {
-	m.transactionPool = append(m.transactionPool, tx)
-}
-
 func (m *Miner) mining(workersNum int) {
 	log.Println("info: Started mining")
 	workers := []chan struct{}{}

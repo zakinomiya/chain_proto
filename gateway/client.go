@@ -141,6 +141,71 @@ func (c *Client) GetBlockByHash(ctx context.Context, hash [32]byte) (*block.Bloc
 	return blk, nil
 }
 
+func (c *Client) GetBlockByHeight(ctx context.Context, height uint32) (*block.Block, error) {
+	req := func(p *peer.Peer) (interface{}, error) {
+		conn, err := p.Connect(grpc.WithInsecure(), grpc.WithUnaryInterceptor(message.UnaryClientInterceptor()))
+		if err != nil {
+			return nil, fmt.Errorf("err: failed to connect to peer(%s) %s\n", p.Addr(), err)
+		}
+		defer conn.Close()
+
+		s := gw.NewBlockchainServiceClient(conn)
+		res, err := s.GetBlockByHeight(ctx, &gw.GetBlockByHeightRequest{BlockHeight: height})
+		if err != nil {
+			return nil, err
+		}
+
+		return res, nil
+	}
+
+	res, err := c.invoke(req)
+	if err != nil {
+		return nil, err
+	}
+
+	blk, err := toBlock(res.(*gw.GetBlockResponse).GetBlock())
+	if err != nil {
+		return nil, err
+	}
+
+	return blk, err
+}
+
+func (c *Client) GetBlockByRange(ctx context.Context, start uint32, end uint32) ([]*block.Block, error) {
+	req := func(p *peer.Peer) (interface{}, error) {
+		conn, err := p.Connect(grpc.WithInsecure(), grpc.WithUnaryInterceptor(message.UnaryClientInterceptor()))
+		if err != nil {
+			return nil, fmt.Errorf("err: failed to connect to peer(%s) %s\n", p.Addr(), err)
+		}
+		defer conn.Close()
+
+		s := gw.NewBlockchainServiceClient(conn)
+		res, err := s.GetBlocks(ctx, &gw.GetBlocksRequest{Offset: start, Limit: end - start + 1})
+		if err != nil {
+			return nil, err
+		}
+
+		return res, err
+	}
+
+	res, err := c.invoke(req)
+	if err != nil {
+		return nil, err
+	}
+
+	pbBlks := res.(*gw.GetBlocksResponse).GetBlocks()
+	blks := make([]*block.Block, 0, len(pbBlks))
+	for _, pbBlk := range pbBlks {
+		blk, err := toBlock(pbBlk)
+		if err != nil {
+			return nil, err
+		}
+		blks = append(blks, blk)
+	}
+
+	return blks, nil
+}
+
 func (c *Client) target(addr string) (*peer.Peer, error) {
 	for _, p := range c.neighbours {
 		if p.Addr() == addr {
