@@ -87,7 +87,7 @@ func (g *Gateway) startHTTPServer() error {
 	g.httpServer.Handler = mux
 
 	go func() {
-		if err := g.httpServer.ListenAndServe(); err != nil {
+		if err := g.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalln("fatal: failed to start http server. err=", err)
 		}
 	}()

@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type BlockchainServiceClient interface {
 	PropagateTransaction(ctx context.Context, in *PropagateTransactionRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	GetTransactionByHash(ctx context.Context, in *GetTransactionByHashRequest, opts ...grpc.CallOption) (*GetTransactionResponse, error)
-	GetTxsByBlockHash(ctx context.Context, in *GetTxByBlockHashRequest, opts ...grpc.CallOption) (*GetTransactionsResponse, error)
+	GetTxsByBlockHash(ctx context.Context, in *GetTxsByBlockHashRequest, opts ...grpc.CallOption) (*GetTxsByBlockHashResponse, error)
 	PropagateBlock(ctx context.Context, in *PropagateBlockRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	GetBlockByHeight(ctx context.Context, in *GetBlockByHeightRequest, opts ...grpc.CallOption) (*GetBlockResponse, error)
 	GetBlockByHash(ctx context.Context, in *GetBlockByHashRequest, opts ...grpc.CallOption) (*GetBlockResponse, error)
@@ -56,8 +56,8 @@ func (c *blockchainServiceClient) GetTransactionByHash(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *blockchainServiceClient) GetTxsByBlockHash(ctx context.Context, in *GetTxByBlockHashRequest, opts ...grpc.CallOption) (*GetTransactionsResponse, error) {
-	out := new(GetTransactionsResponse)
+func (c *blockchainServiceClient) GetTxsByBlockHash(ctx context.Context, in *GetTxsByBlockHashRequest, opts ...grpc.CallOption) (*GetTxsByBlockHashResponse, error) {
+	out := new(GetTxsByBlockHashResponse)
 	err := c.cc.Invoke(ctx, "/gw.BlockchainService/GetTxsByBlockHash", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -157,7 +157,7 @@ func (x *blockchainServiceSyncClient) Recv() (*SyncResponse, error) {
 type BlockchainServiceServer interface {
 	PropagateTransaction(context.Context, *PropagateTransactionRequest) (*empty.Empty, error)
 	GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionResponse, error)
-	GetTxsByBlockHash(context.Context, *GetTxByBlockHashRequest) (*GetTransactionsResponse, error)
+	GetTxsByBlockHash(context.Context, *GetTxsByBlockHashRequest) (*GetTxsByBlockHashResponse, error)
 	PropagateBlock(context.Context, *PropagateBlockRequest) (*empty.Empty, error)
 	GetBlockByHeight(context.Context, *GetBlockByHeightRequest) (*GetBlockResponse, error)
 	GetBlockByHash(context.Context, *GetBlockByHashRequest) (*GetBlockResponse, error)
@@ -178,7 +178,7 @@ func (UnimplementedBlockchainServiceServer) PropagateTransaction(context.Context
 func (UnimplementedBlockchainServiceServer) GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionByHash not implemented")
 }
-func (UnimplementedBlockchainServiceServer) GetTxsByBlockHash(context.Context, *GetTxByBlockHashRequest) (*GetTransactionsResponse, error) {
+func (UnimplementedBlockchainServiceServer) GetTxsByBlockHash(context.Context, *GetTxsByBlockHashRequest) (*GetTxsByBlockHashResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTxsByBlockHash not implemented")
 }
 func (UnimplementedBlockchainServiceServer) PropagateBlock(context.Context, *PropagateBlockRequest) (*empty.Empty, error) {
@@ -252,7 +252,7 @@ func _BlockchainService_GetTransactionByHash_Handler(srv interface{}, ctx contex
 }
 
 func _BlockchainService_GetTxsByBlockHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTxByBlockHashRequest)
+	in := new(GetTxsByBlockHashRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -264,7 +264,7 @@ func _BlockchainService_GetTxsByBlockHash_Handler(srv interface{}, ctx context.C
 		FullMethod: "/gw.BlockchainService/GetTxsByBlockHash",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).GetTxsByBlockHash(ctx, req.(*GetTxByBlockHashRequest))
+		return srv.(BlockchainServiceServer).GetTxsByBlockHash(ctx, req.(*GetTxsByBlockHashRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

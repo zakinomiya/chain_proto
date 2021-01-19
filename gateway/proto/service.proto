@@ -21,8 +21,8 @@ service BlockchainService {
       get: "/transactions/{tx_hash}"
     };
   }
-  rpc GetTxsByBlockHash(GetTxByBlockHashRequest)
-      returns (GetTransactionsResponse) {
+  rpc GetTxsByBlockHash(GetTxsByBlockHashRequest)
+      returns (GetTxsByBlockHashResponse) {
     option (google.api.http) = {
       get: "/transactions/block/{block_hash}"
     };
@@ -121,17 +121,17 @@ message PropagateTransactionRequest {
 }
 
 message GetTransactionResponse {
-  uint32 block_height = 1;
-  string block_hash = 2;
   Transaction transaction = 3;
 }
 
-message GetTransactionsResponse {
-  repeated Transaction transactions = 1;
+message GetTxsByBlockHashRequest {
+  string block_hash = 1;
 }
 
-message GetTxByBlockHashRequest {
-  string block_hash = 1;
+message GetTxsByBlockHashResponse {
+  uint32 block_height = 1;
+  string block_hash = 2;
+  repeated Transaction transactions = 3;
 }
 
 message PropagateBlockRequest {

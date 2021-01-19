@@ -10,7 +10,7 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 )
 
-func (bs *BlockchainService) GetTxsByBlockHash(_ context.Context, in *gw.GetTxByBlockHashRequest) (*gw.GetTransactionsResponse, error) {
+func (bs *BlockchainService) GetTxsByBlockHash(_ context.Context, in *gw.GetTxsByBlockHashRequest) (*gw.GetTxsByBlockHashResponse, error) {
 	blockHash, err := hex.DecodeString(in.GetBlockHash())
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func (bs *BlockchainService) GetTxsByBlockHash(_ context.Context, in *gw.GetTxBy
 		pbTxs = append(pbTxs, toPbTransaction(tx))
 	}
 
-	return &gw.GetTransactionsResponse{
+	return &gw.GetTxsByBlockHashResponse{
 		Transactions: pbTxs,
 	}, nil
 }

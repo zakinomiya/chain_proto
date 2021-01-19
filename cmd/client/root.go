@@ -30,8 +30,9 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	initBlockCmd()
+	initTxCmd()
 
-	rootCmd.AddCommand(blockCmds)
+	rootCmd.AddCommand(blockCmds, txCmds)
 }
 
 func execute() {

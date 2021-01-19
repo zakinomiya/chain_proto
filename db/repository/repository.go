@@ -22,6 +22,7 @@ type Repository struct {
 	Tx interface {
 		GetByBlockHash(blockHash [32]byte) ([]*transaction.Transaction, error)
 		GetByHash(hash [32]byte) (*transaction.Transaction, error)
+		Insert(tx *transaction.Transaction) error
 		BulkInsert(txs []*transaction.Transaction) error
 	}
 	Account interface {

@@ -119,7 +119,7 @@ func local_request_BlockchainService_GetTransactionByHash_0(ctx context.Context,
 }
 
 func request_BlockchainService_GetTxsByBlockHash_0(ctx context.Context, marshaler runtime.Marshaler, client BlockchainServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetTxByBlockHashRequest
+	var protoReq GetTxsByBlockHashRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -145,7 +145,7 @@ func request_BlockchainService_GetTxsByBlockHash_0(ctx context.Context, marshale
 }
 
 func local_request_BlockchainService_GetTxsByBlockHash_0(ctx context.Context, marshaler runtime.Marshaler, server BlockchainServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetTxByBlockHashRequest
+	var protoReq GetTxsByBlockHashRequest
 	var metadata runtime.ServerMetadata
 
 	var (

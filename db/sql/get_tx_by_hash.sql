@@ -9,4 +9,4 @@ SELECT
     signature,
     timestamp
 FROM transactions
-WHERE transactions.blockHash=:blockHash;
+WHERE transactions.txHash=:hash;

@@ -206,6 +206,37 @@ func (c *Client) GetBlockByRange(ctx context.Context, start uint32, end uint32) 
 	return blks, nil
 }
 
+func (c *Client) GetTransactionByHash(ctx context.Context, hash [32]byte) (*transaction.Transaction, error) {
+	req := func(p *peer.Peer) (interface{}, error) {
+		conn, err := p.Connect(grpc.WithInsecure(), grpc.WithUnaryInterceptor(message.UnaryClientInterceptor()))
+		if err != nil {
+			return nil, fmt.Errorf("err: failed to connect to peer(%s) %s\n", p.Addr(), err)
+		}
+		defer conn.Close()
+
+		s := gw.NewBlockchainServiceClient(conn)
+		res, err := s.GetTransactionByHash(ctx, &gw.GetTransactionByHashRequest{TxHash: fmt.Sprintf("%x", hash)})
+		if err != nil {
+			return nil, err
+		}
+
+		return res, err
+	}
+
+	res, err := c.invoke(req)
+	if err != nil {
+		return nil, err
+	}
+
+	pbTx := res.(*gw.GetTransactionResponse).GetTransaction()
+	tx, err := toTransaction(pbTx)
+	if err != nil {
+		return nil, err
+	}
+
+	return tx, nil
+}
+
 func (c *Client) target(addr string) (*peer.Peer, error) {
 	for _, p := range c.neighbours {
 		if p.Addr() == addr {

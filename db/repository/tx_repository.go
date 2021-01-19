@@ -14,7 +14,7 @@ type TxRepository struct {
 }
 
 func (tr *TxRepository) GetByHash(hash [32]byte) (*transaction.Transaction, error) {
-	row, err := tr.queryRow("get_tx_by_hash", map[string]interface{}{"hash": hash[:]})
+	row, err := tr.queryRow("get_tx_by_hash.sql", map[string]interface{}{"hash": hash[:]})
 	if err != nil {
 		return nil, err
 	}
@@ -75,6 +75,16 @@ func (tr *TxRepository) getTxModelsByBlockHash(blockHash [32]byte) ([]*models.Tx
 	}
 
 	return txModels, nil
+}
+
+func (tr *TxRepository) Insert(tx *transaction.Transaction) error {
+	filename := "insert_tx.sql"
+	txModel := &models.TxModel{}
+	if err := txModel.FromTx(tx); err != nil {
+		return err
+	}
+
+	return tr.command(filename, txModel)
 }
 
 func (tr *TxRepository) BulkInsert(txs []*transaction.Transaction) error {

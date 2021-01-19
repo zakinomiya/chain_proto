@@ -17,11 +17,13 @@ CREATE TABLE
 IF NOT EXISTS transactions
 (
     txHash TEXT NOT NULL PRIMARY KEY,
+    txType TEXT, 
     totalValue TEXT,
     fee TEXT,
     senderAddr TEXT,
     outCount INTEGER,
     outs BLOB,
+    signature TEXT,
     timestamp INTEGER
 );
 

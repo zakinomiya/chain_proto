@@ -3,6 +3,7 @@ package models
 import (
 	"chain_proto/common"
 	"chain_proto/transaction"
+	"chain_proto/wallet"
 	"encoding/json"
 	"log"
 )
@@ -12,18 +13,19 @@ const (
 )
 
 type TxModel struct {
-	TxHash []byte `db:"txHash" json:"txhash"`
+	TxHash []byte `db:"txHash"`
+	TxType string `db:"txType"`
 	//	BlockHash  string `db:"lockHash"`
 	TotalValue string `db:"totalValue"`
 	Fee        string `db:"fee"`
 	SenderAddr string `db:"senderAddr"`
 	Timestamp  int64  `db:"timestamp"`
+	Signature  string `db:"signature"`
 	OutCount   int    `db:"outCount"`
 	Outs       []byte `db:"outs"`
 }
 
 func (tm *TxModel) ToTx(tx *transaction.Transaction) error {
-
 	var outs []*transaction.Output
 	err := json.Unmarshal(tm.Outs, &outs)
 	if err != nil || tm.OutCount != len(outs) {
@@ -40,11 +42,17 @@ func (tm *TxModel) ToTx(tx *transaction.Transaction) error {
 		return err
 	}
 
+	sig, err := wallet.DecodeSigString(tm.Signature)
+	if err != nil {
+		return err
+	}
+
 	tx.TxHash = common.ReadByteInto32(tm.TxHash)
-	tx.TxHash = common.ReadByteInto32(tm.TxHash)
+	tx.TxType = transaction.TxType(tm.TxType)
 	tx.TotalValue = totalValue
 	tx.Timestamp = tm.Timestamp
 	tx.SenderAddr = tm.SenderAddr
+	tx.Signature = sig
 	tx.Fee = fee
 	tx.Outs = outs
 
@@ -59,10 +67,12 @@ func (tm *TxModel) FromTx(tx *transaction.Transaction) error {
 	}
 
 	tm.TxHash = tx.TxHash[:]
+	tm.TxType = string(tx.TxType)
 	tm.TotalValue = txPrefix + tx.TotalValue.String()
 	tm.Fee = txPrefix + tx.Fee.String()
 	tm.SenderAddr = tx.SenderAddr[:]
 	tm.Timestamp = tx.Timestamp
+	tm.Signature = tx.Signature.String()
 	tm.OutCount = len(tx.Outs)
 	tm.Outs = outs
 

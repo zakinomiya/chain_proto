@@ -2,6 +2,8 @@ package repository
 
 import (
 	"chain_proto/block"
+	"chain_proto/common"
+	"chain_proto/config"
 	"chain_proto/transaction"
 	"chain_proto/wallet"
 	"crypto/sha256"
@@ -9,6 +11,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -119,5 +122,37 @@ func TestBlockRepository(t *testing.T) {
 		assert.Equal(t, blk1, blks[0])
 		assert.Equal(t, blk2, blks[1])
 		t.Log("GetByRange done")
+	})
+}
+
+func TestTxRepository(t *testing.T) {
+	w, _ := wallet.New()
+	tx := transaction.New()
+	tx.Fee = decimal.New(10, config.MaxDecimalDigit)
+	tx.Outs = []*transaction.Output{{RecipientAddr: "addr", Value: decimal.New(10, config.MaxDecimalDigit)}}
+	tx.TxType = transaction.Normal
+	tx.SenderAddr = w.Address()
+	tx.Timestamp = common.Timestamp()
+	tx.CalcHash()
+	sig, _ := w.Sign(tx.ToBytes())
+	tx.Signature = sig
+
+	t.Run("Insert", func(t *testing.T) {
+		if err := r.Tx.Insert(tx); err != nil {
+			t.Errorf("failed in tx Insert. err=%+v", err)
+			t.FailNow()
+			return
+		}
+	})
+
+	t.Run("GetByHash", func(t *testing.T) {
+		txn, err := r.Tx.GetByHash(tx.TxHash)
+		if err != nil {
+			t.Errorf("failed in tx GetByHash. err=%+v", err)
+			t.FailNow()
+			return
+		}
+
+		assert.Equal(t, tx, txn)
 	})
 }
