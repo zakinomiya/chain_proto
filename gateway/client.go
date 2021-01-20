@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"chain_proto/account"
 	"chain_proto/block"
 	gw "chain_proto/gateway/gw"
 	"chain_proto/gateway/message"
@@ -235,6 +236,36 @@ func (c *Client) GetTransactionByHash(ctx context.Context, hash [32]byte) (*tran
 	}
 
 	return tx, nil
+}
+
+func (c *Client) GetAccount(ctx context.Context, addr string) (*account.Account, error) {
+	req := func(p *peer.Peer) (interface{}, error) {
+		conn, err := p.Connect(grpc.WithInsecure(), grpc.WithUnaryInterceptor(message.UnaryClientInterceptor()))
+		if err != nil {
+			return nil, fmt.Errorf("err: failed to connect to peer(%s) %s\n", p.Addr(), err)
+		}
+		defer conn.Close()
+
+		s := gw.NewBlockchainServiceClient(conn)
+		res, err := s.GetAccount(ctx, &gw.GetAccountRequest{Addr: addr})
+		if err != nil {
+			return nil, err
+		}
+
+		return res, err
+	}
+
+	res, err := c.invoke(req)
+	if err != nil {
+		return nil, err
+	}
+
+	pbAcc := res.(*gw.GetAccountResponse).GetAccount()
+	if err != nil {
+		return nil, err
+	}
+
+	return toAccount(pbAcc)
 }
 
 func (c *Client) target(addr string) (*peer.Peer, error) {

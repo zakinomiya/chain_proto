@@ -1,7 +1,6 @@
 package gateway
 
 import (
-	"chain_proto/config"
 	gw "chain_proto/gateway/gw"
 	"context"
 )
@@ -15,7 +14,6 @@ func (bs *BlockchainService) GetAccount(_ context.Context, in *gw.GetAccountRequ
 	return &gw.GetAccountResponse{
 		Account: &gw.Account{
 			Addr:    acc.Addr,
-			Balance: acc.Balance.StringFixed(config.MaxDecimalDigit),
-		},
+			Balance: acc.BalanceString()},
 	}, nil
 }

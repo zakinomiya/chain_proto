@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"chain_proto/account"
 	"chain_proto/block"
 	"chain_proto/common"
 	"chain_proto/config"
@@ -10,6 +11,8 @@ import (
 	"chain_proto/wallet"
 	"encoding/hex"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 )
 
 func toPbBlock(b *block.Block) (*gw.Block, error) {
@@ -159,4 +162,23 @@ func toPbPeer(p *peer.Peer) *gw.Peer {
 
 func toPeer(p *gw.Peer) *peer.Peer {
 	return peer.New(p.Addr, p.Network)
+}
+
+func toPbAccount(a *account.Account) *gw.Account {
+	return &gw.Account{
+		Addr:    a.Addr,
+		Balance: a.BalanceString(),
+	}
+}
+
+func toAccount(a *gw.Account) (*account.Account, error) {
+	balance, err := decimal.NewFromString(a.GetBalance())
+	if err != nil {
+		return nil, err
+	}
+
+	return &account.Account{
+		Addr:    a.GetAddr(),
+		Balance: balance,
+	}, nil
 }

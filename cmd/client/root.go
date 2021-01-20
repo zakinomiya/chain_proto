@@ -31,8 +31,9 @@ var rootCmd = &cobra.Command{
 func init() {
 	initBlockCmd()
 	initTxCmd()
+	initAccountCmd()
 
-	rootCmd.AddCommand(blockCmds, txCmds)
+	rootCmd.AddCommand(blockCmds, txCmds, accCmds)
 }
 
 func execute() {

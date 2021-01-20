@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"chain_proto/account"
 	"chain_proto/block"
 	"chain_proto/common"
 	"chain_proto/config"
@@ -154,5 +155,32 @@ func TestTxRepository(t *testing.T) {
 		}
 
 		assert.Equal(t, tx, txn)
+	})
+}
+
+func TestAccountRepository(t *testing.T) {
+	w, _ := wallet.New()
+	acc := account.New(w.Address())
+	b, _ := decimal.NewFromString("10.000")
+	acc.Receive(b)
+	t.Log(acc.Balance.String())
+	t.Run("Insert", func(t *testing.T) {
+		if err := r.Account.Insert(acc); err != nil {
+			t.Errorf("failed to insert account. acc=%+v, err=%+v\n", acc, err)
+			t.FailNow()
+			return
+		}
+	})
+
+	t.Run("GetAccount", func(t *testing.T) {
+		a, err := r.Account.Get(acc.Addr)
+		if err != nil {
+			t.Errorf("failed to get account. aacc=%+v, err=%+v\n", acc, err)
+			t.FailNow()
+			return
+		}
+		t.Log(acc.BalanceString())
+		t.Log(a.BalanceString())
+		assert.Equal(t, acc, a)
 	})
 }
