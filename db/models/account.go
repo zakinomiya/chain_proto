@@ -15,7 +15,7 @@ type AccountModel struct {
 }
 
 func (am *AccountModel) FromAccount(account *account.Account) {
-	log.Printf("debug: action=FromAccount. Addr=%s Balance=%f\n", account.Addr, account.Balance)
+	log.Printf("debug: action=FromAccount. Addr=%s Balance=%s\n", account.Addr, account.Balance)
 	am.Addr = account.Addr
 	// SQLite3 will interpret numeric strings(like "123.456") as number; so prefixing string
 	am.Balance = balancePrefix + account.Balance.StringFixed(config.MaxDecimalDigit)

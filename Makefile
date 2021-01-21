@@ -3,11 +3,16 @@ OUT_DIR = bin
 
 # Go varibales
 GOBIN = $(GOPATH)/bin
+BUILD = GOOS=$(GOOS) go build
 
 # protobuf varibles
 PROTO_DIR = gateway/proto
 PB_OUT_DIR = gateway/gw
 GOOGLEAPIS_DIR = gateway/proto/googleapis
+
+ifeq ($(shell uname),Linux)
+	export GOOS=linux 
+endif
 
 all: cli
 
@@ -17,13 +22,13 @@ clean:
 	rm data/blockchain.db
 
 wallet:
-	go build -o $(OUT_DIR)/wallet $(PROJECT_NAME)/cmd/wallet
+	$(BUILD) -o $(OUT_DIR)/wallet $(PROJECT_NAME)/cmd/wallet
 
 server: 
-	go build -o $(OUT_DIR)/server $(PROJECT_NAME)/cmd/server
+	$(BUILD) -o $(OUT_DIR)/server $(PROJECT_NAME)/cmd/server
 
 client: 
-	go build -o $(OUT_DIR)/client $(PROJECT_NAME)/cmd/client
+	$(BUILD) -o $(OUT_DIR)/client $(PROJECT_NAME)/cmd/client
 
 proto:
 	protoc -I $(PROTO_DIR) -I $(GOOGLEAPIS_DIR)\

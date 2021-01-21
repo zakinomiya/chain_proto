@@ -12,7 +12,6 @@ func NewCoinbase(w *wallet.Wallet, value string) *Transaction {
 	tx := New()
 
 	totalValue, _ := decimal.NewFromString(value)
-
 	tx.Fee = decimal.New(0, config.MaxDecimalDigit)
 	tx.SenderAddr = ""
 	tx.Timestamp = common.Timestamp()

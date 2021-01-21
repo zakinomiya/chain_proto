@@ -3,6 +3,7 @@ package transaction
 import (
 	"bytes"
 	"chain_proto/common"
+	"chain_proto/config"
 	"chain_proto/wallet"
 	"crypto/sha256"
 	"encoding/hex"
@@ -47,8 +48,8 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 	}{
 		TxHash:     fmt.Sprintf("%x", t.TxHash),
 		TxType:     t.TxType,
-		TotalValue: t.TotalValue.String(),
-		Fee:        t.Fee.String(),
+		TotalValue: t.TotalValue.StringFixed(config.MaxDecimalDigit),
+		Fee:        t.Fee.StringFixed(config.MaxDecimalDigit),
 		SenderAddr: t.SenderAddr,
 		Timestamp:  t.Timestamp,
 		Signature:  t.Signature.String(),
@@ -142,6 +143,6 @@ func (o *Output) MarshalJSON() ([]byte, error) {
 			Value         string `json:"value"`
 		}{
 			RecipientAddr: o.RecipientAddr,
-			Value:         o.Value.String(),
+			Value:         o.Value.StringFixed(config.MaxDecimalDigit),
 		})
 }

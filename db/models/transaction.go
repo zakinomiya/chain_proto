@@ -2,6 +2,7 @@ package models
 
 import (
 	"chain_proto/common"
+	"chain_proto/config"
 	"chain_proto/transaction"
 	"chain_proto/wallet"
 	"encoding/json"
@@ -68,8 +69,8 @@ func (tm *TxModel) FromTx(tx *transaction.Transaction) error {
 
 	tm.TxHash = tx.TxHash[:]
 	tm.TxType = string(tx.TxType)
-	tm.TotalValue = txPrefix + tx.TotalValue.String()
-	tm.Fee = txPrefix + tx.Fee.String()
+	tm.TotalValue = txPrefix + tx.TotalValue.StringFixed(config.MaxDecimalDigit)
+	tm.Fee = txPrefix + tx.Fee.StringFixed(config.MaxDecimalDigit)
 	tm.SenderAddr = tx.SenderAddr[:]
 	tm.Timestamp = tx.Timestamp
 	tm.Signature = tx.Signature.String()

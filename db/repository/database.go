@@ -31,14 +31,14 @@ func (d *database) rawSQL(filename string) (string, error) {
 	return string(sql), nil
 }
 
-// prepareNamed reads a sql file and preapare named query with it
-func (d *database) prepareNamed(fn prepareFunc, filename string) (*sqlx.NamedStmt, error) {
+// prepareStmt reads a sql file and preapare named query with it
+func (d *database) prepareStmt(filename string) (*sqlx.NamedStmt, error) {
 	sql, err := d.rawSQL(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	return fn(sql)
+	return d.db.PrepareNamed(sql)
 }
 
 // queryRow queries a single row
@@ -48,7 +48,7 @@ func (d *database) queryRow(filename string, data interface{}) (*sqlx.Row, error
 		args = map[string]interface{}{}
 	}
 
-	stmt, err := d.prepareNamed(d.db.PrepareNamed, filename)
+	stmt, err := d.prepareStmt(filename)
 	if err != nil {
 		log.Printf("error: failed to prepare sql. filename=%s. err=%s\n", filename, err)
 		return nil, err
@@ -64,7 +64,7 @@ func (d *database) queryRows(filename string, data interface{}) (*sqlx.Rows, err
 		args = map[string]interface{}{}
 	}
 
-	stmt, err := d.prepareNamed(d.db.PrepareNamed, filename)
+	stmt, err := d.prepareStmt(filename)
 	if err != nil {
 		log.Printf("error: failed to prepare sql statement. err=%v\n", err)
 		return nil, err
@@ -84,7 +84,7 @@ func (d *database) command(filename string, data interface{}) error {
 		args = ""
 	}
 
-	stmt, err := d.prepareNamed(d.db.PrepareNamed, filename)
+	stmt, err := d.prepareStmt(filename)
 	if err != nil {
 		return err
 	}
@@ -98,16 +98,14 @@ func (d *database) command(filename string, data interface{}) error {
 }
 
 func (d *database) txCommand(tx *sqlx.Tx, filename string, data interface{}) error {
-	stmt, err := d.prepareNamed(tx.PrepareNamed, filename)
+	sql, err := d.rawSQL(filename)
 	if err != nil {
 		return err
 	}
 
-	sql, _ := d.rawSQL(filename)
-
-	log.Printf("debug: action=txCommand. sql=%s", string(sql))
-	if _, err := tx.NamedExec(string(sql), data); err != nil {
-		log.Printf("debug: action=txCommand. sql=%s", stmt.QueryString)
+	log.Printf("debug: action=txCommand. sql=%s", sql)
+	if _, err := tx.NamedExec(sql, data); err != nil {
+		log.Printf("debug: action=txCommand. sql=%s", sql)
 		return err
 	}
 
