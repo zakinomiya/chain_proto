@@ -1,5 +1,5 @@
 PROJECT_NAME = chain_proto
-OUT_DIR = bin
+OUT_DIR = $(GOPATH)/src/$(PROJECT_NAME)/bin
 
 # Go varibales
 GOBIN = $(GOPATH)/bin
