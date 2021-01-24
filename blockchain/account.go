@@ -4,7 +4,7 @@ import "chain_proto/account"
 
 // GetAccount returns an account with the given address
 func (bc *Blockchain) GetAccount(addr string) (*account.Account, error) {
-	acc, err := bc.repository.Account.Get(addr)
+	acc, err := bc.r.Account.Get(addr)
 	if err != nil {
 		return nil, err
 	}

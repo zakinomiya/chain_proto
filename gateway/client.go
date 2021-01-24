@@ -30,9 +30,10 @@ type Client struct {
 	neighbours []*peer.Peer
 }
 
-func NewClient() *Client {
+func NewClient(peers ...*peer.Peer) *Client {
 	return &Client{
-		m: &sync.Mutex{},
+		m:          &sync.Mutex{},
+		neighbours: peers,
 	}
 }
 

@@ -9,7 +9,7 @@ import (
 // GetTxsByBlockHash returns a set of transactions in a block.
 // When no block
 func (bc *Blockchain) GetTxsByBlockHash(blockHash [32]byte) ([]*transaction.Transaction, error) {
-	txs, err := bc.repository.Tx.GetByBlockHash(blockHash)
+	txs, err := bc.r.Tx.GetByBlockHash(blockHash)
 	if err != nil {
 		if err == repository.ErrNotFound {
 			return make([]*transaction.Transaction, 0), nil
@@ -22,7 +22,7 @@ func (bc *Blockchain) GetTxsByBlockHash(blockHash [32]byte) ([]*transaction.Tran
 
 // GetTransactionByHash returns a transaction with the given transaction hash.
 func (bc *Blockchain) GetTransactionByHash(hash [32]byte) (*transaction.Transaction, error) {
-	tx, err := bc.repository.Tx.GetByHash(hash)
+	tx, err := bc.r.Tx.GetByHash(hash)
 	if err != nil {
 		return nil, err
 	}
@@ -37,6 +37,6 @@ func (bc *Blockchain) AddTransaction(tx *transaction.Transaction) error {
 		return errors.New("invalid transaction")
 	}
 
-	bc.miner.AddTransaction(tx)
+	bc.m.AddTransaction(tx)
 	return nil
 }

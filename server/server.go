@@ -6,6 +6,7 @@ import (
 	"chain_proto/db/repository"
 	"chain_proto/gateway"
 	"chain_proto/miner"
+	"chain_proto/peer"
 	"chain_proto/wallet"
 	"errors"
 	"log"
@@ -26,23 +27,29 @@ func New() (*Server, error) {
 		return nil, errors.New("No miner key provided")
 	}
 
-	repository, err := repository.New(config.Config.DbPath, config.Config.Driver, config.Config.SQLPath)
+	r, err := repository.New(config.Config.DbPath, config.Config.Driver, config.Config.SQLPath)
 	if err != nil {
 		return nil, err
 	}
 
-	blockchain := blockchain.New(repository)
+	seedNodes := []*peer.Peer{}
+	for _, s := range config.Config.Network.Seeds {
+		p := peer.New(s.Addr, s.Network)
+		seedNodes = append(seedNodes, p)
+	}
+
+	bc := blockchain.New(r, gateway.NewClient(seedNodes...))
 	wal, err := wallet.RestoreWallet(config.Config.SecretKeyStr)
 	if err != nil {
 		return nil, err
 	}
 
-	miner := miner.New(blockchain, wal)
-	gateway := gateway.New(blockchain)
+	miner := miner.New(bc, wal)
+	gateway := gateway.New(bc)
+	bc.SetMiner(miner)
 
-	blockchain.SetMiner(miner)
 	return &Server{
-		services: []Service{blockchain, miner, gateway},
+		services: []Service{bc, miner, gateway},
 	}, nil
 }
 

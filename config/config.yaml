@@ -28,3 +28,6 @@ configurations:
     websocket:
       port: 9002
       enabled: false
+    seeds:
+      - addr: "localhost:19000"
+        network: "tcp"

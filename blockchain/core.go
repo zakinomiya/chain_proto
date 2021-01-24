@@ -17,32 +17,33 @@ type Miner interface {
 
 // Blockchain is a struct of the chain
 type Blockchain struct {
-	chainID    string
-	blocks     []*block.Block
-	repository *repository.Repository
-	miner      Miner
-	client     *gateway.Client
+	chainID string
+	blocks  []*block.Block
+	r       *repository.Repository
+	m       Miner
+	c       *gateway.Client
 }
 
 var blockchain *Blockchain
 var once sync.Once
 
 // New returns a new blockchain
-func New(repository *repository.Repository) *Blockchain {
+func New(r *repository.Repository, c *gateway.Client) *Blockchain {
 	blockchain = &Blockchain{
-		repository: repository,
-		blocks:     make([]*block.Block, 0),
+		blocks: make([]*block.Block, 0),
+		r:      r,
+		c:      c,
 	}
 	return blockchain
 }
 
 // SetMiner sets miner to the blockchain
 func (bc *Blockchain) SetMiner(m Miner) {
-	bc.miner = m
+	bc.m = m
 }
 
 func initializeBlockchain() error {
-	b, err := blockchain.repository.Block.GetLatest()
+	b, err := blockchain.r.Block.GetLatest()
 	if err != nil {
 		if err != repository.ErrNotFound {
 			return err

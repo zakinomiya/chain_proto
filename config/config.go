@@ -42,6 +42,10 @@ type Network struct {
 	RPC       ServerInfo `yaml:"rpc"`
 	HTTP      ServerInfo `yaml:"http"`
 	Websocket ServerInfo `yaml:"websocket"`
+	Seeds     []struct {
+		Addr    string `yaml:"addr"`
+		Network string `yaml:"network"`
+	} `yaml:"seeds"`
 }
 
 type ConfigFile struct {
@@ -74,16 +78,14 @@ func init() {
 		os.Exit(1)
 	}
 
-	if ok := common.IsValidPort(conf.RPC.Port); ok == false {
-		os.Exit(1)
-	}
+	for _, p := range []ServerInfo{conf.RPC, conf.HTTP, conf.Websocket} {
+		if !p.Enabled {
+			continue
+		}
 
-	if ok := common.IsValidPort(conf.HTTP.Port); ok == false {
-		os.Exit(1)
-	}
-
-	if ok := common.IsValidPort(conf.Websocket.Port); ok == false {
-		os.Exit(1)
+		if ok := common.IsValidPort(p.Port); ok == false {
+			os.Exit(1)
+		}
 	}
 
 	Config = conf

@@ -8,14 +8,14 @@ import (
 // AddPeer registers a new peer to the client
 func (bc *Blockchain) AddPeer(addr string, network string) error {
 	p := peer.New(addr, network)
-	bc.client.AddNeighbour(p)
-	return bc.repository.Peer.AddOrReplace(p)
+	bc.c.AddNeighbour(p)
+	return bc.r.Peer.AddOrReplace(p)
 }
 
 // GetPeers returns the registered peers.
 // If no peers are found, an empty slice will be returned.
 func (bc *Blockchain) GetPeers() ([]*peer.Peer, error) {
-	peers, err := bc.repository.Peer.GetAll()
+	peers, err := bc.r.Peer.GetAll()
 	if err != nil {
 		if err == repository.ErrNotFound {
 			return make([]*peer.Peer, 0), nil

@@ -1,19 +1,11 @@
-FROM golang:1.14-alpine AS builder
-# Create appuser
-# ENV USER=appuser
-# ENV UID=10001
+FROM golang:1.14-alpine 
+
+RUN apk update && apk add --no-cache alpine-sdk build-base
+
 ENV PJDIR="/go/src/chain_proto"
-RUN apk update && apk add --no-cache make gcc
-RUN apk add --no-cache alpine-sdk build-base
+WORKDIR ${PJDIR}
 
-COPY . ${PJDIR}
-RUN cd ${PJDIR} && make server 
-#RUN cd ${PJDIR} && touch bin/server 
+COPY . .
+RUN make server 
 
-#FROM alpine
-#ENV PJDIR="/go/src/chain_proto"
-#COPY --from=builder ${PJDIR}/bin/server /go/bin/server
-
-#CMD ["/go/bin/server", "run"]
-
-CMD ["/go/src/chain_proto/bin/server", "run"]
+CMD ["bin/server", "run"]

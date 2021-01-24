@@ -3,6 +3,7 @@ package blockchain
 import (
 	"chain_proto/block"
 	"chain_proto/db/repository"
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -15,7 +16,7 @@ func (bc *Blockchain) Blocks() []*block.Block {
 
 // GetBlocks returns blocks at block height within the given offset and offset+limit.
 func (bc *Blockchain) GetBlocks(offset uint32, limit uint32) ([]*block.Block, error) {
-	blks, err := bc.repository.Block.GetByRange(offset, limit)
+	blks, err := bc.r.Block.GetByRange(offset, limit)
 	if err != nil {
 		if err == repository.ErrNotFound {
 			return make([]*block.Block, 0), err
@@ -27,31 +28,32 @@ func (bc *Blockchain) GetBlocks(offset uint32, limit uint32) ([]*block.Block, er
 }
 
 // AddBlock adds a new block to the chain.
-func (bc *Blockchain) AddBlock(block *block.Block) error {
-	if !block.Verify() {
+func (bc *Blockchain) AddBlock(b *block.Block) error {
+	if !b.Verify() {
 		return errors.New("error: failed in block verification")
 	}
 
-	if err := bc.repository.Block.Insert(block); err != nil {
+	if err := bc.r.Block.Insert(b); err != nil {
 		return fmt.Errorf("error: failed to insert block to db. err=%v", err)
 	}
 
-	bc.blocks = append(bc.blocks, block)
+	bc.c.PropagateBlock(context.Background(), b)
+	bc.blocks = append(bc.blocks, b)
 
-	log.Printf("info: Adding new block: %x\n", block.Hash)
-	log.Printf("debug: block=%+v\n", block)
+	log.Printf("info: Adding new block: %x\n", b.Hash)
+	log.Printf("debug: block=%+v\n", b)
 	log.Printf("info: Now the length of the chain is %d:\n", bc.LatestBlock().Height)
 	return nil
 }
 
 // GetBlockByHash returns a block with the given block hash
 func (bc *Blockchain) GetBlockByHash(hash [32]byte) (*block.Block, error) {
-	return bc.repository.Block.GetByHash(hash)
+	return bc.r.Block.GetByHash(hash)
 }
 
 // GetBlockByHeight returns a block with the given block hash
 func (bc *Blockchain) GetBlockByHeight(height uint32) (*block.Block, error) {
-	return bc.repository.Block.GetByHeight(height)
+	return bc.r.Block.GetByHeight(height)
 }
 
 // CurrentBlockHeight returns the height of the latest block in the chain.
