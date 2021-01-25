@@ -5,7 +5,7 @@ OUT_DIR = $(GOPATH)/src/$(PROJECT_NAME)/bin
 GOBIN = $(GOPATH)/bin
 BUILD = GOOS=$(GOOS) go build
 
-# protobuf varibles
+# protobuf variables
 PROTO_DIR = gateway/proto
 PB_OUT_DIR = gateway/gw
 GOOGLEAPIS_DIR = gateway/proto/googleapis
