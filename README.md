@@ -1,4 +1,5 @@
 # Blockchain To Be Named
 
-Just an attempt to learn about blockchain works by building one.
+This is just an attempt to learn about blockchain by building one.
+
 
