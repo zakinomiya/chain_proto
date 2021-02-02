@@ -55,3 +55,20 @@ func UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 func genMessageID() string {
 	return uuid.New().String()
 }
+
+func StreamServerInterceptor() grpc.StreamServerInterceptor {
+	return func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+		md, ok := metadata.FromIncomingContext(ss.Context())
+		if !ok {
+			log.Println("error: failed to retrieve information from header")
+			return nil
+		}
+
+		chainID := md.Get("chainID")[0]
+		if chainID != config.Config.ChainID {
+			return status.Error(codes.InvalidArgument, "Invalid ChainID")
+		}
+
+		return handler(srv, ss)
+	}
+}

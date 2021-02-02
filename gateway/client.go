@@ -62,8 +62,41 @@ func (c *Client) AddNeighbour(p *peer.Peer) {
 	c.neighbours = append(c.neighbours, p)
 }
 
+func (c *Client) Sync(ctx context.Context, ch chan<- []*block.Block, height uint32) error {
+	p := c.neighbours[0]
+	conn, err := p.Connect(grpc.WithInsecure(), grpc.WithUnaryInterceptor(message.UnaryClientInterceptor()))
+	if err != nil {
+		return err
+	}
+
+	s := gw.NewBlockchainServiceClient(conn)
+	stream, err := s.Sync(ctx, &gw.SyncRequest{Offset: height + 1})
+	if err != nil {
+		return err
+	}
+
+	for {
+		res, err := stream.Recv()
+		if err != nil {
+			return err
+		}
+
+		pbBlks := res.GetBlocks()
+		blks := make([]*block.Block, len(pbBlks))
+
+		for _, pbBlk := range pbBlks {
+			b, err := toBlock(pbBlk)
+			if err != nil {
+				return err
+			}
+			blks = append(blks, b)
+		}
+
+		ch <- blks
+	}
+}
+
 func (c *Client) PropagateBlock(ctx context.Context, b *block.Block) error {
-	defer c.tidyUp()
 	pbBlock, err := toPbBlock(b)
 	if err != nil {
 		return err
@@ -87,18 +120,16 @@ func (c *Client) PropagateBlock(ctx context.Context, b *block.Block) error {
 	return nil
 }
 
-func (c *Client) PropagateTransaction(tx *transaction.Transaction) error {
+func (c *Client) PropagateTransaction(ctx context.Context, tx *transaction.Transaction) error {
 	pbTransaction := toPbTransaction(tx)
 
 	req := func(p *peer.Peer) error {
-		ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
-		defer cancel()
-
 		conn, err := p.Connect(grpc.WithInsecure(), grpc.WithUnaryInterceptor(message.UnaryClientInterceptor()))
 		if err != nil {
 			log.Println("error:", err)
 			return err
 		}
+		defer conn.Close()
 
 		s := gw.NewBlockchainServiceClient(conn)
 		_, err = s.PropagateTransaction(ctx, &gw.PropagateTransactionRequest{Transaction: pbTransaction})
@@ -279,6 +310,7 @@ func (c *Client) target(addr string) (*peer.Peer, error) {
 	return nil, errors.New("error: peer not connected")
 }
 
+// propagate sends requests to registered peers
 func (c *Client) propagate(reqFunc withoutReturnFn) {
 	wg := &sync.WaitGroup{}
 
@@ -301,7 +333,7 @@ func (c *Client) propagate(reqFunc withoutReturnFn) {
 
 //invoke makes requests to each of the neighbours registered.
 //it returns the first response
-//it is intended to this function when making requests where the origin of the response is not inportant.
+//it is intended to use this function when making requests where the origin of the response is not inportant.
 func (c *Client) invoke(reqFunc withReturnFn) (interface{}, error) {
 	ch := make(chan interface{})
 	errList := make([]error, 0)

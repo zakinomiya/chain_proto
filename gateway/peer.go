@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"chain_proto/block"
 	gw "chain_proto/gateway/gw"
 	"context"
 
@@ -36,6 +37,40 @@ func (bs *BlockchainService) Connect(ctx context.Context, in *empty.Empty) (*gw.
 }
 
 func (bs *BlockchainService) Sync(in *gw.SyncRequest, server gw.BlockchainService_SyncServer) error {
+	offset := in.GetOffset()
+	ch := make(chan []*block.Block, 1)
+	get := func(o uint32) {
+		blks, err := bs.bc.GetBlocks(o, o+1000)
+		if err != nil {
+			return
+		}
 
-	return nil
+		ch <- blks
+	}
+
+	for {
+		get(offset)
+
+		select {
+		case blks := <-ch:
+			if len(blks) == 0 {
+				return nil
+			}
+
+			pbBlks := make([]*gw.Block, len(blks))
+			for _, b := range blks {
+				pbBlk, err := toPbBlock(b)
+				if err != nil {
+					return err
+				}
+
+				pbBlks = append(pbBlks, pbBlk)
+			}
+
+			server.Send(&gw.SyncResponse{
+				Blocks: pbBlks,
+			})
+			offset += 1000
+		}
+	}
 }
