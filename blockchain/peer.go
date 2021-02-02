@@ -1,8 +1,11 @@
 package blockchain
 
 import (
+	"chain_proto/block"
 	"chain_proto/db/repository"
 	"chain_proto/peer"
+	"context"
+	"io"
 )
 
 // AddPeer registers a new peer to the client
@@ -24,4 +27,32 @@ func (bc *Blockchain) GetPeers() ([]*peer.Peer, error) {
 	}
 
 	return peers, nil
+}
+
+func (bc *Blockchain) Sync() error {
+	ch := make(chan []*block.Block)
+	errCh := make(chan error)
+
+	go func() {
+		if err := bc.c.Sync(context.Background(), ch, bc.CurrentBlockHeight()); err != nil {
+			if err == io.EOF {
+				return
+			}
+
+			errCh <- err
+		}
+	}()
+
+	for {
+		select {
+		case blks := <-ch:
+			for _, b := range blks {
+				if err := bc.AddBlock(b); err != nil {
+					return err
+				}
+			}
+		case err := <-errCh:
+			return err
+		}
+	}
 }
