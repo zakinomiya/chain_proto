@@ -39,10 +39,11 @@ func (bs *BlockchainService) Connect(ctx context.Context, in *empty.Empty) (*gw.
 func (bs *BlockchainService) Sync(in *gw.SyncRequest, server gw.BlockchainService_SyncServer) error {
 	offset := in.GetOffset()
 	ch := make(chan []*block.Block, 1)
+	errCh := make(chan error)
 	get := func(o uint32) {
 		blks, err := bs.bc.GetBlocks(o, o+1000)
 		if err != nil {
-			return
+			errCh <- err
 		}
 
 		ch <- blks
@@ -71,6 +72,8 @@ func (bs *BlockchainService) Sync(in *gw.SyncRequest, server gw.BlockchainServic
 				Blocks: pbBlks,
 			})
 			offset += 1000
+		case err := <-errCh:
+			return err
 		}
 	}
 }
