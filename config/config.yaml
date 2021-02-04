@@ -21,11 +21,11 @@ configurations:
   network:
     rpc:
       port: 9000
-      enabled: false
+      enabled: true
     http:
       port: 9001
       enabled: true
     websocket:
       port: 9002
-      enabled: false
+      enabled: true
     seeds:

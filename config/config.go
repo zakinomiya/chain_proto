@@ -38,14 +38,16 @@ type ServerInfo struct {
 	Enabled bool   `yaml:"enabled"`
 }
 
+type SeedNode struct {
+	Addr    string `yaml:"addr"`
+	Network string `yaml:"network"`
+}
+
 type Network struct {
 	RPC       ServerInfo `yaml:"rpc"`
 	HTTP      ServerInfo `yaml:"http"`
 	Websocket ServerInfo `yaml:"websocket"`
-	Seeds     []struct {
-		Addr    string `yaml:"addr"`
-		Network string `yaml:"network"`
-	} `yaml:"seeds"`
+	Seeds     []SeedNode `yaml:"seeds"`
 }
 
 type ConfigFile struct {
@@ -76,6 +78,11 @@ func init() {
 	if err != nil {
 		log.Printf("error: Failed to read config file. ERROR: %v.\n", err)
 		os.Exit(1)
+	}
+
+	seed := os.Getenv("SEED")
+	if seed != "" {
+		conf.Seeds = append(conf.Seeds, SeedNode{Addr: seed, Network: "tcp"})
 	}
 
 	for _, p := range []ServerInfo{conf.RPC, conf.HTTP, conf.Websocket} {
