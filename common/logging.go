@@ -11,7 +11,7 @@ import (
 )
 
 func LogginSettings(logFile string, logLevel string) {
-	l, err := os.OpenFile(fmt.Sprintf("chain_%s.log", uuid.New().String()), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	l, err := os.OpenFile(fmt.Sprintf("chain_%.5s.log", uuid.New().String()), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatalln("Failed to open log file")
 	}

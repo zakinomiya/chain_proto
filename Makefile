@@ -3,7 +3,7 @@ OUT_DIR = $(GOPATH)/src/$(PROJECT_NAME)/bin
 
 # Go varibales
 GOBIN = $(GOPATH)/bin
-BUILD = GOOS=$(GOOS) go build
+BUILD = GOOS=$(GOOS) go build -ldflags="-extldflags=-static" -tags sqlite_omit_load_extension
 
 # protobuf variables
 PROTO_DIR = gateway/proto

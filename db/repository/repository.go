@@ -6,6 +6,7 @@ import (
 	"chain_proto/peer"
 	"chain_proto/transaction"
 	"log"
+	"os"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
@@ -39,6 +40,13 @@ type Repository struct {
 
 func New(dbPath string, dbDriver string, sqlPath string) (*Repository, error) {
 	log.Printf("debug: DBInfo driver=%s, dbpath=%s\n", dbDriver, dbPath)
+
+	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
+		if _, err := os.Create(dbPath); err != nil {
+			return nil, err
+		}
+	}
+
 	db, err := sqlx.Open(dbDriver, dbPath)
 	if err != nil {
 		log.Println(err)

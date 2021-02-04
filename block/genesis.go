@@ -7,6 +7,8 @@ import (
 	"encoding/hex"
 	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/go-yaml/yaml"
 	"github.com/shopspring/decimal"
@@ -51,7 +53,7 @@ func readFromYaml(path string) (*genesis, error) {
 }
 
 func NewGenesisBlock() (*Block, error) {
-	gen, err := readFromYaml("block/genesis.yaml")
+	gen, err := readFromYaml(filepath.Join(os.Getenv("GOPATH"), "src/chain_proto/config/genesis.yaml"))
 
 	var transactions []*transaction.Transaction
 	for _, t := range gen.Transactions {

@@ -1,4 +1,4 @@
-FROM golang:1.14-alpine 
+FROM golang:1.14-alpine AS builder
 
 RUN apk update && apk add --no-cache alpine-sdk build-base
 
@@ -7,5 +7,13 @@ WORKDIR ${PJDIR}
 
 COPY . .
 RUN make server 
+
+FROM scratch
+
+ENV GOPATH="/go"
+WORKDIR ${GOPATH}/src/chain_proto
+COPY --from=builder /go/src/chain_proto/bin ./bin
+COPY --from=builder /go/src/chain_proto/db/sql ./db/sql
+COPY --from=builder /go/src/chain_proto/config ./config
 
 CMD ["bin/server", "run"]
