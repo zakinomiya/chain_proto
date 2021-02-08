@@ -13,11 +13,13 @@ require (
 	github.com/golang/mock v1.4.4
 	github.com/golang/protobuf v1.4.3
 	github.com/google/uuid v1.1.2
+	github.com/googleapis/googleapis v0.0.0-20210205220527-5e3dacee1940 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.1.0
 	github.com/jmoiron/sqlx v1.2.1-0.20200324155115-ee514944af4b
 	github.com/mattn/go-sqlite3 v1.14.6
 	github.com/mwitkow/go-proto-validators v0.3.2
 	github.com/pkg/errors v0.8.1
+	github.com/protocolbuffers/protobuf v3.14.0+incompatible // indirect
 	github.com/shopspring/decimal v1.2.0
 	github.com/spf13/cobra v1.1.1
 	github.com/stretchr/objx v0.3.0 // indirect

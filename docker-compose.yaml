@@ -3,22 +3,25 @@ version: "3"
 services: 
   node1:
     container_name: "node1"
-    build: . 
+    image: chain:latest
     ports:
       - "9000-9002:9000-9002"
     environment:
-      - LOG_LEVEL=info
-        SEED="node2:9000"
+      - LOG_LEVEL=debug
+      - LOG_DIR=./logs
+      - SEED="node2:9000"
     volumes:
       - ./logs:/go/src/chain_proto/logs
       - /go/src/chain_proto/data
-        #  node2:
-        #    container_name: "node2"
-        #    image: chain 
-        #    ports:
-        #      - "9000-9002": "9000-9002"
-        #    environment:
-        #      - LOG_LEVEL=info
-        #        SEED="node1:9000"
-        #    volumes:
-        #      - ./logs:/go/src/chain_proto/logs
+  node2:
+    container_name: "node2"
+    image: chain:latest
+    ports:
+      - "19000-19002:9000-9002"
+    environment:
+      - LOG_LEVEL=debug
+      - LOG_DIR=./logs
+      - SEED="node1:9000"
+    volumes:
+      - ./logs:/go/src/chain_proto/logs
+      - /go/src/chain_proto/data

@@ -4,8 +4,9 @@ package gw;
 
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
+import "validator/validator.proto";
 
-option go_package = "go_chain/gateway/gw";
+option go_package = "chain_proto/gateway/gw";
 
 service BlockchainService {
   rpc PropagateTransaction(PropagateTransactionRequest)
@@ -112,7 +113,7 @@ message Peer {
 // -----------------------------------
 
 message GetTransactionByHashRequest {
-  string tx_hash = 1;
+  string tx_hash = 1 [(validator.field) = { regex: "[0-9a-fA-F]{32}" }];
 }
 
 message PropagateTransactionRequest {
@@ -121,7 +122,7 @@ message PropagateTransactionRequest {
 }
 
 message GetTransactionResponse {
-  Transaction transaction = 3;
+  Transaction transaction = 1;
 }
 
 message GetTxsByBlockHashRequest {

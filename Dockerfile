@@ -8,7 +8,8 @@ WORKDIR ${PJDIR}
 COPY . .
 RUN make server 
 
-FROM scratch
+#FROM scratch
+FROM alpine
 
 ENV GOPATH="/go"
 WORKDIR ${GOPATH}/src/chain_proto
